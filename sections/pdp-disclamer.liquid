@@ -1,0 +1,60 @@
+<div id="{{ section.settings.id_for_hash }}">
+{% if section.settings.display_when_login %}
+  {% if customer %}
+    {% render 'pdp-disclamer', section: section %}
+  {% endif %}
+{% else %}
+  {% render 'pdp-disclamer', section: section %}
+{% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": "pdp disclamer",
+    "class": "pdp position-relative z-index-2 overflow-hidden snap-child as-snap-list",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "id_for_hash",
+        "label": "ID for hash"
+      },
+      {
+        "type": "checkbox",
+        "id": "display_when_login",
+        "label": "Display when user login"
+      },
+      {
+        "type": "text",
+        "id": "hash_id",
+        "label": "ID for hash"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "title",
+        "default": "Disclamer"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Disclamer",
+        "type": "disclamer",
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "lead_graph",
+            "label": "Lead paragraph",
+            "default": "<p>Lead paragraph</p>"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "pdp disclamer",
+        "category": "Content"
+      }
+    ]
+  }
+{% endschema %}

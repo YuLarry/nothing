@@ -1,0 +1,221 @@
+
+<div class="container-core">
+  <h3 class="fs-h2">{{ 'service_portal.submit.describe_your_problem_title' | t }}</h3>
+  <input type="hidden" value="{{settings.upload}}" class="as-upload-file-api">
+  <form class="as-service-portal-form as-form-no-action" autocomplete="false" novalidate="true">
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+      <div class="mt-4 mt-md-5">
+        <p class="mb-0">{{ 'service_portal.submit.issue_tag_subline' | t }}</p>
+        <div class="px-lg-6">
+          <div class="as-radio-wrap">
+            <p class="mb-0 mt-4 mt-md-5">{{ 'service_portal.submit.issue_tag_hardware' | t }}</p>
+            <div class="d-flex flex-column position-relative">
+              {% for block in section.blocks %}
+                {% if block.type == 'tags' %}
+                  {% if block.settings.issue_type == 'hardware_issue' %}
+                    <div class="as-issue-{{ block.settings.model | replace: '(', '' | replace: ')', '' | replace: ' ', '' }} d-none">
+                      <input type="checkbox" data-value="{{ block.settings.title }}" 
+                        id="hardware-{{ block.settings.model }}-{{ block.settings.title | escape }}" 
+                        class="form-check-input visually-hidden as-radio">
+                      <label for="hardware-{{ block.settings.model }}-{{ block.settings.title | escape }}" class="form-check-label mt-4">{{ block.settings.title }}</label>
+                    </div>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            </div>
+            <p class="mb-0 mt-4 mt-md-5">{{ 'service_portal.submit.issue_tag_software' | t }}</p>
+            <div class="d-flex flex-column position-relative">
+              {% for block in section.blocks %}
+                {% if block.type == 'tags' %}
+                  {% if block.settings.issue_type == 'software_issue' %}
+                    <div class="as-issue-{{ block.settings.model | replace: '(', '' | replace: ')', '' }} d-none">
+                      <input type="checkbox" data-value="{{ block.settings.title }}" 
+                        id="software-{{ block.settings.model }}-{{ block.settings.title | escape }}" 
+                        class="form-check-input visually-hidden as-radio as-software-{{ block.settings.model }}">
+                      <label for="software-{{ block.settings.model }}-{{ block.settings.title | escape }}" class="form-check-label mt-4">{{ block.settings.title }}</label>
+                    </div>
+                    {% endif %}
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div>
+              <div>
+                <input type="hidden" name="issueTags" required form="submitWorkOrder" class="as-issue-tags-hidden-input as-form-input" />
+              </div>
+              <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                {{ 'service_portal.submit.issue_tag_subline' | t }} {{ 'general.error_message.format_error' | t }}
+              </div>
+            </div>
+          </div>
+          <p class="mb-0 mt-4 mt-md-5">{{ 'service_portal.submit.issue_description_subline' | t }}</p>
+          <div class="mt-4">
+            <div class="form-floating overflow-hidden">
+              <textarea maxlength="1000" rows="4" required name="issueDescription" form="submitWorkOrder" class="form-control form-control-textarea border-0 rounded-3 as-form-input" placeholder="{{ 'service_portal.submit.issue_description_label' | t }}"></textarea>
+              <label for="issue_description_placeholeder">{{ 'service_portal.submit.issue_description_label' | t }}</label>
+            </div>
+            <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+              {{ 'service_portal.submit.issue_description_subline' | t }} {{ 'general.error_message.format_error' | t }}
+            </div>
+          </div>
+
+          <div class="mt-5 as-upload-file">
+            <p class="mb-4">{{ 'service_portal.submit.issue_pic_subline' | t }}</p>
+            <div class="row row-cols-4 gx-0 flex-column">
+              <input accept="image/jpg,image/png,image/jpeg" class="visually-hidden as-upload-input" id="issuePic" type="file">
+              <div class="as-upload-image-wrap d-none mb-3 position-relative">
+                <div class="as-upload-reset cursor-pointer end-0 position-absolute text-primary w-100 h-100" style="background: rgba(0, 0, 0, .5)">
+                  <button type="button" class="btn-close end-0 p-2 position-absolute top-0 border-0"></button>
+                </div>
+                <img class="as-upload-image w-100" />
+              </div>
+              <label for="issuePic">
+                <a class="btn btn-primary">{{ 'service_portal.general.upload' | t }}</a>
+              </label>
+            </div>
+            {% assign file_type = 'service_portal.general.file_type' | t %}
+            <div class="text-muted fs-small mt-3 px-4 richtext">
+              {% render 'richtext', richtext: file_type %}
+            </div>
+            <div class="mt-4">
+              <input type="hidden" name="issuePic" form="submitWorkOrder" required class="as-hidden-input as-form-input" />
+              <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                {{ 'service_portal.submit.issue_pic_error_label' | t }} {{ 'general.error_message.format_error' | t }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% if section.settings.show_plan %}
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top as-checkbox-show-input">
+      <div class="mt-4 mt-md-5">
+        <p class="mb-3">{{ 'service_portal.submit.protection_plan_subline' | t }}</p>
+        <div class="px-lg-6">
+          <div class="mt-4">
+            <div class="d-flex">
+              <input class="form-check-input position-relative flex-center as-checkbox rounded-0" form="submitWorkOrder" type="checkbox" name="protectionPlan" style="margin-top: 0.1875rem;" value="" id="protectionPlan">
+              <label class="ms-2" for="protectionPlan">
+                {{ 'service_portal.submit.protection_plan_checkbox' | t }}
+              </label>
+            </div>
+          </div>
+          <div class="d-none as-checkbox-wrap">
+            <div class="mt-4">
+              <div class="mt-4 form-floating overflow-hidden rounded-pill">
+                <input type="text" name="protectionOrder" form="submitWorkOrder" class="form-control border-0 as-form-input" 
+                  id="protectionOrder" placeholder="{{ 'service_portal.submit.order_number_label' | t }}">
+                <label for="protectionOrder">{{ 'service_portal.submit.order_number_label' | t }}</label>
+              </div>
+              <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                {{ 'service_portal.submit.order_number_label' | t }} {{ 'general.error_message.format_error' | t }}
+              </div>
+            </div>
+            <div class="fs-small mt-3 px-4 text-muted">
+              {{ 'service_portal.submit.protection_plan_description_html' | t }}
+            </div>
+            <div class="mt-5 as-upload-file">
+              <p class="mb-4">{{ 'service_portal.submit.protection_plan_purchase_voucher' | t }}</p>
+              <div class="row row-cols-4 gx-0 flex-column">
+                <input type="hidden"  name="protectionVoucher" form="submitWorkOrder" class="as-hidden-input" />
+                <input accept="image/jpg,image/png,image/jpeg" class="visually-hidden as-upload-input" id="protectionVoucher" type="file">
+                <div class="as-upload-image-wrap d-none mb-3 position-relative">
+                  <div class="as-upload-reset cursor-pointer end-0 position-absolute text-primary w-100 h-100" style="background: rgba(0, 0, 0, .5)">
+                    <button type="button" class="btn-close end-0 p-2 position-absolute top-0 border-0"></button>
+                  </div>
+                  <img class="as-upload-image w-100" />
+                </div>
+                <label for="protectionVoucher">
+                  <a class="btn btn-primary">{{ 'service_portal.general.upload' | t }}</a>
+                </label>
+              </div>
+              {% assign file_type = 'service_portal.general.file_type' | t %}
+              <div class="text-muted fs-small mt-3 px-4 richtext">
+                {% render 'richtext', richtext: file_type %}
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <input form="submitWorkOrder" class="visually-hidden" type="checkbox" name="protectionPlan" value="">
+    {% endif %}
+    <div>
+      <button class="as-next-step as-toggle-radio btn btn-lg btn-primary w-100 mt-5 mt-sm-6 as-btn" type="submit">{{ 'service_portal.general.next_step' | t }}</button>
+      <p class="as-pre-step cursor-pointer mb-0 mt-3 text-center text-primary">{{ 'service_portal.general.go_back' | t }}</p>
+    </div>
+  </form>
+</div>
+{% schema %}
+{
+  "name": "Problem Description",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9 d-none as-tab-content",
+  "settings": [  
+    {
+      "type": "header",
+      "content": "Protection Plan"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_plan",
+      "label": "Show Protection Plan",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Issua tag",
+      "type": "tags",
+      "settings": [
+        {
+          "type": "radio",
+          "id": "issue_type",
+          "label": "Issua type",
+          "options": [
+            {
+              "value": "hardware_issue",
+              "label": "Hardware issue"
+            },
+            {
+              "value": "software_issue",
+              "label": "Software issue"
+            }
+          ],
+          "default": "hardware_issue"
+        },
+        {
+          "type": "radio",
+          "id": "model",
+          "label": "Model",
+          "options": [
+            {
+              "value": "ear(1)",
+              "label": "ear(1)"
+            },
+            {
+              "value": "phone(1)",
+              "label": "phone(1)"
+            },
+            {
+              "value": "ear(stick)",
+              "label": "ear (stick)"
+            },
+            {
+              "value": "ear(2)",
+              "label": "ear (2)"
+            }
+          ],
+          "default": "ear(1)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

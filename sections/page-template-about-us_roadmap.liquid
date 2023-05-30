@@ -1,0 +1,218 @@
+{% for block in section.blocks %}
+{%- if block.settings.image != blank -%}
+  {%- style -%}
+    .carousel-block  .adapt-to-image::before {
+      padding-bottom: {{ 1 | divided_by: block.settings.image.aspect_ratio | times: 100 }}%;
+      content: '';
+      display: block;
+      width: 1px;
+      margin-left: -1px;
+    }
+    @media (max-width: 576px) {
+      .carousel-block  .adapt-to-image::before {
+        padding-bottom: {{ 1 | divided_by: block.settings.imageMob.aspect_ratio | times: 100 }}%;
+      }
+    }
+  {%- endstyle -%}
+{%- endif -%}
+{% endfor %}
+{% if section.settings.title %}
+{% render 'aboutus-title', title: section.settings.title %}
+{% endif %}
+<div class="carousel-block row">
+  <div class="col-12">
+    <div id="carouselExampleIndicators" class="as-carousel carousel _page-template-section slide" data-bs-ride="carousel">
+      <div class="position-absolute w-100 pt-md-3">
+        <div class="adapt-to-image"></div>
+        <div class="row justify-content-between">
+          <div class="col-auto col-md-4">
+          </div>
+          <div class="col-auto col-md-8 d-flex">
+            <button class="as-carousel-prev carousel-control-prev w-auto pe-2 position-relative" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+              <span class="fs-base font-ndot55" aria-hidden="true"><</span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <div class="as-carousel-indicators carousel-indicators m-0 position-relative fs-base font-ndot55">
+              {% for block in section.blocks %}
+              <span data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.index0 }}" class="as-carousel-indicator mx-0 px-1{% if forloop.first %} active{% endif %}" aria-current="true" aria-label="Slide {{ forloop.index }}">{{ forloop.index }}</span>
+              {% if forloop.last %}/<span class="px-1">{{ forloop.index }}</span>{% endif %}
+              {% endfor %}
+            </div>
+            <button class="as-carousel-next carousel-control-next w-auto ps-2 position-relative" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+              <span class="fs-base font-ndot55" aria-hidden="true">></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="as-carousel-slides carousel-inner">
+        {% for block in section.blocks %}
+          <div class="as-carousel-slide carousel-item d-flex flex-column{% if forloop.first %} active{% endif %}">
+            <div class="adapt-to-image position-relative overflow-hidden">
+              <figure class="mb-0">
+                <picture>
+                  <source media="(max-width: 576px)" 
+                    sizes="(max-width: 576px) 100vw, 576px" 
+                    srcset="
+                      {{ block.settings.imageMob | img_url: 'master' }}" >
+                  <img loading="lazy" class="w-100 position-absolute top-0"
+                    sizes="(max-width: 2160px) 100vw, 2160px"
+                    srcset="
+                      {{ block.settings.image | img_url: '600x' }} 600w,
+                      {{ block.settings.image | img_url: '857x' }} 857w,
+                      {{ block.settings.image | img_url: '1069x' }} 1069w,
+                      {{ block.settings.image | img_url: '1244x' }} 1244w,
+                      {{ block.settings.image | img_url: '1494x' }} 1494w,
+                      {{ block.settings.image | img_url: '1560x' }} 1560w,
+                      {{ block.settings.image | img_url: '1660x' }} 1660w,
+                      {{ block.settings.image | img_url: '1901x' }} 1901w,
+                      {{ block.settings.image | img_url: '2040x' }} 2040w,
+                      {{ block.settings.image | img_url: '2155x' }} 2155w,
+                      {{ block.settings.image | img_url: '2160x' }} 2160w,
+                      {{ block.settings.image | img_url: '3840x' }} 3840w" 
+                    src="{{ block.settings.image | img_url: '2160x' }}"
+                    alt="{{ block.settings.image.alt }}">
+                </picture>
+              </figure>
+            </div>
+            <div class="carousel-item-desp pt-md-3 position-relative">
+              <div class="row justify-content-between">
+                <div class="col-auto col-md-4">
+                  <h5 class="mb-0 fs-base font-ndot55">{% if block.settings.year != blank %}{{ block.settings.year }}{% else %}{{ block.type }}{% endif %}</h5>
+                </div>
+                <div class="col-auto col-md-8">
+                </div>
+                <div class="col-md-7 offset-md-4">
+                  <div class="pt-2 pt-md-3">
+                    {% if block.settings.des != blank %}
+                      {% render 'richtext', richtext: block.settings.des  %}
+                    {% endif %}
+                    {% if block.settings.button_text != blank %}
+                      <div class="mt-2">
+                        <a href="{{ block.settings.button_link }}" class="dot-border-primary border-bottom text-primary">{{ block.settings.button_text }}</a>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="carousel-control top-0">
+        <div class="carousel-control-prev bg-light" style="width: {% for block in section.blocks %}{% if forloop.last %}{{ forloop.index | times: 100 }}{% endif %}{% endfor %}%"></div>
+        <div class="carousel-control-next bg-light d-xl-none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Roadmap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "List 2020",
+      "type": "2020",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Time"
+        },
+        {
+          "type": "text",
+          "id": "event",
+          "label": "Event"
+        },
+        {
+          "type": "richtext",
+          "id": "des",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop image",
+          "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+        },
+        {
+          "type": "image_picker",
+          "id": "imageMob",
+          "label": "Mobile image",
+          "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+        }
+      ]
+    },
+    {
+      "name": "List 2020-2022",
+      "type": "2021",
+      "settings": [
+        {
+          "type": "text",
+          "id": "year",
+          "label": "Year"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "event",
+          "label": "Event"
+        },
+        {
+          "type": "richtext",
+          "id": "des",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop image",
+          "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+        },
+        {
+          "type": "image_picker",
+          "id": "imageMob",
+          "label": "Mobile image",
+          "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

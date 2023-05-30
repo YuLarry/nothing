@@ -1,0 +1,56 @@
+
+<section class="container-fits-viewport px-2 text-black section-top section-bottom">
+  <div class="container-topic px-2 pt-header mt-sm-1 font-base section-bottom">
+    <div class="row mx-n2">
+      <div class="col-sm-3 col-xl-2 px-2">
+        {% render 'sidebar-newsroom', handle: request.page_type %} 
+      </div>
+      <div class="col-sm-6 px-2">
+        {% render 'page-title', title: blog.title  %}
+        <ul class="list-unstyled mb-0 mt-n6 mt-sm-n9">
+          {% for article in blog.articles limit: 2 %}
+            <li class="mt-6 mt-sm-9">
+              {% render 'article-card', article: article %}
+              {% unless forloop.last %}
+              <!-- <div class="dot-border-dark border-top pb-3 my-6"></div> -->
+              {% endunless %}
+            </li>
+          {% endfor %}
+          {% if blog.articles.size > 2 %}
+            <div class="d-flex mt-7 as-showmore-btn row">
+              <div class="col-md-7">
+                <button class="btn btn-primary">{{ 'blogs.show_more' | t }}</button>
+              </div>
+            </div>
+            {% for article in blog.articles offset: 2 %}
+              <li class="mt-6 mt-sm-9 d-none as-article-list">
+                <!-- <div class="dot-border-dark border-top pb-3 my-6"></div> -->
+                {% render 'article-card', article: article %}
+              </li>
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Blog Template",
+  "settings": [
+    {
+      "label": "Desktop image",
+      "type": "image_picker",
+      "info": "3840px x auto .jpg recommended( height is twice the desktop height)",
+      "id": "desktop_image"
+    },
+    {
+      "label": "Mobile image",
+      "type": "image_picker",
+      "info": "750px x 1000px .jpg recommended.",
+      "id": "mobile_image"
+    }
+  ]
+}
+{% endschema %}

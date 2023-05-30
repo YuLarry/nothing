@@ -1,0 +1,210 @@
+
+<section class="as-components d-none as-register-section" data-next-page="verify" data-router="#register">
+  <h2 class="fs-h2 mb-0 text-uppercase">{{'customer.register.title' | t }}</h2>
+  <form action="{{ settings.api_host }}/auth/verification/email/send" method="post" class="as-email-form mt-4 mt-md-7" novalidate autocomplete="off">
+    <div class="as-form-input-wrap form-pristine">
+      <input type="email" name="email" class="as-user-email overflow-hidden rounded-pill border-0 form-control input-pristine as-email-param" maxlength="255" id="email-register" placeholder="{{ 'customer.register.email' | t }}" required
+      data-pristine-required-message="{{ 'customer.register.email' | t }}{{ 'customer.error.empty_error' | t }}"
+      data-pristine-email-message="{{ 'customer.error.format_error' | t }}"
+      data-pristine-maxlength-message="{{ 'customer.error.format_error' | t }}">
+      <label for="email-register" class="d-none">{{ 'customer.register.email' | t }}</label> 
+    </div>
+    <div class="form-check mt-3 form-pristine">
+      <input class="form-check-input position-relative flex-center input-pristine" type="checkbox" name="is_agree" id="flexCheckDefault" data-pristine-required-message="{{ 'customer.error.policy_uncheck_error' | t }}" required>
+      <label for="flexCheckDefault" class="richtext">
+        {{- 'customer.register.privacy_policy_html' | t -}}
+        <a class="dot-border-primary border-bottom" target="_blank" rel="noopener" href="/pages/privacy-policy">{{'customer.register.privacy_policy' | t}}</a>
+      </label>
+    </div>
+
+    <div class="form-check mt-3 form-pristine">
+      <input class="form-check-input position-relative as-if-subscribe flex-center input-pristine" type="checkbox"name="subscribe" id="flexCheck"
+      data-pristine-required-message="{{ 'customer.error.subscribe_uncheck_error' | t }}">
+      <label for="flexCheck">
+        {{'customer.register.subscribe_consent' | t}}
+      </label>
+    </div>
+
+    <input type="hidden" name="lang" value="{{ settings.store_code }}">
+    <div class="as-form-error text-danger d-none small mt-2"></div>
+    <div class="as-exist-error d-none">{{ 'customer.error.email_taken_error' | t }}</div>
+    <div class="as-frequent-error d-none">{{ 'customer.error.too_many_requests' | t }}</div>
+    <div class="as-invalid-error d-none">{{ 'customer.error.other_error' | t }}</div>
+    
+    <button type="submit" class="as-submit btn btn-lg btn-dark mt-5 font-55 text-uppercase">{{'customer.register.submit' | t}}</button>
+    <div class="my-5">Or</div>
+    <div>
+      <div>
+        <a class="text-uppercase font-55 btn btn-lg btn-dark as-update-redirect as-update-social as-track-third-party-register" data-type="google" data-link="{{ settings.api_host }}/auth/redirect/google" href="{{ settings.api_host }}/auth/redirect/google?source=store&store={{ shop.permanent_domain | remove: ".myshopify.com" }}&lang={{ settings.store_code }}&return_to={{ request.origin | append: '/pages/redirect' }}">
+          {{'customer.register.google' | t }}
+        </a>
+      </div>
+      <div>
+        <a class="text-uppercase font-55 btn btn-lg text-start btn-dark mt-2 as-update-redirect as-update-social as-track-third-party-register" data-type="apple" data-link="{{ settings.api_host }}/auth/redirect/apple" href="{{ settings.api_host }}/auth/redirect/apple?source=store&store={{ shop.permanent_domain | remove: ".myshopify.com" }}&lang={{ settings.store_code }}&return_to={{ request.origin | append: '/pages/redirect' }}">
+          {{ 'customer.register.apple' | t }}
+        </a>
+      </div> 
+    </div>
+  </form>
+  <form action="{{ settings.api_host }}/auth/register" class="as-check-email-form" method="post" novalidate>
+    <input type="hidden" name="is_check" value="1">
+    <input type="hidden" name="email" class="as-email-param as-check-email-param">
+  </form>
+  <div class="mt-5">
+    <p class="mb-0 richtext">
+      {{ 'customer.register.sign_in_html' | t }}
+      <a class="as-update-link dot-border-primary border-bottom" data-link="/account/login" href="/account/login">{{'customer.register.sign_in' | t }}</a>
+    </p>
+  </div>
+</section>
+
+<section class="as-components d-none as-verify-section" data-next-page="set-name" data-prev-page="register" data-router="#verify">
+  <h2 class="display-1 font-ndot55 mb-0 text-uppercase">{{'customer.verify.title' | t }}</h2>
+  <div class="mt-4 mt-md-7">
+    <div class="mb-5">
+      <p class="mb-3">{{'customer.verify.subtext' | t }} <span class="as-render-email word-break text-truncate font-weight-bold"></span></p>
+      <a href="#" class="as-change btn-link d-block link-dark text-decoration-underline">{{'customer.verify.change' | t }}</a>
+    </div>
+    <p class="mb-2">{{'customer.verify.activate_information' | t }}</p>
+  </div>
+  <form action="{{ settings.api_host }}/auth/verification/email/verify" method="post" class="as-verification-form" novalidate autocomplete="off">
+    <div class="form-floating form-pristine">
+      <input type="text" name="verification_code" class="dot-border-dark bg-transparent form-control input-pristine" id="verification-code" placeholder="{{'customer.verify.verification_code' | t }}"
+      data-pristine-required-message="{{'customer.verify.verification_code' | t }}{{ 'customer.error.empty_error' | t }}" required>
+      <label for="verification-code">{{'customer.verify.verification_code' | t }}</label>
+      <!-- <div class="as-field-error as-error-tips text-danger d-none small">Please provide a valid verification code</div> -->
+    </div>
+    <input type="hidden" class="as-email-param" name="email">
+    <div class="text-start my-2 py-2">
+      <a class="as-send-again btn-link link-dark cursor-pointer text-decoration-underline" >{{'customer.verify.send_again' | t }}</a>
+      <p class="as-countdown-wrap d-none mb-0" >{{'customer.verify.count_down_html' | t }}<span class="as-countdown-number" data-interval="{{'customer.verify.second' | t }}">{{'customer.verify.second' | t }}</span>s</p>
+    </div>
+    
+    <button type="submit" class="text-uppercase as-submit font-55 btn btn-dark">{{'customer.verify.confirm' | t }}</button>
+    <div class="as-form-error text-danger d-none small mt-2"></div>
+    <div class="as-frequent-error d-none">{{ 'customer.error.too_many_requests' | t }}</div>
+    <div class="as-invalid-error d-none">{{ 'customer.error.verify_code_error' | t }}</div>
+  </form>
+  <form action="{{ settings.api_host }}/auth/verification/email/send" class="as-email-form" method="post" novalidate>
+    <input type="hidden" name="email" class="as-email-param">
+    <input type="hidden" name="lang" value="{{ settings.store_code }}">
+    <div class="as-frequent-error d-none">{{ 'customer.error.too_many_requests' | t }}</div>
+    <div class="as-invalid-error d-none">{{ 'customer.error.other_error' | t }}</div>
+  </form>
+</section>
+
+<section class="as-components d-none as-set-name-section" data-next-page="set-password" data-router="#set-name">
+  <h2 class="display-1 font-ndot55 mb-0 text-uppercase">{{'customer.set_name.title' | t }}</h2>
+  <form class="as-set-name-form mt-4 mt-md-7" novalidate autocomplete="off">
+    <div class="form-floating form-pristine font-base">
+      <input type="text" name="verification_code" class="as-first-name bg-transparent dot-border-dark form-control input-pristine" maxlength="32" id="first-name" placeholder="{{'customer.set_name.first_name' | t }}"
+      data-pristine-maxlength-message="{{ 'customer.error.format_error' | t }}"
+      data-pristine-required-message="{{'customer.set_name.first_name' | t }}{{ 'customer.error.empty_error' | t }}" required>
+      <label for="first-name">{{'customer.set_name.first_name' | t }}</label>
+    </div>
+    <div class="py-2"></div>
+    <div class="form-floating form-pristine font-base">
+        <input type="text" name="verification_code" class="as-last-name bg-transparent dot-border-dark form-control input-pristine" maxlength="32" id="last-name" placeholder="{{'customer.set_name.last_name' | t }}"
+        data-pristine-maxlength-message="{{ 'customer.error.format_error' | t }}"
+        data-pristine-required-message="{{'customer.set_name.last_name' | t }}{{ 'customer.error.empty_error' | t }}" required>
+        <label for="last-name">{{'customer.set_name.last_name' | t }}</label>  
+      </div>
+    <button type="button" class="text-uppercase as-submit font-55 btn btn-dark mt-5">{{'customer.set_name.confirm' | t }}</button>
+  </form>
+</section>
+
+<section class="as-components d-none as-set-pwd" data-next-page="success" data-router="#set-password">
+  <h2 class="display-1 font-ndot55 mb-0 text-uppercase">{{'customer.set_password.title' | t }}</h2>
+  <p class="mb-0 mt-4 mt-md-7">{{'customer.set_password.subtext' | t }}</p>
+  <form action="{{ settings.api_host }}/auth/register" class="as-set-pwd-form mt-5" method="post" novalidate autocomplete="off">
+    <div class="form-floating form-pristine as-pwd-wrap font-base">
+      <input type="password" name="password" class="bg-transparent dot-border-dark form-control input-pristine as-pwd-input pe-6" id="set-pwd"
+      data-pristine-required-message="{{'customer.set_password.password' | t }}{{ 'customer.error.empty_error' | t }}"
+      data-pristine-pattern= "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/"
+      data-pristine-pattern-message="{{'customer.error.format_error' | t }}"
+    placeholder="{{ 'customer.set_password.password' | t }}" required> 
+      <div class="d-flex align-items-center as-visible-control visible-control content-invisible">
+        <div class="icon-eye-off">
+          {% render 'icon-eye-off' %}
+        </div>
+        <div class="icon-eye">
+          {% render 'icon-eye' %}
+        </div>
+      </div>
+      <label for="set-pwd">{{'customer.set_password.password' | t }}</label>
+    </div>
+    <div class="py-2"></div>
+    <div class="form-floating form-pristine as-pwd-wrap font-base">
+      <input type="password" class="bg-transparent dot-border-dark form-control input-pristine as-pwd-input pe-6" id="confirm-pwd" placeholder="Password" required
+        data-pristine-equals="#set-pwd" data-pristine-required-message="{{'customer.set_password.confirm_password' | t }} {{ 'customer.error.empty_error' | t }}" data-pristine-equals-message="{{ 'customer.error.confirm_password_error' | t }}">
+      <div class="d-flex align-items-center as-visible-control visible-control content-invisible">
+        <div class="icon-eye-off">
+          {% render 'icon-eye-off' %}
+        </div>
+        <div class="icon-eye">
+          {% render 'icon-eye' %}
+        </div>
+      </div>
+      <label for="confirm-pwd">{{'customer.set_password.confirm_password' | t }}</label>
+    </div>
+    <input type="hidden" class="as-email-param" name="email">
+    <input type="hidden" class="as-first-name-param" name="first_name">
+    <input type="hidden" class="as-last-name-param" name="last_name">
+    <input type="hidden" class="as-source-param" name="source" value="store">
+    <input type="hidden" class="as-return-to-param as-update-redirect" name="return_to" value="{{ request.origin | append: '/pages/redirect' }}">
+    <input type="hidden" class="as-store-param" name="store" value="{{ shop.permanent_domain | remove: ".myshopify.com" }}">
+    <input type="hidden" name="lang" value="{{ settings.store_code }}">
+    <div class="as-form-error text-danger d-none small mt-2"></div>
+    <div class="as-format-error d-none">{{ 'customer.error.format_error' | t }}</div>
+    <div class="as-other-error d-none">{{ 'customer.error.other_error' | t }}</div>
+    <button type="submit" class="as-submit text-uppercase font-55 btn btn-dark mt-5">{{'customer.set_password.confirm' | t }}</button>
+  </form>
+  <!-- 订阅接口 -->
+  <form action="{{ settings.subscribe_api }}" class="as-subscribe-form mt-5" method="post" novalidate>
+    {% comment %} <!-- 使用google-recaptcha后，生成包含<textarea name="g-recaptcha-response"></textarea>的结构（内含token值） --> {% endcomment %}
+    <google-recaptcha data-sitekey="{{ settings.google_recaptcha_sitekey }}" data-container-class="as-verify-code-recaptcha"></google-recaptcha>
+    <input type="hidden" name="email" class="as-email-param">
+    {% if settings.store_tag != blank %}
+      <input type="hidden" name="tags" value="{{settings.store_tag}}">
+    {% endif %}
+    <div class="as-other-error d-none">{{ 'customer.error.other_error' | t }}</div>
+  </form>
+
+</section>
+
+<section class="as-components d-none as-invitation-code" data-next-page="success" data-router="#invite-code">
+  <h2 class="display-1 font-ndot55 mb-0 text-uppercase">{{'customer.invite_code.title' | t }}</h2>   
+  <p class="mb-0 mt-4 mt-md-7">{{'customer.invite_code.subtext' | t }}</p>
+  <form action="{{ settings.api_host }}/auth/invite/redeem" class="as-invitation-code-form mt-5" method="post" novalidate data-need-authorization="true" autocomplete="off">
+    <div class="form-floating form-pristine font-base">
+      <input type="text" name="invite_code" class="dot-border-dark bg-transparent form-control input-pristine" id="invitation-code" placeholder="{{'customer.invite_code.invite_code' | t }}" required
+        data-pristine-required-message="{{'customer.invite_code.invite_code' | t }}{{ 'customer.error.empty_error' | t }}">
+      <label for="invitation-code">{{'customer.invite_code.invite_code' | t }}</label>
+    </div>
+    <div class="as-form-error text-danger d-none small mt-2"></div>
+    <div class="as-invalid-error d-none">{{ 'customer.error.invite_code_error' | t }}</div>
+    <div class="mt-5">
+      <button type="submit" class="text-uppercase as-submit font-55 btn btn-dark me-4">{{'customer.invite_code.confirm' | t }}</button>
+      <div class="mt-5">
+        <a class="cursor-pointer as-skip-button font-base link-dark text-decoration-underline">{{'customer.invite_code.not_have' | t }}</a>
+      </div>
+    </div>
+  </form>
+</section>
+
+<section class="as-components d-none as-success-section" data-router="#success">
+  <h2 class="display-1 font-ndot55 mb-0 text-uppercase">{{'customer.register_success.title' | t }}</h2>
+  <div class="mt-4 mt-md-6">
+    <p class="mb-4">{{'customer.register_success.thanks' | t }}</p>
+    <p class="mb-4">{{'customer.register_success.information' | t }}
+      <a class="as-confirm link-dark text-decoration-underline cursor-pointer text-capitalize">{{'customer.register_success.my_account' | t }}</a>
+    </p>
+    <p class="">{{'customer.register_success.check' | t }}
+      {% comment %} <a href="https://nothing.community/" target="_blank" rel="noopener" class="link-dark text-decoration-underline">{{'customer.register_success.community' | t }}</a> {% endcomment %}
+      <a href="{{ routes.root_url }}pages/nothing-community" target="_blank" rel="noopener" class="link-dark text-decoration-underline">{{'customer.register_success.community' | t }}</a>
+    </p>
+  </div>   
+  <button class="as-confirm text-uppercase font-55 btn btn-dark mt-5">
+    {{'customer.register_success.close' | t }}
+  </button>
+</section>

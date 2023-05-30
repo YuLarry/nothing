@@ -1,0 +1,1 @@
+{"layout":"new-guideline","sections":{"main":{"type":"page-title","settings":{"des":"<p>Check the progress of your request.<\/p>"}},"track":{"type":"track-form","settings":{"btn_link_detail":"shopify:\/\/pages\/track-your-service-request-detail","btn_link_list":"shopify:\/\/pages\/track-your-service-request-list"}}},"order":["main","track"]}

@@ -1,0 +1,152 @@
+{% if shop.permanent_domain == 'nothing-th.myshopify.com' %}
+  <link rel="preload" as="font" href="{{ 'NotoSansThai-Regular.ttf' | asset_url }}" type="font/ttf" crossorigin>
+{% elsif shop.permanent_domain == 'nothing-kr.myshopify.com' %}
+  <link rel="preload" as="font" href="{{ 'AppleSDGothicNeoL.otf' | asset_url }}" type="font/otf" crossorigin>
+{% elsif shop.permanent_domain == 'nothing-tw.myshopify.com' %}
+  <link rel="preload" as="font" href="{{ 'PingFangHK-Light.otf' | asset_url }}" type="font/otf" crossorigin>
+{% elsif shop.permanent_domain == 'nothing-jp.myshopify.com' %}
+  <link rel="preload" as="font" href="{{ 'HiraginoSans.ttc' | asset_url }}" type="font/ttc" crossorigin>
+{% else %}
+  <link rel="preload" as="font" href="{{ 'LetteraMonoLLCondLight-Regular.otf' | asset_url }}" type="font/otf" crossorigin>
+{% endif %}
+<link rel="preload" as="font" href="{{ 'Ndot-55.otf' | asset_url }}" type="font/otf" crossorigin>
+<link rel="preload" as="font" href="{{ 'NType82-Regular.otf' | asset_url }}" type="font/otf" crossorigin>
+<link rel="preload" as="font" href="{{ 'NType82Mono-Regular.otf' | asset_url }}" type="font/otf" crossorigin>
+
+<style>
+  @font-face {
+    font-family: "Ndot-55";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("{{ 'Ndot-55.otf' | asset_url }}"); 
+  }
+  @font-face {
+    font-family: "NType82";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("{{ 'NType82-Regular.otf' | asset_url }}");
+  }
+  @font-face {
+    font-family: "NType82Mono";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("{{ 'NType82Mono-Regular.otf' | asset_url }}");
+  }
+</style>
+
+{% if shop.permanent_domain == 'nothing-th.myshopify.com' %}
+  <style>
+    @font-face {
+      font-family: "Noto Sans Thai";
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: url("{{ 'NotoSansThai-Regular.ttf' | asset_url }}");
+    }
+    .fs-h1,
+    .fs-h2 {
+      font-family: 'Noto Sans Thai', 'NType82' !important;
+    }
+    .fs-base {
+      font-family: 'Noto Sans Thai', 'NType82Mono' !important;
+    }
+    .font-ndot55 {
+      font-family: 'Ndot-55', 'Noto Sans Thai', 'NType82Mono' !important;
+    }
+  </style>
+{% elsif shop.permanent_domain == 'nothing-kr.myshopify.com' %}
+  <style>
+    @font-face {
+      font-family: "AppleSDGothicNeo";
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: url("{{ 'AppleSDGothicNeoL.otf' | asset_url }}");
+    }
+    .fs-h1,
+    .fs-h2 {
+      font-family: 'AppleSDGothicNeo', 'NType82' !important;
+    }
+    .fs-base {
+      font-family: 'AppleSDGothicNeo', 'NType82Mono' !important;
+    }
+    .font-ndot55 {
+      font-family: 'Ndot-55', 'AppleSDGothicNeo', 'NType82Mono' !important;
+    }
+  </style>
+{% elsif shop.permanent_domain == 'nothing-tw.myshopify.com' %}
+  <style>
+    @font-face {
+      font-family: "PingFang HK";
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: url("{{ 'PingFangHK-Light.otf' | asset_url }}");
+    }
+    .fs-h1,
+    .fs-h2 {
+      font-family: 'PingFang HK', 'NType82' !important;
+    }
+    .fs-base {
+      font-family: 'PingFang HK', 'NType82Mono' !important;
+    }
+    .font-ndot55 {
+      font-family: 'Ndot-55', 'PingFang HK', 'NType82Mono' !important;
+    }
+  </style>
+{% elsif shop.permanent_domain == 'nothing-jp.myshopify.com' %}
+<style>
+  @font-face {
+    font-family: "Hiragino Sans";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("{{ 'HiraginoSans.ttc' | asset_url }}");
+  }
+  .fs-h1,
+  .fs-h2 {
+    font-family: 'Hiragino Sans', 'NType82' !important;
+  }
+  .fs-base {
+    font-family: 'Hiragino Sans', 'NType82Mono' !important;
+  }
+  .font-ndot55 {
+    font-family: 'Ndot-55', 'Hiragino Sans', 'NType82Mono' !important;
+  }
+</style>
+{% else %}
+<style>
+  @font-face {
+    font-family: "Lettera Mono LL Cond Light";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("{{ 'LetteraMonoLLCondLight-Regular.otf' | asset_url }}");
+  }
+  
+  /* body, .font-body {
+    font-family: ndot57 !important;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, .h1, .h2, .font-heading, .shopify-challenge__message {
+    font-family: ndot57;
+  } */
+  .fs-h1,
+  .fs-h2 {
+    font-family: NType82 !important;
+  }
+  .fs-base {
+    font-family: NType82Mono !important;
+  }
+  .font-ndot55 {
+    font-family: 'Ndot-55', 'NType82Mono' !important;
+  }
+  .font-mono{
+    font-family: "Lettera Mono LL Cond Light";
+    font-weight: 400;
+  }
+</style>
+{% endif %}

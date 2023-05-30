@@ -1,0 +1,34 @@
+
+{% render 'faq-template', key: 'crypto' %}
+
+{% schema %}
+{
+  "name": "Crypto",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title1",
+      "label": "Accordions 1"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Accordions 1",
+      "type": "tab1",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

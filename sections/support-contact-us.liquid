@@ -1,0 +1,68 @@
+
+<div class="container-core">
+  {% if section.settings.title != blank %}
+  <h3 class="fs-h2">{{ section.settings.title }}</h3>
+  {% endif %}
+  <div class="{% if section.settings.title != blank %}mt-5 mt-sm-6 dot-border-dark border-top{% endif %}">
+    <div class="mt-4 mt-md-5">
+      <div class="row flex-column flex-md-row mt-n4">
+        <div class="col-md-7 mt-4 mt-md-5">
+          {% render 'richtext', richtext: section.settings.intro %}
+        </div>
+        <div class="col-md-4 offset-md-1 mt-4 mt-md-5">
+          {% if section.settings.btn != blank %}
+          <a class="btn w-100 btn-primary" {% render 'link', link: section.settings.btn_link %} 
+            href="{{ section.settings.btn_link }}">{{ section.settings.btn }}</a>
+          <div class="mt-4">
+            {% render 'richtext', richtext: section.settings.back %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Contact us",
+  "tag": "section",
+  "class": "bg-light pb-7 pb-sm-9",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Popular Questions"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "intro"
+    },
+    {
+      "type": "text",
+      "id": "btn",
+      "label": "btn"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "btn link"
+    },
+    {
+      "type": "richtext",
+      "id": "back",
+      "label": "back"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact us"
+    }
+  ]
+}
+{% endschema %}

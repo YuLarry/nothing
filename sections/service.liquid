@@ -1,0 +1,261 @@
+{%- liquid 
+        assign tab1 = section.settings.tab1 | downcase | replace: ' ', '_' | replace: '.', '_' | replace: '&', '_'
+        assign tab2 = section.settings.tab2 | downcase | replace: ' ', '_' | replace: '.', '_' | replace: '&', '_'
+        assign tab3 = section.settings.tab3 | downcase | replace: ' ', '_' | replace: '.', '_' | replace: '&', '_'
+        assign tab4 = section.settings.tab4 | downcase | replace: ' ', '_' | replace: '.', '_' | replace: '&', '_'
+        
+        assign tab1_blocks_list = section.blocks | where: 'type', 'design'
+        assign tab2_blocks_list = section.blocks | where: 'type', 'camera'
+        assign tab3_blocks_list = section.blocks | where: 'type', 'features'
+        assign tab4_blocks_list = section.blocks | where: 'type', 'network_connectivity'
+        
+        assign enable_tab_switch = false
+        assign tmp_total_size = 0
+        for tab_index in (1..4)
+          case tab_index
+            when 1
+              assign tab = section.settings.tab1
+              assign blocks_list = tab1_blocks_list
+            when 2
+              assign tab = section.settings.tab2
+              assign blocks_list = tab2_blocks_list
+            when 3
+              assign tab = section.settings.tab3
+              assign blocks_list = tab3_blocks_list
+            when 4
+              assign tab = section.settings.tab4
+              assign blocks_list = tab4_blocks_list
+          endcase
+        
+          if tab != blank and blocks_list.size > 0
+            assign tmp_total_size = tmp_total_size | plus: 1
+          endif
+        endfor
+        if tmp_total_size > 1
+          assign enable_tab_switch = true
+        endif
+      -%}
+
+<div class="service-{{ section.id }} container-fits-viewport bg-dark px-4 pb-6 pb-md-4 pt-md-0">
+  <nav>
+    <div class="nav nav-tabs row border-0 py-2 py-md-4" id="nav-tab" role="tablist">
+      <div class="col-4 col-md-2 text-white">{{ section.settings.heading }}
+      </div>
+      {%- for tab_index in (1..4) -%}
+        {%- liquid
+                case tab_index
+                  when 1
+                    assign tab = section.settings.tab1
+                    assign tab_handle = tab1
+                    assign blocks_list = tab1_blocks_list
+                  when 2
+                    assign tab = section.settings.tab2
+                    assign tab_handle = tab2
+                    assign blocks_list = tab2_blocks_list
+                  when 3
+                    assign tab = section.settings.tab3
+                    assign tab_handle = tab3
+                    assign blocks_list = tab3_blocks_list
+                  when 4
+                    assign tab = section.settings.tab4
+                    assign tab_handle = tab4
+                    assign blocks_list = tab4_blocks_list
+                endcase
+              -%}
+
+        {%- if tab != blank and blocks_list.size > 0 -%}
+          <div class="col-4 col-md-2 col-xl-1 nav-link px-3 py-0 text-white border-0 bg-transparent text-md-end as-nav-tab{% if enable_tab_switch %} d-none d-md-block cursor-pointer{% endif %}{% if forloop.first %} active{% endif %}" id="nav-{{ tab_handle }}-tab" data-bs-toggle="tab" data-bs-target="#nav-{{ tab_handle }}" role="tab" aria-controls="nav-{{ tab_handle }}" aria-selected="true">{{ tab }}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </nav>
+  {% if enable_tab_switch %}
+    <div class="p-4 d-block d-md-none">
+      <select class="as-select-tab form-select form-select-sm rounded-pill bg-transparent text-light text-center border-light">
+        {%- for tab_index in (1..4) -%}
+          {%- liquid
+                  case tab_index
+                    when 1
+                      assign tab = section.settings.tab1
+                      assign tab_handle = tab1
+                      assign blocks_list = tab1_blocks_list
+                    when 2
+                      assign tab = section.settings.tab2
+                      assign tab_handle = tab2
+                      assign blocks_list = tab2_blocks_list
+                    when 3
+                      assign tab = section.settings.tab3
+                      assign tab_handle = tab3
+                      assign blocks_list = tab3_blocks_list
+                    when 4
+                      assign tab = section.settings.tab4
+                      assign tab_handle = tab4
+                      assign blocks_list = tab4_blocks_list
+                  endcase
+                -%}
+
+          {%- if tab != blank and blocks_list.size > 0 -%}
+            <option value="{{ tab }}" {% if forloop.first %} selected{% endif %}>{{ tab }}
+            </option>
+          {%- endif -%}
+        {%- endfor -%}
+      </select>
+    </div>
+  {% endif %}
+  <div class="tab-content text-white pt-5 pt-md-8" id="nav-tabContent">
+    {%- for tab_index in (1..4) -%}
+      {%- liquid
+              case tab_index
+                when 1
+                  assign tab = section.settings.tab1
+                  assign tab_handle = tab1
+                  assign blocks_list = tab1_blocks_list
+                when 2
+                  assign tab = section.settings.tab2
+                  assign tab_handle = tab2
+                  assign blocks_list = tab2_blocks_list
+                when 3
+                  assign tab = section.settings.tab3
+                  assign tab_handle = tab3
+                  assign blocks_list = tab3_blocks_list
+                when 4
+                  assign tab = section.settings.tab4
+                  assign tab_handle = tab4
+                  assign blocks_list = tab4_blocks_list
+              endcase
+            -%}
+
+      {%- if tab != blank and blocks_list.size > 0 -%}
+        <div class="tab-pane fade{% if forloop.first %} show active{% endif %}" id="nav-{{ tab_handle }}" role="tabpanel" aria-labelledby="nav-{{ tab_handle }}-tab" tabindex="0">
+          <div class="row">
+            <div class="col-md-9">
+              <div class="row">
+                {% for block in blocks_list %}
+                  <div class="col-md-4">
+                    <h2 class="fs-h2 mb-4 mb-md-5 pb-3 pb-md-0">{{ block.settings.heading }}
+                    </h2>
+                    <ul class="list-unstyled {% unless forloop.last %} mb-9 mb-md-7{% else %} mb-0{% endunless %}">
+                      {{ block.settings.lead_graph | replace: '<p', '<li' | replace: '/p>', '/li>' | replace: '<a', '<a class="link-light"' }}
+                    </ul>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Service",
+    "class": "service position-relative overflow-hidden",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "Heading"
+      },
+      {
+        "type": "text",
+        "id": "tab1",
+        "label": "Tab1",
+        "default": "Tab1"
+      },
+      {
+        "type": "text",
+        "id": "tab2",
+        "label": "Tab2",
+        "default": "Tab2"
+      },
+      {
+        "type": "text",
+        "id": "tab3",
+        "label": "Tab3",
+        "default": "Tab3"
+      }, {
+        "type": "text",
+        "id": "tab4",
+        "label": "Tab4",
+        "default": "Tab4"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Design",
+        "type": "design",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Heading"
+          }, {
+            "type": "richtext",
+            "id": "lead_graph",
+            "label": "Lead paragraph",
+            "default": "<p>Lead paragraph</p>"
+          }
+        ]
+      }, {
+        "name": "Camera",
+        "type": "camera",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Heading"
+          }, {
+            "type": "richtext",
+            "id": "lead_graph",
+            "label": "Lead paragraph",
+            "default": "<p>Lead paragraph</p>"
+          }
+        ]
+      }, {
+        "name": "Features",
+        "type": "features",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Heading"
+          }, {
+            "type": "richtext",
+            "id": "lead_graph",
+            "label": "Lead paragraph",
+            "default": "<p>Lead paragraph</p>"
+          }
+        ]
+      }, {
+        "name": "Network & Connectivity.",
+        "type": "network_connectivity",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Heading"
+          }, {
+            "type": "richtext",
+            "id": "lead_graph",
+            "label": "Lead paragraph",
+            "default": "<p>Lead paragraph</p>"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Service",
+        "category": "Content"
+      }
+    ]
+  }
+{% endschema %}

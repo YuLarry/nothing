@@ -1,0 +1,131 @@
+{%- liquid
+  assign show_countdown = false
+  assign countdown_block = section.blocks | where: 'type', 'countdown'
+  if countdown_block.size > 0
+    if countdown_block[0].settings.start_time != blank or countdown_block[0].settings.end_time != blank
+      assign show_countdown = true
+    endif
+  endif
+-%}
+
+<div class="marquee-wrap {%- unless settings.fonts == 'lettera' %} font-55-strong{%- endunless -%}">
+  <div class="g-0">
+    <countdown-marquee class="row gx-0 {% if show_countdown %}d-none{% endif %}">
+      <ul class="col-12 d-flex flex-nowrap as-marquee list-unstyled text-uppercase mb-0">
+        {%- if show_countdown -%}
+          <li class="text-nowrap fs-marquee as-marquee-wrap">     
+            /<a data-id="ticker" class="mx-4 text-dark text-decoration-none" {% if section.settings.countdown_link %}href="{{ section.settings.countdown_link }}{% endif %}">
+              {%- render 'countdown-marquee', start_text: section.settings.start_text, end_text: section.settings.end_text, start_time: countdown_block[0].settings.start_time, end_time: countdown_block[0].settings.end_time -%}
+            </a>
+          </li>
+          <li class="text-nowrap fs-marquee as-marquee-wrap-copy">
+            /<a data-id="ticker" class="mx-4 text-dark text-decoration-none" {% if section.settings.countdown_link %}href="{{ section.settings.countdown_link }}{% endif %}">
+              {%- render 'countdown-marquee', start_text: section.settings.start_text, end_text: section.settings.end_text, start_time: countdown_block[0].settings.start_time, end_time: countdown_block[0].settings.end_time -%}
+            </a>
+          </li>
+          <li class="text-nowrap fs-marquee">
+            {%- for i in (1..20) -%}
+              /<a data-id="ticker" class="mx-4 text-dark text-decoration-none" {% if section.settings.countdown_link %}href="{{ section.settings.countdown_link }}{% endif %}">
+                {%- render 'countdown-marquee', start_text: section.settings.start_text, end_text: section.settings.end_text, start_time: countdown_block[0].settings.start_time, end_time: countdown_block[0].settings.end_time -%}
+              </a>
+            {%- endfor -%}
+          </li>
+        {%- else -%}
+        <li class="text-nowrap fs-marquee as-marquee-wrap">
+          {%- if linklists[section.settings.ticker_text].links.size > 0 -%}
+            {%- for link in linklists[section.settings.ticker_text].links -%}
+            /<a data-id="ticker" class="mx-4 text-dark text-decoration-none" href="{{ link.url }}">{{ link.title }}</a>
+            {%- endfor -%}
+          {%- else -%}
+            /<a data-id="ticker" class="mb-0 mx-4 text-dark text-decoration-none">Nothing</a>
+          {%- endif -%}
+        </li>
+        <li class="text-nowrap fs-marquee as-marquee-wrap-copy">
+          {%- if linklists[section.settings.ticker_text].links.size > 0 -%}
+            {%- for link in linklists[section.settings.ticker_text].links -%}
+            /<a data-id="ticker" class="mx-4 text-dark text-decoration-none" href="{{ link.url }}">{{ link.title }}</a>
+            {%- endfor -%}
+          {%- else -%}
+            /<a data-id="ticker" class="mb-0 mx-4 text-dark text-decoration-none">Nothing</a>
+          {%- endif -%}
+        </li>
+        <li class="text-nowrap fs-marquee">
+          {%- if linklists[section.settings.ticker_text].links.size > 0 -%}
+            {%- for i in (1..10) -%}
+            {%- for link in linklists[section.settings.ticker_text].links -%}
+            /<a data-id="ticker" class="mx-4 text-dark text-decoration-none" href="{{ link.url }}">{{ link.title }}</a>
+            {%- endfor -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- for i in (1..20) -%}
+              /<a data-id="ticker" class="mb-0 mx-4 text-dark text-decoration-none">Nothing</a>
+            {%- endfor -%}
+          {%- endif -%}
+        </li>
+        {%- endif -%}
+      </ul>
+    </countdown-marquee>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Countdown ticker",
+  "tag": "section",
+  "class": "fixed-bottom bg-light mb-0 overflow-hidden font-ndot55",
+  "max_blocks": 1,
+  "settings": [
+    {
+      "type": "html",
+      "id": "start_text",
+      "label": "Start text",
+      "default": "STARTS IN <span class= \"as-days\" data-units=\"D\"></span><span class=\"as-hours\" data-units=\"H\"></span><span class=\"as-minutes\" data-units=\"M\"></span><span class=\"as-seconds\" data-units=\"S\"></span>"
+    },
+    {
+      "type": "html",
+      "id": "end_text",
+      "label": "End text",
+      "default": "ENDS IN <span class= \"as-days\" data-units=\"D\"></span><span class=\"as-hours\" data-units=\"H\"></span><span class=\"as-minutes\" data-units=\"M\"></span><span class=\"as-seconds\" data-units=\"S\"></span>"
+    },
+    {
+      "type": "url",
+      "id": "countdown_link",
+      "label": "Countdown link"
+    },
+    {
+      "type": "link_list",
+      "id": "ticker_text",
+      "label": "Ticker text"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Countdown",
+      "type": "countdown",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Time",
+          "info": "Timestamp conversion tool:[https://tool.lu/timestamp/](https://tool.lu/timestamp/), and the units should be seconds."
+        },
+        {
+          "type": "text",
+          "id": "start_time",
+          "label": "Start time"
+        },
+        {
+          "type": "text",
+          "id": "end_time",
+          "label": "End time"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Countdown ticker",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

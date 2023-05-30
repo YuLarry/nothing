@@ -1,0 +1,199 @@
+
+{% assign suffix = '' %}
+{% if env == 'modal' %}
+  {% assign suffix = '-modal' %}
+{% endif %}
+  <div class="swiper-content-container container-fluid px-0">
+    <div class="mt-4 mt-lg-5 overflow-hidden">
+      <div class="swiper overflow-visible as-cards-swiper mt-n4 mx-4 {% if count > 4 %}enable-pc{% endif %}" data-pc-flat="false">
+        <div class="swiper-wrapper d-flex {% if count < 5 %}flex-lg-wrap{% endif %}">
+          {%- for accessory in product_blocks -%}
+            {% assign index = forloop.index %}
+            {%- if accessory.available -%} 
+            
+            
+            {% liquid
+              assign currentStore = request.host
+              assign diff_variant = false
+              if accessory.metafields.my_fields.display_different_variant != blank
+                assign diff_variant = true
+                assign diff_variant_data = accessory.metafields.my_fields.display_different_variant.value
+                assign current_store_variant_id = null
+                for data in diff_variant_data
+                  for store in data.stores
+                    if store == currentStore
+                      assign current_store_variant_id = data.variant | plus: 0
+                      break
+                    endif
+                  endfor
+                endfor
+              endif
+              
+              assign current_accessory_variant = accessory.selected_or_first_available_variant
+              if diff_variant
+                for variant in accessory.variants
+                  if variant.id  == current_store_variant_id
+                    assign current_accessory_variant = variant
+                  endif
+                endfor
+              endif
+            %}
+
+            {% if diff_variant == false or diff_variant and current_accessory_variant.available  %}
+
+            {% liquid
+              
+              if section.settings.enable_ear1_promotion and accessory.handle == 'ear-1'
+                assign enable_promotion = true
+              else
+                assign enable_promotion = false
+              endif
+            %}
+
+              <div class="swiper-slide mt-4">
+                <div class="as-accessory-card" data-product-id="{{ accessory.id }}">
+                {% comment %} 在购买页中以变体图片为节点，将产品图分组，形如 A1 $$ B1;;B2;;B3 $$ C1;;C2 {% endcomment %}
+                {%- capture image_list -%}
+                {%- for product_image in accessory.images -%}
+                  {%- if product_image.variants.first.id != blank -%}
+                    {%- comment -%} If product image is attached to a variant, image.attached_to_variant not working! {%- endcomment -%}
+                    {%- unless forloop.first -%}$${%- endunless -%}
+                    {{ product_image.id }}::{{ product_image.position }}||{{ product_image.alt }}
+                  {%- else -%}
+                    {%- unless forloop.first -%};;{%- endunless -%}{{ product_image.position }}||{{ product_image.alt }}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- endcapture -%}
+                <div class="position-relative">
+                  {% if accessory.has_only_default_variant %}
+                    {%- assign image = accessory.images[0] -%}
+                    <figure class="mb-1 mb-lg-2">
+                      <picture class="d-block picture ratio">
+                        <img
+                          sizes="{{ picture_sizes }}"
+                          srcset="
+                            {%- if image.width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}
+                            {%- if image.width >= 857 -%}{{ image | image_url: width: 857 }} 857w,{%- endif -%}
+                            {%- if image.width >= 1069 -%}{{ image | image_url: width: 1069 }} 1069w,{%- endif -%}
+                            {%- if image.width >= 1244 -%}{{ image | image_url: width: 1244 }} 1244w,{%- endif -%}
+                            {%- if image.width >= 1494 -%}{{ image | image_url: width: 1494 }} 1494w,{%- endif -%}
+                            {%- if image.width >= 1560 -%}{{ image | image_url: width: 1560 }} 1560w,{%- endif -%}
+                            {%- if image.width >= 1660 -%}{{ image | image_url: width: 1660 }} 1660w,{%- endif -%}
+                            {%- if image.width >= 1901 -%}{{ image | image_url: width: 1901 }} 1901w,{%- endif -%}
+                            {%- if image.width >= 2040 -%}{{ image | image_url: width: 2040 }} 2040w,{%- endif -%}
+                            {%- if image.width >= 2160 -%}{{ image | image_url: width: 2160 }} 2160w,{%- endif -%}
+                            {%- if image.width >= 3840 -%}{{ image | image_url: width: 3840 }} 3840w,{%- endif -%}"
+                          src="{{ image | image_url: width: 1230 }}"
+                          alt="{{ image.alt | escape }}"
+                          class="w-100 h-100 object-fit-cover"
+                          loading="lazy"
+                          width="{{ image.width }}"
+                          height="{{ image.height }}"
+                        >
+                      </picture>
+                    </figure>
+                  {% else %}
+                    {% for variant in accessory.variants %}
+                      {% capture variant_image_strs %}{%- render 'get-product-images-by-variant-id', image_list: image_list, target_variant: variant, all_images: product.images -%}{% endcapture %}
+                      {% assign variant_image_strs = variant_image_strs | split: ';;' %}
+                      <div data-variant-id="{{ variant.id }}" class="as-accessory-gallery-wrapper {% if current_accessory_variant.id != variant.id %}d-none{% else %}as-default{% endif %}">
+                          {%- liquid 
+                            assign variant_image_str = variant_image_strs[0]
+                            assign variant_image = variant_image_str | split: '||'
+                            assign variant_image_pos = variant_image[0] | plus: 0 | minus: 1
+                            assign variant_image_alt = variant_image[1]
+                          -%}
+                          {%- assign image = accessory.images[variant_image_pos] -%}
+                          <figure class="mb-1 mb-lg-2">
+                            <picture class="d-block picture ratio">
+                              <img
+                                sizes="{{ picture_sizes }}"
+                                srcset="
+                                  {%- if image.width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}
+                                  {%- if image.width >= 857 -%}{{ image | image_url: width: 857 }} 857w,{%- endif -%}
+                                  {%- if image.width >= 1069 -%}{{ image | image_url: width: 1069 }} 1069w,{%- endif -%}
+                                  {%- if image.width >= 1244 -%}{{ image | image_url: width: 1244 }} 1244w,{%- endif -%}
+                                  {%- if image.width >= 1494 -%}{{ image | image_url: width: 1494 }} 1494w,{%- endif -%}
+                                  {%- if image.width >= 1560 -%}{{ image | image_url: width: 1560 }} 1560w,{%- endif -%}
+                                  {%- if image.width >= 1660 -%}{{ image | image_url: width: 1660 }} 1660w,{%- endif -%}
+                                  {%- if image.width >= 1901 -%}{{ image | image_url: width: 1901 }} 1901w,{%- endif -%}
+                                  {%- if image.width >= 2040 -%}{{ image | image_url: width: 2040 }} 2040w,{%- endif -%}
+                                  {%- if image.width >= 2160 -%}{{ image | image_url: width: 2160 }} 2160w,{%- endif -%}
+                                  {%- if image.width >= 3840 -%}{{ image | image_url: width: 3840 }} 3840w,{%- endif -%}"
+                                src="{{ image | image_url: width: 1230 }}"
+                                alt="{{ image.alt | escape }}"
+                                class="w-100 h-100 object-fit-cover"
+                                loading="lazy"
+                                width="{{ image.width }}"
+                                height="{{ image.height }}"
+                              >
+                            </picture>
+                          </figure>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                </div>
+                <div>
+                  <div class="mb-1 mb-lg-2 mx-n1">
+                    <span class="mx-1">
+                      {{ accessory.title }}
+                    </span>
+                    <div class="d-inline-block as-accessories-price mx-1">
+                      {% render 'price', product: accessory, enable_customize_promotion: enable_promotion, use_variant: true, custom_variant: current_accessory_variant, show_discount_rate: true, discount_rate: section.settings.ear1_promotion_text, price_class: 'accessory-price' %}
+                    </div>
+                  </div>
+
+                  {% if section.settings.ear_stick_discount_info != blank and accessory.handle == 'ear-stick' %}
+                    <div class="richtext with-underline-link mb-1 mb-lg-2">
+                      {{ section.settings.ear_stick_discount_info | replace: '<p', '<p class="mb-0"' }}
+                    </div>
+                  {% endif %}
+
+                  {%- if accessory.has_only_default_variant or diff_variant or accessory.variants.size == 1  -%}
+                  {%- else -%}
+                  <div class="mb-1 mb-lg-2">
+                    <div class="d-flex mx-n2 my-n2 flex-wrap">
+                      {%- for variant in accessory.variants -%}
+                        <div class="as-variant-wrap radio-btn position-relative m-2" style="min-width: 6.125rem;">
+                          <input type="radio" id="accessory-{{ accessory_index }}-{{ section.id }}-{{ variant.id }}-{{ forloop.index0 }}{{suffix}}"
+                            class="as-step-option radio-btn-input form-check-input visually-hidden" {% unless variant.available %}disabled{% endunless %}
+                            name="{{ accessory.title | escape }}{{suffix}}"
+                            value="{{ variant.id }}"
+                            form="as-accessory-product-form-{{ section.id }}-{{ accessory_index }}"
+                          >
+                          <label class="radio-btn-label form-check-label {% unless variant.available %}disabled{% endunless %} {% if variant.metafields.my_fields.option != blank %}{{ variant.metafields.my_fields.option | downcase }}{% else %}none{% endif %}" for="accessory-{{ accessory_index }}-{{ section.id }}-{{ variant.id }}-{{ forloop.index0 }}{{suffix}}">
+                            {{ variant.option1 }}
+                          </label>
+                        </div>
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                  {%- endif -%}
+                  <div class="mt-n1 ms-n2">
+                    <product-form class="d-inline-block mt-1 ms-2" data-show-offcanvas="false">
+                      {% liquid
+                        assign productFormClass = 'form'
+                        assign productFormClass = productFormClass | append: ' as-async-add-form'
+                        assign product_form_id = 'as-product-form-' | append: section.id | append: index | append: suffix
+                      %}
+                      <button class="as-remove-from-cart btn btn-primary px-6 text-nowrap d-none">{{ 'sections.accessories.added' | t }}</button>
+                      {% form 'product', accessory, id: product_form_id, class: productFormClass, data-tag: 'accessory', data-product-id: accessory.id %}
+                        <input name="id" value="{{ current_accessory_variant.id }}" type="hidden">
+                        {% render 'add-error-message' %} 
+                        <div class="d-inline-block">
+                          <button class="add-to-cart as-add-to-cart btn btn-primary px-6 text-nowrap {% if accessory.has_only_default_variant or diff_variant or accessory.variants.size == 1 %}{% else %}unavailable{% endif %}" 
+                            type="submit">{{ 'sections.accessories.add_to_cart_button' | t }}</button>
+                        </div>
+                      {% endform %}
+                    </product-form>
+                  </div>
+                </div>
+              </div>
+              </div>
+            {% endif %}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>

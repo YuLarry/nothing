@@ -1,0 +1,55 @@
+
+
+<div class="container-fits-viewport section-top section-bottom d-flex">
+
+  <div class="position-absolute h-100 w-100 top-0 as-location-target" data-color='{{ section.settings.text_color }}'>
+    <figure class="h-100 mb-0 w-100">
+      <picture class="w-100 h-100 d-block">
+        <source media="(max-width: 576px)" 
+          sizes="(max-width: 576px) 100vw, 576px" 
+          srcset="
+            {{ section.settings.imageMob | img_url: 'master' }}" >
+        <img class="img-fluid w-100 h-100 object-fit-cover"
+          sizes="(max-width: 2160px) 100vw, 2160px"
+          srcset="
+            {{ section.settings.image | img_url: '600x' }} 600w,
+            {{ section.settings.image | img_url: '857x' }} 857w,
+            {{ section.settings.image | img_url: '1069x' }} 1069w,
+            {{ section.settings.image | img_url: '1244x' }} 1244w,
+            {{ section.settings.image | img_url: '1494x' }} 1494w,
+            {{ section.settings.image | img_url: '1560x' }} 1560w,
+            {{ section.settings.image | img_url: '1660x' }} 1660w,
+            {{ section.settings.image | img_url: '1901x' }} 1901w,
+            {{ section.settings.image | img_url: '2040x' }} 2040w,
+            {{ section.settings.image | img_url: '2155x' }} 2155w,
+            {{ section.settings.image | img_url: '2160x' }} 2160w,
+            {{ section.settings.image | img_url: '3840x' }} 3840w" 
+          src="{{ section.settings.image | img_url: '2160x' }}"
+          alt="{{ section.settings.image.alt }}">
+      </picture>
+    </figure>
+  </div>
+  
+  <div class="hero-text-{{ section.settings.text_color }} {% if section.settings.block_alignment_in_mob == 'bottom' %}d-flex{% endif %} d-sm-block container-topic gx-6 gx-sm-5 font-change">
+    <div class="d-flex justify-content-end align-items-end flex-column flex-sm-row">
+      <div class="mw-text position-relative">
+        {% if section.settings.heading != blank %}
+        <h2 class="mb-5 font-size-lg font-55">{{ section.settings.heading }}</h2>
+        <div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small">
+        {% endif %}
+
+        {{ section.settings.lead_graph | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+
+        {% if section.settings.heading != blank %}
+        </div></div></div></div>
+        {% endif %}
+        
+        <div class="d-sm-flex flex-wrap mt-3">
+        {% if section.settings.enable_this_newsletter_form %}
+        {% render 'product-sign-up', color: section.settings.text_color, place: 'homepage' %}
+        {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

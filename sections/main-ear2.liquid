@@ -1,0 +1,462 @@
+{% capture estimated_delivery_time %}{%- render 'delivery-time' -%}{% endcapture %}
+{% capture current_delivery_time %}{%- render 'current-delivery-time' -%}{% endcapture %}
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign selected_variant = product.selected_variant
+
+  assign current_available = current_variant.available
+  	
+  if product.has_only_default_variant	
+    assign hide_purchase_and_notify = product.metafields.my_fields.hide_purchase_and_notify	
+  else	
+    assign hide_purchase_and_notify = current_variant.metafields.my_fields.hide_purchase_and_notify	
+  endif
+
+  assign current_shipping_info = null	
+
+  assign delivery_text = null
+  assign delivery_data = selected_variant.metafields.my_fields.delivery_time.value
+  unless hide_purchase_and_notify
+    if current_available
+      if delivery_data != blank
+        if selected_variant.inventory_quantity <= delivery_data.last.quantity
+          assign current_available = false
+        endif
+      endif
+      for delivery_policy in delivery_data
+          if selected_variant.inventory_quantity > delivery_policy.quantity
+            assign delivery_text = delivery_policy.text
+            break
+          endif
+      endfor
+    endif
+  endunless
+
+  unless hide_purchase_and_notify	
+    if current_available	
+      assign current_shipping_info = current_variant.metafields.my_fields.shipping_info	
+      unless current_shipping_info
+        assign current_shipping_info = section.settings.shipping_text | replace: '<p', '<p class="mb-0"' | replace: '$current_delivery_time$', current_delivery_time | replace: '$delivery_time$', estimated_delivery_time
+      endunless
+    endif
+  endunless
+  if hide_purchase_and_notify	
+    assign resellers_blocks = section.blocks | where: 'type', 'resellers'
+    assign has_resellers_blocks = false
+    for temp in resellers_blocks
+      assign has_resellers_blocks = true
+    endfor
+  endif
+
+  assign rotate360_blocks = section.blocks | where: 'type', 'rotate360'
+  assign has_rotate360_blocks = false
+  for temp in rotate360_blocks
+    assign has_rotate360_blocks = true
+  endfor
+
+  assign quick_link_blocks = section.blocks | where: 'type', 'quick_link'
+  assign has_quick_link_blocks = false
+  for temp in quick_link_blocks
+    assign has_quick_link_blocks = true
+  endfor
+
+  assign dot_holder_blocks = section.blocks | where: 'type', 'dot_holder'
+-%}
+
+{% comment %} 在购买页中以变体图片为节点，将产品图分组，形如 A1 $$ B1;;B2;;B3 $$ C1;;C2 {% endcomment %}
+{%- capture image_list -%}
+  {%- for product_image in product.images -%}
+    {%- if product_image.variants.first.id != blank -%}
+      {%- comment -%} If product image is attached to a variant, image.attached_to_variant not working! {%- endcomment -%}
+      {%- unless forloop.first -%}$${%- endunless -%}
+      {{ product_image.id }}::{{ product_image.position }}||{{ product_image.alt }}
+    {%- else -%}
+      {%- unless forloop.first -%};;{%- endunless -%}{{ product_image.position }}||{{ product_image.alt }}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+<script>
+  window.p_img = new Array()
+  window.p_img['dark'] = ["//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1001.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1002.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1003.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1004.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1005.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1006.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1007.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1008.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1009.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1010.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1011.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1012.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1013.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1014.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1015.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1016.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1017.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1018.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1019.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1020.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1021.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1022.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1023.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1024.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1025.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1026.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1027.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1028.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1029.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1030.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1031.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1032.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1033.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1034.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1035.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1036.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1037.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1038.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1039.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1040.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1041.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1042.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1043.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1044.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1045.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1046.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1047.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1048.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1049.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1050.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1051.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1052.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1053.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1054.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1055.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1056.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1057.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1058.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1059.png?v=1678873539", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1060.png?v=1678873539"].reverse()
+  window.p_img['white'] = ["//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1060.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1059.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1058.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1057.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1056.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1055.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1054.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1053.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1052.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1051.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1050.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1049.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1048.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1047.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1046.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1045.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1044.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1043.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1042.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1041.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1040.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1039.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1038.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1037.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1036.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1035.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1034.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1033.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1032.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1031.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1030.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1029.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1028.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1027.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1026.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1025.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1024.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1023.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1022.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1021.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1020.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1019.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1018.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1017.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1016.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1015.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1014.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1013.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1012.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1011.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1010.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1009.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1008.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1007.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1006.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1005.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1004.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1003.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1002.png?v=1679127072", "//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_060_230208.1001.png?v=1679127072"]
+</script>
+<div id="{{ section.settings.id_for_hash }}">
+  <div class="product-wrap as-product-rotate as-ear2 as-location-target main-product-ear2" data-color="dark">
+    <div class="modal fade as-rotate-modal" id="rotate-modal">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content text-dark" style="background-color: #efefef;">
+          <a data-bs-dismiss="modal" aria-label="Close" href="javascript:void(0);" class="text-reset position-absolute top-0 end-0 me-4 mt-4 z-index-1 font-ndot55">{{ 'cart.general.close' | t }}</a>
+          <div class="ratio product-media-img">
+            <img data-name="{% for block in rotate360_blocks %}{{ block.settings.bud_text }}{% endfor %}" loading="lazy" class="main-img w-100 h-100 as-img-mob object-fit-contain cursor-grab"
+                src="//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1001.png?v=1678873539" width="" height=""
+            alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-0">
+      <div class="col media-content">
+        <div class="container-fits-viewport sticky-top d-flex" style="background-color: #efefef;">
+          <div class="position-lg-absolute h-100 w-100">
+            <div class="position-relative w-100 h-100 overflow-hidden">
+              {%- if section.settings.title != blank -%}
+                <div class="position-absolute z-index-1 d-none d-lg-block font-size-calc">
+                  {% render 'product-special-title', title: section.settings.title, color: dark %}
+                </div>
+              {%- endif -%}
+              <div class="ratio product-media-img">
+                <img data-name="{% for block in rotate360_blocks %}{{ block.settings.bud_text }}{% endfor %}" loading="lazy" class="main-img w-100 h-100 as-img object-fit-contain cursor-grab"
+                    src="//cdn.shopifycdn.net/s/files/1/0692/5988/6904/files/ELEV_AZU_070_230201.1001.png?v=1678873539" width="" height=""
+                  alt="">
+              </div>
+              <div class="text-center position-absolute z-index-1 rotate-icon d-none d-lg-block">
+                {% for block in rotate360_blocks %}
+                <div class="pb-4 cursor-grab text-dark">
+                  <span class="font-ndot55 p-2"><</span><span>{{ block.settings.spin_text }}</span><span class="font-ndot55 p-2">></span>
+                </div>
+                <div class="px-4 btn btn-lg{% unless has_rotate360_blocks and block.settings.show_case_rotate %} d-none{% endunless %}" style="background-color: rgba({{ block.settings.button_color }}, {{ block.settings.button_opacity }})">
+                  <span class="as-spin-option dot-border-dark border-bottom" data-name="{{ block.settings.bud_text }}" data-value="dark">{{ block.settings.bud_text }}</span>
+                  <span class="dot-border-dark border-end">&nbsp;</span>&nbsp;
+                  <span class="as-spin-option dot-border-dark" data-name="{{ block.settings.case_text }}" data-value="white">{{ block.settings.case_text }}</span>
+                </div>
+                {% endfor %}
+              </div>
+              <div class="text-center position-absolute z-index-1 rotate-icon d-block d-lg-none">
+                {% for block in rotate360_blocks %}
+                <div class="pb-4 cursor-grab text-dark{% unless has_rotate360_blocks and block.settings.show_case_rotate %} opacity-0{% endunless %}" data-bs-toggle="modal" data-bs-target="#rotate-modal">
+                  <span class="font-ndot55 p-2"><</span><span>{{ block.settings.spin_text }}</span><span class="font-ndot55 p-2">></span>
+                </div>
+                <div class="px-4 btn btn-lg{% unless has_rotate360_blocks and block.settings.show_case_rotate %} d-none{% endunless %}" style="background-color: rgba({{ block.settings.button_color }}, {{ block.settings.button_opacity }})">
+                  <a class="as-spin-option text-dark dot-border-dark border-bottom" data-name="{{ block.settings.bud_text }}" data-value="dark" style="outline: 0;" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#rotate-modal">{{ block.settings.bud_text }}</a>
+                  <span class="dot-border-dark border-end">&nbsp;</span>&nbsp;
+                  <a class="as-spin-option text-dark dot-border-dark" data-name="{{ block.settings.case_text }}" data-value="white" style="outline: 0;" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#rotate-modal">{{ block.settings.case_text }}</a>
+                </div>
+                {% endfor %}
+              </div>
+              {% if section.settings.badge_image != blank %}
+                {% render 'product-badge-image', image: section.settings.badge_image, badge_position: section.settings.badge_position %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col col-auto purchase-content px-4 pt-1 pt-lg-0 d-flex flex-column justify-content-end">
+        {% render 'ear2-purchased',
+          heading: section.settings.heading,
+          current_shipping_info: current_shipping_info,
+          delivery_text: delivery_text,
+          current_variant: current_variant,
+          current_available: current_available,
+          selected_variant: selected_variant,
+          estimated_delivery_time: estimated_delivery_time,
+          current_delivery_time: current_delivery_time,
+          has_resellers_blocks: has_resellers_blocks,
+          hide_purchase_and_notify: hide_purchase_and_notify,
+          dot_holder_blocks: dot_holder_blocks
+        %}
+      </div>
+    </div>
+  </div>
+  <div class="as-fixed-bar as-sticky-bar sticky-bar position-fixed bg-white w-100 py-3 py-lg-0">
+    <div class="row h-100 g-0 bar-content py-0 py-lg-1">
+      <div class="col d-lg-flex align-items-center justify-content-end px-4">
+        <div class="d-lg-block d-none">
+          {% for block in quick_link_blocks %}
+          <a data-id="fl_tab_click" data-sectionName="{{ forloop.index }}" class="as-customer-select-list text-start text-dark px-2" href="{{ block.settings.link }}">{{ block.settings.link_text }}</a>
+          {% endfor %}
+        </div>
+        <div class="position-relative customer-select w-100 as-customer-select d-lg-none d-block z-index-2">
+          <ol class="list-unstyled w-100 customer-select-lists overflow-hidden mb-0">
+            {% for block in quick_link_blocks %}
+            <li class="py-1">
+              <a data-id="fl_tab_click" data-sectionName="{{ forloop.index }}" class="as-customer-select-list btn px-0 cursor-pointer d-flex justify-content-between {% if forloop.first %}active{% endif %}" href="{{ block.settings.link }}">{{ block.settings.link_text }}</a>
+            </li>
+            {% endfor %}
+          </ol>
+          <div class="btn px-0 cursor-pointer d-flex justify-content-between align-items-center">
+            <span class="as-customer-selected">{% for block in quick_link_blocks %}{% if forloop.first %}{{ block.settings.link_text }}{% endif %}{% endfor %}</span>
+            <div class="end-0 pe-4 position-absolute">
+              <div class="customer-select-arrow flex-center" >
+                {% render 'select-arrow' %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col col-lg-auto w-lg-fixed align-self-end align-self-lg-center px-4 as-sticky-bar {% if hide_purchase_and_notify %}{% unless has_resellers_blocks %}d-none{% endunless %}{% else %}{% unless current_available %}d-none{% endunless %}{% endif %}">
+        
+        {% for block in resellers_blocks %}
+        <div class="">
+          <a class="btn btn-primary" href="{{ block.settings.button_link }}">{{ block.settings.button_label }}</a>
+        </div>
+        {% endfor %}
+        <div class="as-product-form-wrap{% if hide_purchase_and_notify %} d-none{% endif %}{% unless current_available %} d-none{% endunless %}">
+          <div class="">
+            <product-form class="product-form">
+              {% liquid
+                            assign productFormClass = 'form'
+                            assign productFormClass = productFormClass | append: ' as-async-add-form'
+                            %}
+              {%- form 'product', product, id: product_form_id, class: productFormClass, novalidate:
+                    'novalidate', data-type: 'add-to-cart-form' -%}
+                <input class="as-form-quantity" type="hidden" name="id" value="{{ current_variant.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <input type="hidden" name="accessories" value="">
+                <div class="d-grid as-form-button-wrap">
+                  {% render 'add-error-message' %}
+                  <button name="add" type="submit" class="btn btn-primary">
+                    {{ "products.general.add_to_cart" | t }}
+                  </button>
+                </div>
+              {%- endform -%}
+            </product-form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/hogan" class="as-variant-price-template">
+  @{#data}@
+    {% assign target_price = '@{price}@' %}
+    <div class="d-inline">{{ 'products.product.price.from_price_html' | t: price: target_price }}</div>
+  @{/data}@
+</script>
+
+{% schema %}
+{
+  "name": "ear-2 main-product",
+  "class": "as-ear2-purchase-area main-product main-product-phone1 b-version",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Dot title"
+    },{
+      "type": "image_picker",
+      "id": "badge_image",
+      "label": "Badge image",
+      "info": "PNG"
+    },
+    {
+      "type":      "select",
+      "id":        "badge_position",
+      "label":     "Pin the mob badege on",
+      "options": [
+        {
+          "value": "left:0;bottom:0;",
+          "label": "LeftBottom"
+        },
+        {
+          "value": "left:0;top:0;",
+          "label": "LeftTop"
+        },
+        {
+          "value": "right:0;bottom:0;",
+          "label": "RightBottom"
+        },
+        {
+          "value": "right:0;top:0;",
+          "label": "RightTop"
+        }
+      ],
+      "default": "right:0;bottom:0;"
+    },
+    {
+      "type": "text",
+      "id": "pages",
+      "label": "Left subtitle"
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Right subtitle"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "lead_paragraph",
+      "label": "Lead paragraph"
+    },
+    {
+      "type": "text",
+      "id": "id_for_hash",
+      "label": "ID for hash",
+      "default": "ear-2"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Badge"
+    },
+    {
+      "type": "richtext",
+      "id": "store_locator_text",
+      "label": "Store locator text",
+      "default": "<p>Want to collect it at a store? Find a store</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_text",
+      "label": "Shipping text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variant_box",
+      "label": "Show variant box",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show Price",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "discount_info",
+      "label": "Discount info"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Resellers",
+      "type": "resellers",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        }, 
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button linnk"
+        }
+      ]
+    },
+    {
+      "name": "360 rotate",
+      "type": "rotate360",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_case_rotate",
+          "label": "Show case rotate",
+          "default": true
+        }, 
+        {
+          "type": "text",
+          "id": "spin_text",
+          "label": "Spin text",
+          "default": "Spin: 360"
+        },
+        {
+          "type": "text",
+          "id": "bud_text",
+          "label": "Bud text",
+          "default": "Bud"
+        },
+        {
+          "type": "text",
+          "id": "case_text",
+          "label": "Case text",
+          "default": "Case"
+        },
+        {
+          "type": "select",
+          "id": "button_color",
+          "label": "Button color",
+          "options": [
+            {
+              "value": "255, 255, 255",
+              "label": "Light"
+            },
+            {
+              "value": "0, 0, 0",
+              "label": "Dark"
+            }
+          ],
+          "default": "255, 255, 255"
+        },
+        {
+          "type": "select",
+          "id": "button_opacity",
+          "label": "Button opacity",
+          "options": [
+            {
+              "value": "0",
+              "label": "0"
+            },
+            {
+              "value": ".25",
+              "label": "25%"
+            },
+            {
+              "value": ".5",
+              "label": "50%"
+            },
+            {
+              "value": ".75",
+              "label": "75%"
+            },
+            {
+              "value": "1",
+              "label": "100%"
+            }
+          ],
+          "default": "0"
+        }
+      ]
+    },
+    {
+      "name": "Dot holder",
+      "type": "dot_holder",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "dot_image",
+          "label": "image"
+        },
+        {
+          "type": "richtext",
+          "id": "dot_text",
+          "label": "text",
+          "default": "<p>Special thank you for black dot holders, Learn more</p>"
+        }
+      ]
+    },
+    {
+      "name": "Quick link",
+      "type": "quick_link",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Please use it to add anchors."
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text"
+        }, 
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

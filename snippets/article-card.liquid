@@ -1,0 +1,21 @@
+
+<div class="card bg-transparent border-0">
+  
+  {% render 'single-and-small-picture', img: article.image %}
+
+  <div class="card-body text-dark p-0 row">
+    <div class="col-md-7">
+      <p class="my-2 fs-base font-ndot55">{{ article.published_at | time_tag: format: 'month_day_year' }}</p>
+      <h4 class="card-title mb-0 fs-h2">{{ article.title | escape }}</h4>
+      <p class="np-4 px-0 mb-0 card-text fs-base richtext">
+        {% if article.excerpt.size > 0 %}
+          {{ article.excerpt }}
+        {% else %}
+          {{ article.content | strip_html | truncate: 90 }}
+        {% endif %}
+      </p>
+      <span class="text-primary">({{ 'blogs.show_more' | t }})</span>
+    </div>
+  </div>
+  <a href="{{ article.url }}" class="stretched-link"></a>
+</div>

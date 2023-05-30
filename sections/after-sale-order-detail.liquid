@@ -1,0 +1,218 @@
+<div class="container-core">
+  
+  <div class="tpl-track-list-wrap">
+    
+  </div>
+</div>
+<div id="as-track-info" class="fade modal" 
+  tabindex="-1" 
+  role="dialog"
+  data-keyboard="false"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-light p-4 rounded-3">
+      <div class="modal-header position-relative">
+        <h5 class="modal-title fs-h2 text-center w-100" id="exampleModalLabel">{{ 'service_portal.track.modal.title' | t }}</h5>
+        <button type="button" class="btn-close end-0 position-absolute top-0 border-0" data-bs-dismiss="modal" aria-label="Close">
+          <!-- {% render 'icon-close' %} -->
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="as-track-update-delivery-info-form" method="post" autocomplete="false" novalidate="true" action="{{ settings.updateDeliveryInfo }}">
+          <input type="hidden" name="workOrderNo" class="as-hidden-input-workOrderNo as-form-input" />
+          <div>
+            <div class="form-floating overflow-hidden rounded-pill">
+              <input type="text" name="deliveryCarrierName" class="form-control border-0 as-form-input" 
+                required id="deliveryCarrierName" placeholder="{{ 'service_portal.track.modal.shipping_carrier' | t }}">
+              <label for="deliveryCarrierName">{{ 'service_portal.track.modal.shipping_carrier' | t }}</label>
+            </div>
+            <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+              {{ 'service_portal.track.modal.shipping_carrier' | t }} {{ 'general.error_message.format_error' | t }}
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="form-floating overflow-hidden rounded-pill">
+              <input type="text" name="deliveryNo" class="form-control border-0 as-form-input" 
+                required id="deliveryNo" placeholder="{{ 'service_portal.track.modal.track_number' | t }}">
+              <label for="deliveryNo">{{ 'service_portal.track.modal.track_number' | t }}</label>
+            </div>
+            <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+              {{ 'service_portal.track.modal.track_number' | t }} {{ 'general.error_message.format_error' | t }}
+            </div>
+          </div>
+          <div class="mt-6">
+            <div class="text-start mt-3 px-4 text-danger invalid-feedback as-form-error-tips">
+              {{ 'service_portal.error.other_error' | t }}
+            </div>
+            <button class="as-next-step btn btn-lg btn-primary mt-3 w-100 as-btn" type="submit">{{ 'service_portal.track.modal.submit' | t }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/hogan" id="tpl-track-list">
+  <ol class="d-flex flex-column flex-md-row list-unstyled mb-7 mb-sm-9 pt-1 text-muted">
+    <li class="d-flex @{#created}@text-dark@{/created}@">{{ 'service_portal.track.created' | t }}
+      <span class="mx-4 d-none d-md-block">{% render 'icon-dot-right' %}</span>
+    </li>
+    <li class="d-flex @{#inProgress}@text-dark@{/inProgress}@">{{ 'service_portal.track.in_progress' | t }}
+      <span class="mx-4 d-none d-md-block">{% render 'icon-dot-right' %}</span>
+    </li>
+    <li class="d-flex @{#isCancel}@text-dark@{/isCancel}@">
+      @{#cancel}@
+        {{ 'service_portal.track.cancel' | t }}
+      @{/cancel}@
+      @{^cancel}@
+        {{ 'service_portal.track.completed' | t }}
+      @{/cancel}@
+    </li>
+  </ol>
+  <div class="mb-7 mb-sm-9">
+    <h3 class="fs-h2">{{ 'service_portal.track.basic_information' | t }}</h3>
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+      <div class="mt-4 mt-md-5">
+        <ol class="mb-0 list-unstyled">
+          <li>{{ 'service_portal.track.ticket_number' | t }}: @{ data.workOrderNumber }@</li>
+          <li>{{ 'service_portal.track.service_type' | t }}:  @{ data.type }@</li>
+          <li>{{ 'service_portal.track.product' | t }}:  @{ data.modelName }@</li>
+          <li>{{ 'service_portal.track.SN_IMEI' | t }}:  @{ data.SN_IMEI }@</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  
+  @{#data.inspectionNote}@
+  <div class="mb-7 mb-sm-9">
+    <h3 class="fs-h2">{{ 'service_portal.track.assessment_results' | t }}</h3>
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+      <div class="mt-4 mt-md-5">
+        @{ data.inspectionNote }@
+      </div>
+    </div>
+  </div>
+  
+  @{/data.inspectionNote}@
+  @{#has_pick_up_tracking}@
+    @{#nolyModal}@
+      <div class="mb-7 mb-sm-9">
+        <h3 class="fs-h2">{{ 'service_portal.track.pick_up_tracking' | t }}</h3>
+        <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+          <div class="gx-0 mt-4 mt-md-5 row row-cols-lg-3 row-cols-sm-2">
+            <div class="as-track-modal-btn">
+              <button class="btn btn-primary">{{ 'service_portal.track.enter_your_tracking_information' | t }}</button>
+            </div>
+            <ol class="mb-0 list-unstyled as-track-update-ol d-none">
+              <li>{{ 'service_portal.track.shipping_carrier' | t }}: <span class="as-track-shipping_carrier"></span></li>
+              <li>{{ 'service_portal.track.shipping_number' | t }}: <span class="as-track-shipping_number"></span></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    @{/nolyModal}@
+
+    @{#nolyPickup}@
+    <div class="mb-7 mb-sm-9">
+      <h3 class="fs-h2">{{ 'service_portal.track.pick_up_tracking' | t }}</h3>
+      <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+        <div class="col mt-4">
+          <ol class="mb-0 list-unstyled">
+            @{#data.pickUpDate}@
+              <li class="mb-3">{{ 'service_portal.track.pick_up_drop_off' | t }}: @{ data.pickUpDate }@  @{ data.pickUpTime }@</li>
+            @{/data.pickUpDate}@
+          </ol>
+        </div>
+      </div>
+    </div>
+    @{/nolyPickup}@
+
+    @{#pick_up_tracking}@
+    <div class="mb-7 mb-sm-9">
+      <h3 class="fs-h2">{{ 'service_portal.track.pick_up_tracking' | t }}</h3>
+      <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+        <div class="col mt-4">
+          <ol class="mb-0 list-unstyled">
+            @{#data.pickUpDate}@
+              <li class="mb-3">{{ 'service_portal.track.pick_up_drop_off' | t }}: @{ data.pickUpDate }@  @{ data.pickUpTime }@</li>
+            @{/data.pickUpDate}@
+            @{#pick_up_tracking_deliveryCompany}@
+            <li>{{ 'service_portal.track.shipping_carrier' | t }}: @{ pick_up_tracking_deliveryCompany }@</li>
+            @{/pick_up_tracking_deliveryCompany}@
+            @{#pick_up_tracking_deliveryNO}@
+            <li class="mb-3">{{ 'service_portal.track.shipping_number' | t }}: @{ pick_up_tracking_deliveryNO }@</li>
+            @{/pick_up_tracking_deliveryNO}@
+
+            @{#self_tracking_deliveryCompany}@
+            <li>{{ 'service_portal.track.shipping_carrier' | t }}: @{ self_tracking_deliveryCompany }@</li>
+            @{/self_tracking_deliveryCompany}@
+            @{#self_tracking_deliveryNO}@
+            <li>{{ 'service_portal.track.shipping_number' | t }}: @{ self_tracking_deliveryNO }@</li>
+            @{/self_tracking_deliveryNO}@
+          </ol>
+        </div>
+      </div>
+    </div>
+    @{/pick_up_tracking}@
+  @{/has_pick_up_tracking}@
+
+  @{#dispatch_tracking}@
+    <div class="mb-7 mb-sm-9">
+      <h3 class="fs-h2">{{ 'service_portal.track.dispatch_tracking' | t }}</h3>
+      <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+        <div class="col mt-4">
+          <ol class="mb-0 list-unstyled">
+            @{#dispatch_tracking_deliveryCompany}@
+            <li>{{ 'service_portal.track.shipping_carrier' | t }}: @{ dispatch_tracking_deliveryCompany }@</li>
+            @{/dispatch_tracking_deliveryCompany}@
+            @{#dispatch_tracking_deliveryNO}@
+            <li>{{ 'service_portal.track.shipping_number' | t }}: @{ dispatch_tracking_deliveryNO }@</li>
+            @{/dispatch_tracking_deliveryNO}@
+          </ol>
+        </div>
+      </div>
+    </div>
+  @{/dispatch_tracking}@
+
+  @{#quoteEntityList}@
+  <div class="mb-7 mb-sm-9">
+    <h3 class="fs-h2">{{ 'service_portal.track.repair_price' | t }}</h3>
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+      <div class="mt-4 mt-md-5">
+        <p class="mb-0">{{ 'service_portal.track.repair_price_description' | t }}</p>
+        <div class="mt-4 mt-md-5 container-core">
+          <div class="border-bottom dot-border-dark row row-cols-4">
+            <div class="border-end dot-border-dark py-3 py-sm-4">{{ 'service_portal.track.repair_price_Name' | t }}</div>
+            <div class="border-end dot-border-dark py-3 py-sm-4">{{ 'service_portal.track.repair_price_Price' | t }}</div>
+            <div class="border-end dot-border-dark py-3 py-sm-4">{{ 'service_portal.track.repair_price_Quantity' | t }}</div>
+            <div class="py-3 py-sm-4">{{ 'service_portal.track.repair_price_sum' | t }}</div>
+          </div>
+          @{#quoteItemEntityList}@
+            <div class="border-bottom dot-border-dark row row-cols-4">
+              <div class="border-end dot-border-dark py-3 py-sm-4">@{materialCode}@</div>
+              <div class="border-end dot-border-dark py-3 py-sm-4">@{price}@</div>
+              <div class="border-end dot-border-dark py-3 py-sm-4">@{quantity}@</div>
+              <div class="py-3 py-sm-4">@{totalPrice}@</div>
+            </div>
+          @{/quoteItemEntityList}@
+        </div>
+        <div class="d-flex mt-4 justify-content-between">
+          <span>{{ 'service_portal.track.total' | t }}:</span>
+          <div>
+            <span class="text-decoration-line-through">@{quoteEntityList.totalPrice}@</span>
+            <span>@{quoteEntityList.finalizePrice}@</span>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  @{/quoteEntityList}@
+</script>
+
+{% schema %}
+{
+  "name": "After sale track detail",
+  "tag": "section",
+  "class": "mt-n5 mt-sm-n7 as-track-detail"
+}
+{% endschema %}

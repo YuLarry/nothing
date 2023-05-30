@@ -1,0 +1,194 @@
+{% liquid
+  assign image_blocks = section.blocks | where: 'type', 'image'
+  if image_blocks.size > 0
+    assign mobile_first_ratio = image_blocks[0].settings.mobile_image.aspect_ratio
+    assign desktop_first_ratio = image_blocks[0].settings.desktop_image.aspect_ratio
+  endif
+%}
+{% style %}
+  @media screen and (max-width: 576px) {
+    .image-placeholder-{{ section.id }} {
+      --bs-aspect-ratio: {{ 1 | divided_by: mobile_first_ratio | times: 100 }}%;
+    }
+  }
+  @media screen and (min-width: 578px ) and (max-width: 1023px) {
+    .image-placeholder-{{ section.id }} {
+      --bs-aspect-ratio: {{ 1 | divided_by: desktop_first_ratio | times: 100 }}%;
+    }
+  }
+  @media screen and (min-width: 1024px) {
+    .image-placeholder-{{ section.id }} figure {
+      position: relative;
+    }
+  }
+  .carousel-inner * {
+    height: 100%;
+  }
+{% endstyle %}
+
+<image-carousel class="container-fits-viewport responsive row g-0">
+  <div class="col-lg position-relative overflow-hidden">
+    {% if section.settings.title != blank %}
+    <div class="position-absolute font-size-calc d-none d-lg-block" style="z-index: 2;">
+      {% render 'product-special-title', title: section.settings.title, color: section.settings.left_text_color %}
+    </div>
+    {% endif %}
+    
+    {% if image_blocks.size > 0 %}
+      <div id="image-carousel-{{ section.id }}" class="{% if image_blocks.size > 1 %}as-image-carousel{% endif %} carousel slide position-lg-absolute w-100 h-100" data-bs-ride="carousel">
+        <div class="as-carousel-slides carousel-inner w-100 h-100">
+          {% for block in image_blocks %}
+            <div class="as-carousel-slide carousel-item w-100 h-100 {% if forloop.first %}active{% endif %}">
+              <div class="ratio image-placeholder-{{section.id}} w-100 h-100">
+                <figure class="w-100 h-100 mb-0">
+                  <picture>
+                    <source media="(max-width: 576px)" 
+                      sizes="(max-width: 576px) 100vw, 576px" 
+                      srcset="
+                        {{ block.settings.mobile_image | img_url: 'master' }}" >
+                    <img loading="lazy" class="w-100 h-100 object-fit-cover"
+                      sizes="(max-width: 2160px) 100vw, 2160px"
+                      srcset="
+                        {{ block.settings.desktop_image | img_url: '600x' }} 600w,
+                        {{ block.settings.desktop_image | img_url: '857x' }} 857w,
+                        {{ block.settings.desktop_image | img_url: '1069x' }} 1069w,
+                        {{ block.settings.desktop_image | img_url: '1244x' }} 1244w,
+                        {{ block.settings.desktop_image | img_url: '1494x' }} 1494w,
+                        {{ block.settings.desktop_image | img_url: '1560x' }} 1560w,
+                        {{ block.settings.desktop_image | img_url: '1660x' }} 1660w,
+                        {{ block.settings.desktop_image | img_url: '1901x' }} 1901w,
+                        {{ block.settings.desktop_image | img_url: '2040x' }} 2040w,
+                        {{ block.settings.desktop_image | img_url: '2155x' }} 2155w,
+                        {{ block.settings.desktop_image | img_url: '2160x' }} 2160w,
+                        {{ block.settings.desktop_image | img_url: '3840x' }} 3840w" 
+                      src="{{ block.settings.desktop_image | img_url: '2160x' }}"
+                      alt="{{ block.settings.desktop_image.alt }}">
+                  </picture>
+                </figure>
+              </div>
+            </div> 
+          {% endfor %}
+        </div>
+        {% if image_blocks.size > 1 %}
+        <div class="carousel-caption justify-content-center start-0 end-0 px-4 pb-lg-7 d-flex align-items-center bottom-0 text-{{section.settings.left_text_color}}" style="z-index: 2;">
+          <button class="as-carousel-prev carousel-control-prev font-ndot55 opacity-show" type="button" data-bs-target="#image-carousel-{{ section.id }}" data-bs-slide="prev">
+            <
+          </button>
+          {% assign index_html = '<span class="as-current-index">1</span>' %}
+          <div>{{ section.settings.image_number_text | replace: '$index$', index_html | replace: '$total$', image_blocks.size }}</div>
+          <button class="as-carousel-next carousel-control-next font-ndot55 opacity-show" type="button" data-bs-target="#image-carousel-{{ section.id }}" data-bs-slide="next">
+            >
+          </button>
+        </div>
+        {% if section.settings.image_link != blank %}
+          <a class="stretched-link" {% render 'link', link: section.settings.image_link %} href="{{ section.settings.image_link }}"></a>
+        {% endif %}
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="col-lg-auto w-lg-fixed px-4 position-relative">
+    <div class="container-fits-viewport responsive row">
+      <div class="col align-self-end pt-1 pb-6 pb-lg-7">
+        <div class="row gx-2">
+          <div class="col-4 col-md-6 col-lg-4">{{ section.settings.pages }}</div>
+          <div class="col-8 col-md-6 col-lg-8">{{ section.settings.subline }}</div>
+        </div>
+        {% if section.settings.heading != blank %}
+          <h2 class="as-section-name pt-1 pt-lg-0 mb-5 mt-5 mt-lg-6 pb-1 fs-h1 break-word">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {{ section.settings.lead_paragraph | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+      </div>
+    </div>
+  </div>
+</image-carousel>
+
+{% schema %}
+{
+  "name": "Image carousel",
+  "tag": "section",
+  "class": "image-carousel position-relative overflow-hidden bg-light",
+  "settings": [
+    {
+      "type": "select",
+      "id": "left_text_color",
+      "label": "Text color",
+      "options": [
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "white",
+          "label": "Light"
+        }
+      ],
+      "default":   "white"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "pages",
+      "label": "pages"
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Subline"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "lead_paragraph",
+      "label": "Lead paragraph"
+    },
+    {
+      "type": "url",
+      "id": "image_link",
+      "label": "Image link"
+    },
+    {
+      "type": "text",
+      "id": "image_number_text",
+      "label": "Image number text",
+      "default": "Image $index$ of $total$"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Image",
+      "type": "image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Desktop image",
+          "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile image",
+          "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image carousel",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

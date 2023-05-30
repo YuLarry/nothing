@@ -1,0 +1,100 @@
+
+<section class="as-login-template-wrap">
+  <h2 class="fs-h2 mb-0 text-uppercase">{{ 'customer.login.title' | t }}</h2>
+  <form action="{{ settings.api_host }}/auth/login" method="post" class="as-login-form mt-4 mt-md-7" novalidate autocomplete="off">
+    <div class="as-form-input-wrap form-pristine mb-2 mb-md-3">
+      <input type="text" name="email" class="overflow-hidden rounded-pill as-form-input form-control border-0 input-pristine" id="floatingInput" placeholder="{{ 'customer.login.email' | t }}" required
+      data-pristine-required-message="{{ 'customer.login.email' | t }}{{ 'customer.error.empty_error' | t }}">
+      <label for="floatingInput" class="d-none">{{ 'customer.login.email' | t }}</label>
+    </div>
+    <div class="form-pristine as-pwd-wrap position-relative">
+      <input type="password" name="password" class="overflow-hidden rounded-pill form-control border-0 input-pristine as-pwd-input pe-6" id="floatingPassword" placeholder="{{ 'customer.login.password' | t }}" required
+      data-pristine-required-message="{{ 'customer.login.password' | t }} {{ 'customer.error.empty_error' | t }}">
+      <div class="d-flex align-items-center as-visible-control visible-control content-invisible">
+        <div class="icon-eye-off">
+          {% render 'icon-eye-off' %}
+        </div>
+        <div class="icon-eye">
+          {% render 'icon-eye' %}
+        </div>
+      </div>
+      <label for="floatingPassword" class="d-none">{{ 'customer.login.password' | t }}</label>
+    </div>
+    <div class="mt-2 mt-md-3">
+      <p class="mb-0 richtext">
+        {{ 'customer.login.forgot_password_html' | t }}
+        <a class="cursor-pointer as-toggle-forgot dot-border-primary border-bottom font-weight-bold">{{ 'customer.login.click_here' | t }}</a>
+      </p>
+    </div>
+    <input type="hidden" name="source" value="store" class="as-source-param">
+    <input type="hidden" name="return_to" value="{{ request.origin | append: '/pages/redirect' }}" class="as-update-redirect as-return-to-param">
+    <input type="hidden" name="store" value="{{ shop.permanent_domain | remove: ".myshopify.com" }}" class="as-store-param">
+    <input type="hidden" name="lang" value="{{ settings.store_code }}">
+    <div class="as-form-error text-danger d-none small mt-2"></div>
+    <div class="as-invalid-error d-none">{{ 'customer.error.login_mismatch_error' | t }}</div>
+    <div class="as-other-error d-none">{{ 'customer.error.other_error' | t }}</div>
+    <button type="submit" class="as-submit font-55 btn btn-lg btn-dark mt-3 mt-md-4 text-uppercase text-nowrap">{{ 'customer.login.confirm' | t }}</button>
+    <div class="my-5">Or</div>
+    <div>
+      <div>
+        <a class="btn btn btn-lg font-55 btn-dark as-update-redirect as-update-social text-uppercase as-track-third-party-login" data-type="google" data-link="{{ settings.api_host }}/auth/redirect/google" href="{{ settings.api_host }}/auth/redirect/google?source=store&store={{ shop.permanent_domain | remove: ".myshopify.com" }}&lang={{ settings.store_code }}&return_to={{ request.origin | append: '/pages/redirect' }}">
+          {{ 'customer.login.google' | t }}
+        </a>
+      </div>
+      <div>
+        <a class="btn btn btn-lg font-55 btn-dark mt-2 as-update-redirect as-update-social text-uppercase as-track-third-party-login" data-type="apple" data-link="{{ settings.api_host }}/auth/redirect/apple" href="{{ settings.api_host }}/auth/redirect/apple?source=store&store={{ shop.permanent_domain | remove: ".myshopify.com" }}&lang={{ settings.store_code }}&return_to={{ request.origin | append: '/pages/redirect' }}">
+          {{ 'customer.login.apple' | t }}
+        </a>
+      </div> 
+    </div>
+  </form>
+  <div class="mt-5">
+    <p class="richtext">
+      {{ 'customer.login.privacy_policy_html' | t }}
+      <a class="dot-border-primary border-bottom" target="_blank" rel="noopener" href="/pages/privacy-policy">{{'customer.login.privacy_policy' | t}}</a>
+    </p>
+    <p class="richtext">
+      {{ 'customer.login.have_not_account_html' | t }}
+      <a class="as-update-link dot-border-primary border-bottom" data-link="/account/register" href="/account/register">{{'customer.login.create_one' | t}}</a>
+    </p>       
+  </div>
+</section>
+
+
+<div class="as-forgot-template-wrap d-none">
+  <div class="as-forgot-password">
+    <h2 class="fs-h2 mb-0 text-uppercase">{{ 'customer.recover_password.title' | t }}</h2>
+    <form action="{{ settings.api_host }}/auth/pwd/forget" method="post" class="as-forgot-pwd-form mt-4 mt-md-7" novalidate autocomplete="off">
+      <div class="form-pristine">
+        <input type="text" name="email" class="overflow-hidden rounded-pill border-0 as-user-email form-control input-pristine" id="email" placeholder="email address" required
+        data-pristine-required-message="{{ 'customer.recover_password.email' | t }}{{ 'customer.error.empty_error' | t }}">
+        <label for="email" class="d-none">{{ 'customer.recover_password.email' | t }}</label>
+      </div>
+      <input type="hidden" name="source" value="store" class="as-source-param">
+      <input type="hidden" name="return_to" value="{{ request.origin| append: '/pages/redirect' }}" class="as-return-to-param as-update-redirect">
+      <input type="hidden" name="store" value="{{ shop.permanent_domain | remove: ".myshopify.com" }}" class="as-store-param">
+      <input type="hidden" name="reset_link" value="{{ request.origin | append: '/pages/reset-password' }}" class="as-reset-link-param">
+      <input type="hidden" name="callback" class="as-callback-param" value="{{ request.origin | append: routes.account_login_url }}">
+      <input type="hidden" name="lang" value="{{ settings.store_code }}">
+
+      <div class="as-form-error text-danger d-none small mt-2"></div>
+      <div class="as-not-exist-error d-none">{{ 'customer.error.account_not_exist_error' | t }}</div>
+      <div class="as-invalid-error d-none">{{ 'customer.error.other_error' | t }}</div>
+      <div class="as-frequent-error d-none">{{ 'customer.error.too_many_requests' | t }}</div>
+      <button type="submit" class="as-submit btn btn-lg btn-dark mt-5 font-55 text-uppercase">{{ 'customer.recover_password.submit' | t }}</button>
+    </form>
+    <div class="mt-5 richtext">
+      {{ 'customer.recover_password.log_in_html' | t }}
+      <a href="/account/login" data-link="/account/login" class="as-update-link cursor-pointer btn-link dot-border-primary border-bottom font-weight-bold">{{ 'customer.recover_password.sign_in' | t }}</a>
+    </div>
+  </div>
+  <div class="as-success-page d-none">
+    <h2 class="fs-h2 mb-0 text-uppercase">{{ 'customer.forgot_password_submitted.title' | t }}</h2> 
+    <div class="mt-4 mt-md-7">
+      <p class="mb-0">{{ 'customer.forgot_password_submitted.subtext' | t }} <span class="as-render-email"></span></p>
+    </div>
+    <a href="{{ routes.account_login_url }}" data-link="{{ routes.account_login_url }}" class="font-55 text-uppercase as-update-link cursor-pointer btn btn-lg btn-dark mt-5">{{ 'customer.forgot_password_submitted.back' | t }}</a>
+  </div>
+</div>
+
+

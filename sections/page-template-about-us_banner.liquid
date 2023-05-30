@@ -1,0 +1,76 @@
+<div class="container-fits-viewport section-top pb-5 d-flex">
+  <div class="position-absolute h-100 w-100 top-0 as-location-target" data-color='white'>
+    <figure class="h-100 mb-0 w-100">
+      <picture class="w-100 h-100 d-block">
+        <source media="(max-width: 576px)" 
+          sizes="(max-width: 576px) 100vw, 576px" 
+          srcset="
+            {{ section.settings.imageMob | img_url: 'master' }}" >
+        <img loading="lazy" class="img-fluid w-100 h-100 object-fit-cover"
+          sizes="(max-width: 2160px) 100vw, 2160px"
+          srcset="
+            {{ section.settings.image | img_url: '600x' }} 600w,
+            {{ section.settings.image | img_url: '857x' }} 857w,
+            {{ section.settings.image | img_url: '1069x' }} 1069w,
+            {{ section.settings.image | img_url: '1244x' }} 1244w,
+            {{ section.settings.image | img_url: '1494x' }} 1494w,
+            {{ section.settings.image | img_url: '1560x' }} 1560w,
+            {{ section.settings.image | img_url: '1660x' }} 1660w,
+            {{ section.settings.image | img_url: '1901x' }} 1901w,
+            {{ section.settings.image | img_url: '2040x' }} 2040w,
+            {{ section.settings.image | img_url: '2155x' }} 2155w,
+            {{ section.settings.image | img_url: '2160x' }} 2160w,
+            {{ section.settings.image | img_url: '3840x' }} 3840w" 
+          src="{{ section.settings.image | img_url: '2160x' }}"
+          alt="{{ section.settings.image.alt }}">
+      </picture>
+    </figure>
+  </div>
+  <div class="position-absolute h-100 w-100 top-0" style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);"></div>
+  
+  <div class="container-topic position-relative px-2 font-change">
+    <div class="row px-2 h-100">
+      <div class="col-12 align-self-start d-flex justify-content-center">
+        {% if section.settings.heading != blank %}
+        {% render 'banner-special-title', heading: section.settings.heading  %}
+        {% endif %}
+      </div>
+      <div class="col-sm-8 offset-sm-2 align-self-end fs-h1 text-white pb-3 mb-9 mb-sm-0">
+        {{ section.settings.lead_graph | replace: '<p', '<p class="mb-0 richtext"' | replace: '<a', '<a class="dot-border-white text-white border-bottom"' }}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Image with text overlay",
+  "class": "position-relative overflow-hidden snap-child as-snap-list as-scrollable-banner",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "lead_graph",
+      "label": "Description"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop image",
+      "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+    },
+    {
+      "type": "image_picker",
+      "id": "imageMob",
+      "label": "Mobile image",
+      "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,221 @@
+<script>
+  window.p_img = new Array()
+  window.RESELLERS = new Array()
+  {% for variant in product.variants %}
+    {% assign option = variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' %}
+    {% if option == 'dark' %}window.p_img['{{ option }}'] = ["//cdn.shopify.com/s/files/1/0514/8554/0505/files/D00.png?v=1646036207", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-2.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-3.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-4.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-5.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-6.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-7.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-8.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-9.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-10.png?v=1636082103", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-11.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-12.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-13.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-14.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-15.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-16.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-17.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-18.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-19.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-20.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-21.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-22.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-23.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-24.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-25.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-26.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-27.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-28.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-29.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-30.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-31.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-32.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-33.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-34.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-35.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-36.png?v=1636082527", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-37.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-38.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-39.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-40.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-41.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-42.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-43.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-44.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-45.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-46.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-47.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-48.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-49.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-50.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-51.png?v=1636082103", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-52.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-53.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-54.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-55.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-56.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-57.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-58.png?v=1636082103", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-59.png?v=1636082102", "//cdn.shopify.com/s/files/1/0514/8554/0505/files/D-60.png?v=1636082103"]
+    {% elsif option == 'white' %}window.p_img['{{ option }}'] = ["//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P0.png?v=6776328872058452651", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P1.png?v=10010074098859877942", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P2.png?v=11990504261388298588", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P3.png?v=1293556880867042894", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P4.png?v=6215815206016859258", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P5.png?v=8247018636632922745", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P6.png?v=6528416950010027553", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P7.png?v=1756877377506942028", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P8.png?v=2191190712791816028", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P9.png?v=7957070860879979333", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P10.png?v=11308053803188769868", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P11.png?v=8446497319707308715", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P12.png?v=13427794572523236787", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P13.png?v=5505714068917789234", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P14.png?v=17049498915410212825", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P15.png?v=1539316020243396015", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P16.png?v=8874177590526147165", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P17.png?v=17097491496194686280", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P18.png?v=8704292673404852096", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P19.png?v=13400761181690718601", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P20.png?v=12178588136127437054", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P21.png?v=13682234766456096184", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P22.png?v=16371373142737985598", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P23.png?v=8582090813517531680", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P24.png?v=1402953457559688974", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P25.png?v=7050935086123543548", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P26.png?v=4587190960007834817", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P27.png?v=5808817249104292035", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P28.png?v=5967239861237879045", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P29.png?v=8899224573386958467", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P30.png?v=944004573449301449", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P31.png?v=85705226034998896", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P32.png?v=16579153836213910511", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P33.png?v=15236553912618052801", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P34.png?v=121638221186647279", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P35.png?v=15091651677659347730", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P36.png?v=2964620926325287030", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P37.png?v=4623094826295020713", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P38.png?v=16978938063920333057", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P39.png?v=16161081660390372778", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P40.png?v=17880471772018306586", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P41.png?v=10718286061503895913", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P42.png?v=8847107388571608778", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P43.png?v=17011554032006439729", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P44.png?v=15182190662994137437", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P45.png?v=11397761405872964988", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P46.png?v=16984044122463938147", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P47.png?v=11833381225857079162", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P48.png?v=14681718442650788805", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P49.png?v=11544769717649704017", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P50.png?v=2578955070509610063", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P51.png?v=267852569634406181", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P52.png?v=4402334447987655874", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P53.png?v=1505384290889461462", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P54.png?v=15454163636720050614", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P55.png?v=4398226351100080631", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P56.png?v=1247235686071327329", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P57.png?v=13179406187174706953", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P58.png?v=5680919031616413783", "//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P59.png?v=6113635610567820695"]{% endif %}
+    {% if variant.metafields.my_fields.resellers %}window.RESELLERS['{{ option }}'] = {{ variant.metafields.my_fields.resellers }}{% endif %}
+  {% endfor %}
+</script>
+{% if product.selected_variant %}
+  {%- assign current_variant = product.selected_variant -%}
+{% else %}
+  {%- assign current_variant = product.variants.first -%}
+{% endif %}
+<section class="product-wrap bg-white as-product as-location-target is-{{ current_variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' }}"
+  data-color="{{ current_variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' }}">
+  <div class="position-fixed top-0 start-0 w-100 container-fits-viewport flex-center slidein as-slideout active mt-0 z-index-2" style="transition-delay: 2s;margin-top: 100vh;">
+    <div class="product-with-mask position-absolute bottom-0 w-100 h-25 flex-center">{% render 'icon-chevron-down' %}</div>
+  </div>
+  <div class="position-fixed top-0 start-0 w-100 container-fits-viewport d-flex align-items-end justify-content-center slidein as-slideout active z-index-1" style="transition-delay: 2s;">
+    <div class="position-absolute h-75 fs-h1 text-dark font-ndot55 mt-sm-9 pt-7">{{ product.title }}</div>
+  </div>
+  <div class="container-topic px-0">
+    <div class="container-fits-viewport as-scrollmagic-item row g-0 z-index-1">
+      <div class="position-relative col-12 col-lg px-0">
+        <div class="row g-0 h-100">
+          <div class="col-lg px-0 position-relative">
+            <div class="position-absolute w-100 h-100 d-none d-lg-block bg-dark slidein as-slidein" style="transition-delay: 3s;transform: none;"></div>
+            <div class="mt-n7 mt-sm-0">
+              <div class="icon-360 user-select-none position-absolute w-100 h-100 flex-center slidein as-slidein" style="transition-delay: 3s;">
+                <div class="h-75 d-flex align-items-end">
+                  {% render 'icon-360' %}
+                </div>
+              </div>
+              <img class="scale-img position-absolute object-fit-contain as-img cursor-grab"
+                src="//cdn.shopifycdn.net/s/files/1/0376/5420/0459/files/P0.png?v=6776328872058452651"
+                loading="lazy" alt="">
+            </div>
+          </div>
+          <div class="col-lg-auto w-lg-fixed"></div>
+        </div>
+      </div>
+      <div class="position-absolute end-0 col-12 col-lg-auto w-lg-fixed slidein as-slidein" style="transition-delay: 2.5s;">
+            <div class="section-with-mask container-fits-viewport w-100 px-4 pb-2 pb-sm-0 d-flex align-items-end">
+              <div class="text-dark w-100 pb-2 pb-sm-0">
+                <h1 class="mb-0 fs-h1 font-ndot55">{{ product.title }}</h1>
+                {% if section.settings.lead_graph != blank %}
+                <div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small">
+                  <div class="mt-5">{{ section.settings.lead_graph | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="text-dark text-decoration-underline"' }}</div>
+                </div></div></div></div></div>
+                {% endif %}
+
+                <div class="mt-5 w-100">
+                  <svg width="76" height="33" viewBox="0 0 76 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_2882_11851)">
+                    <path d="M70.3321 7.32812L70.0039 8.01376C73.3239 9.39145 74.7062 11.5647 74.7062 15.2709V17.7288C74.7062 21.2409 73.3239 23.6082 70.0039 24.9859L70.3321 25.6651C74.4853 24.1709 76.0127 21.1892 76.0127 16.4998C76.0127 11.8105 74.4853 8.82224 70.3321 7.32812Z" fill="black"/>
+                    <path d="M12.8815 14.7861C13.4621 14.7861 13.7525 15.1936 13.8408 15.7628L14.472 15.6205C14.4572 15.2099 14.2841 14.822 13.9907 14.5419C13.6973 14.2618 13.3075 14.1124 12.9067 14.1264C11.9157 14.1264 11.1836 15.1289 11.1836 16.5002C11.1836 17.8714 11.9158 18.8675 12.9509 18.8675C13.3403 18.8721 13.7178 18.7296 14.0112 18.4671C14.3046 18.2046 14.4934 17.8406 14.5414 17.4445L13.9481 17.244C13.8219 17.7614 13.5694 18.2142 12.9509 18.2142C12.3323 18.2142 11.8274 17.4962 11.8274 16.4937C11.8274 15.4911 12.2187 14.7861 12.8815 14.7861Z" fill="black"/>
+                    <path d="M17.3829 17.5674L17.73 18.7898H18.3991L17.0547 14.2104H16.2468L14.9023 18.7898H15.5335L15.8744 17.5674H17.3829ZM16.4803 15.627L16.657 14.8379L16.8401 15.627L17.1998 16.9206H16.1205L16.4803 15.627Z" fill="black"/>
+                    <path d="M21.977 15.5038C21.9892 15.3307 21.965 15.1569 21.9058 14.9943C21.8467 14.8317 21.7541 14.684 21.6344 14.5613C21.5147 14.4386 21.3705 14.3437 21.2118 14.2831C21.0531 14.2225 20.8836 14.1977 20.7147 14.2102H19.1367V18.7896H19.7679V16.8491H20.5695L21.4216 18.7896H22.1222L21.207 16.7133C21.4452 16.6234 21.6488 16.4571 21.7875 16.2392C21.9262 16.0214 21.9927 15.7635 21.977 15.5038ZM20.7147 16.1506H19.7805V14.857H20.7147C20.7992 14.8502 20.8843 14.8622 20.9639 14.8923C21.0434 14.9224 21.1157 14.9698 21.1757 15.0313C21.2357 15.0928 21.282 15.1669 21.3114 15.2484C21.3407 15.33 21.3525 15.4171 21.3458 15.5038C21.3544 15.5923 21.3439 15.6817 21.3151 15.7657C21.2863 15.8496 21.2399 15.9261 21.1791 15.9896C21.1183 16.0531 21.0446 16.1022 20.9633 16.1334C20.8819 16.1646 20.7949 16.1771 20.7084 16.17L20.7147 16.1506Z" fill="black"/>
+                    <path d="M25.6322 15.3744C25.6375 15.2128 25.609 15.0518 25.5485 14.9024C25.4881 14.753 25.3971 14.6186 25.2816 14.5082C25.1662 14.3979 25.029 14.3142 24.8794 14.2628C24.7297 14.2114 24.571 14.1934 24.414 14.2102H22.9434V18.7895H24.5213C24.7 18.8 24.8788 18.7715 25.0458 18.7058C25.2129 18.6401 25.3644 18.5387 25.4904 18.4085C25.6163 18.2782 25.7138 18.1219 25.7763 17.9501C25.8389 17.7783 25.865 17.5948 25.8531 17.4119C25.8671 17.17 25.8063 16.9298 25.6794 16.7254C25.5525 16.521 25.3659 16.3629 25.1462 16.2735C25.3017 16.1859 25.4299 16.055 25.5159 15.8959C25.6019 15.7368 25.6422 15.556 25.6322 15.3744ZM23.5872 14.8635H24.414C24.4958 14.8547 24.5784 14.8637 24.6566 14.8898C24.7348 14.9159 24.8067 14.9585 24.8678 15.0149C24.9289 15.0713 24.9777 15.1402 25.0111 15.2172C25.0445 15.2942 25.0618 15.3775 25.0618 15.4617C25.0618 15.546 25.0445 15.6293 25.0111 15.7063C24.9777 15.7832 24.9289 15.8522 24.8678 15.9086C24.8067 15.965 24.7348 16.0076 24.6566 16.0337C24.5784 16.0598 24.4958 16.0688 24.414 16.06H23.5872V14.8635ZM25.2093 17.4119C25.2211 17.5082 25.2116 17.606 25.1815 17.6981C25.1514 17.7902 25.1015 17.8741 25.0354 17.9437C24.9693 18.0133 24.8888 18.0667 24.7998 18.1001C24.7108 18.1334 24.6156 18.1458 24.5213 18.1363H23.5872V16.7004H24.5213C24.6144 16.6912 24.7084 16.7034 24.7963 16.736C24.8843 16.7686 24.9641 16.8209 25.0299 16.889C25.0958 16.9571 25.146 17.0393 25.177 17.1297C25.2081 17.2202 25.2191 17.3165 25.2093 17.4119Z" fill="black"/>
+                    <path d="M29.9315 16.4934C29.9315 15.1222 29.2056 14.1196 28.2021 14.1196C27.1985 14.1196 26.4727 15.1222 26.4727 16.4934C26.4727 17.8646 27.1985 18.8607 28.2021 18.8607C29.2056 18.8607 29.9315 17.8711 29.9315 16.4934ZM27.1164 16.4934C27.1164 15.4909 27.5267 14.7794 28.2021 14.7794C28.8774 14.7794 29.2877 15.4909 29.2877 16.4934C29.2877 17.496 28.8774 18.2074 28.2021 18.2074C27.5267 18.2074 27.1164 17.496 27.1164 16.4934Z" fill="black"/>
+                    <path d="M31.5151 14.21H30.6504V18.7893H31.2942L31.2437 14.8374L31.5972 15.8205L32.9479 18.7893H33.8063V14.21H33.1625L33.213 18.1684L32.8595 17.1853L31.5151 14.21Z" fill="black"/>
+                    <path d="M39.5557 14.2104H38.6973V18.7898H39.3411L39.2906 14.8379L39.644 15.821L40.9884 18.7898H41.8468V14.2104H41.203L41.2535 18.1689L40.9064 17.1858L39.5557 14.2104Z" fill="black"/>
+                    <path d="M45.558 14.8637V14.2104H42.8691V18.7898H45.6653V18.1366H43.5066V16.6942H45.3812V16.0409H43.5066V14.8637H45.558Z" fill="black"/>
+                    <path d="M46.422 14.21V17.1788C46.3997 17.4 46.4245 17.6236 46.4949 17.834C46.5653 18.0444 46.6795 18.2366 46.8297 18.3972C46.9798 18.5578 47.1623 18.683 47.3643 18.7641C47.5664 18.8453 47.7833 18.8804 48 18.867C48.2158 18.8771 48.4313 18.8397 48.6318 18.7575C48.8324 18.6752 49.0135 18.5499 49.163 18.39C49.3124 18.2301 49.4268 18.0393 49.4983 17.8304C49.5699 17.6215 49.597 17.3993 49.5779 17.1788V14.21H48.9467V17.1788C48.9622 17.3156 48.9492 17.4542 48.9087 17.5856C48.8681 17.7169 48.801 17.8379 48.7116 17.9407C48.6222 18.0436 48.5125 18.1259 48.3899 18.1822C48.2673 18.2386 48.1344 18.2677 48 18.2677C47.8656 18.2677 47.7327 18.2386 47.6101 18.1822C47.4874 18.1259 47.3778 18.0436 47.2884 17.9407C47.199 17.8379 47.1318 17.7169 47.0913 17.5856C47.0507 17.4542 47.0378 17.3156 47.0532 17.1788V14.21H46.422Z" fill="black"/>
+                    <path d="M52.1604 18.7893V14.8632H53.3722V14.21H50.3047V14.8632H51.5229V18.7893H52.1604Z" fill="black"/>
+                    <path d="M57.0527 15.5038C57.0649 15.3307 57.0407 15.1569 56.9816 14.9943C56.9224 14.8317 56.8298 14.684 56.7101 14.5613C56.5904 14.4386 56.4462 14.3437 56.2875 14.2831C56.1289 14.2225 55.9593 14.1977 55.7904 14.2102H54.2188V18.7896H54.8499V16.8491H55.6515L56.4973 18.7896H57.2042L56.289 16.7133C56.5266 16.6232 56.7294 16.4567 56.8671 16.2387C57.0047 16.0206 57.0699 15.7629 57.0527 15.5038ZM55.7904 16.1506H54.8625V14.857H55.7904C55.875 14.8502 55.96 14.8622 56.0396 14.8923C56.1192 14.9224 56.1914 14.9698 56.2514 15.0313C56.3114 15.0928 56.3577 15.1669 56.3871 15.2484C56.4164 15.33 56.4282 15.4171 56.4216 15.5038C56.4301 15.5923 56.4197 15.6817 56.3909 15.7657C56.362 15.8496 56.3156 15.9261 56.2548 15.9896C56.194 16.0531 56.1203 16.1022 56.039 16.1334C55.9577 16.1646 55.8706 16.1771 55.7841 16.17L55.7904 16.1506Z" fill="black"/>
+                    <path d="M60.2464 17.5674L60.5936 18.7898H61.2626L59.9182 14.2104H59.1671L57.8164 18.7898H58.4855L58.8263 17.5674H60.2464ZM59.3502 15.627L59.5206 14.8379L59.7036 15.627L60.0697 16.9206H58.9841L59.3502 15.627Z" fill="black"/>
+                    <path d="M62.7004 14.2104H62.0566V18.7898H64.8338V18.1366H62.7004V14.2104Z" fill="black"/>
+                    <path d="M15.2502 0.517444L14.7389 0L11.1602 3.66739L14.7389 7.33477L15.2502 6.81733L12.5929 4.09428H64.8354V3.24049H12.5929L15.2502 0.517444Z" fill="black"/>
+                    <path d="M64.3305 28.8153L61.2567 25.6719L60.7517 26.1893L63.409 28.9059H11.1602V29.7662H63.409L60.7517 32.4827L61.2567 33.0002L64.8354 29.3328L64.3305 28.8153Z" fill="black"/>
+                    <path d="M5.98926 8.01376L5.66106 7.32812C1.50792 8.82224 -0.0195312 11.8105 -0.0195312 16.4998C-0.0195312 21.1892 1.48898 24.1709 5.66106 25.6651L5.98926 24.9859C2.66927 23.6082 1.28699 21.2409 1.28699 17.7288V15.2709C1.28699 11.5647 2.66927 9.37852 5.98926 8.01376Z" fill="black"/>
+                    </g>
+                    <defs>
+                    <clipPath id="clip0_2882_11851">
+                    <rect width="76" height="33" fill="white"/>
+                    </clipPath>
+                    </defs>
+                    </svg>
+                </div>
+
+                {% for variant in product.variants %}
+                {% assign option = variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' %}
+                <div class="as-info-{{ option }} {% if variant.id == current_variant.id %}d-block{% else %}d-none{% endif %}">
+                  {% unless variant.metafields.my_fields.hide_purchase_and_notify %}
+                  <div class="mt-5 text-uppercase as-gtm-product-checkout">{{ variant.price | money }}</div>
+                  {% if variant.metafields.my_fields.shipping_info != blank %}
+                  <p class="fs-small mb-0 mt-1 text-uppercase text-muted">{{ variant.metafields.my_fields.shipping_info | newline_to_br }}</p>
+                  {% endif %}
+                  {% endunless %}
+                </div>
+                {% endfor %}
+
+                <div class="mt-5 mb-1 pb-1 d-none">
+                  {% for variant in product.variants %}
+                  {% assign option = variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' %}
+                  <p class="fs-small mb-0 text-uppercase text-muted as-color-{{ option }}{% if variant.id == current_variant.id %}{% else %} d-none{% endif %}">
+                    {{ variant.option1 }}
+                  </p>
+                  {% endfor %}
+                </div>
+                
+                <div class="mt-5 row">
+                  {% for variant in product.variants %}
+                  {% assign option = variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' %}
+                  <div class="col-4">
+                    <input class="step-option as-step-option d-none" type="radio" name="option-{{ product.id }}"
+                      id="option-{{ product.id }}-{{ forloop.index0 }}" value="{{ option }}" {% if
+                      variant.id==current_variant.id %}checked{% else %}{% endif %}>
+                    <label class="btn btn-dark" for="option-{{ product.id }}-{{ forloop.index0 }}"
+                      style="background-color: {% if option == 'dark' %}black{% else %}white{% endif %};color:{% if option == 'dark' %}white{% else %}black{% endif %};">
+                      {{ variant.option1 }}
+                      <span class="visually-hidden">{{ option }}</span>
+                    </label>
+                  </div>
+                  {% endfor %}
+                </div>
+
+                {% for variant in product.variants %}
+                {% assign option = variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' %}
+                <div class="as-{{ option }} {% if variant.id == current_variant.id %}d-block{% else %}d-none{% endif %}">
+                  {% unless variant.metafields.my_fields.hide_purchase_and_notify %}
+                  <div class="mt-sm-2 pt-2">
+                    {% if variant.metafields.my_fields.third_party_purchase_link != blank %}
+                    <a class="as-static-buy-now w-100 font-55 btn btn-primary text-uppercase as-gtm-product-checkout" target="_blank"
+                      rel="noopener noreferrer" href="{{variant.metafields.my_fields.third_party_purchase_link}}">{{
+                      'products.product.buy_now' | t }}</a>
+                    {% else %}
+                    {% if variant.available %}
+                    {% if variant.metafields.my_fields.invitation_code %}
+                    {% render 'product-voucher-code', color: 'dark', current_variant: variant %}
+                    {% else %}
+                    <button class="as-static-buy-now w-100 {% unless variant.available %}invisible{% endunless %} as-empty-add-to-cart font-55 btn btn-primary mt-n-small text-uppercase as-gtm-product-checkout" 
+                      data-id="{{ variant.id }}"
+                      data-option="{{ option }}"
+                      data-bs-toggle="offcanvas" 
+                      data-bs-target="#offcanvas-cart" 
+                      aria-controls="offcanvas-cart"
+                      >{{ 'products.product.add_to_cart' | t }}</button>
+                    {%- comment -%}
+                    <a class="{% unless variant.available %}invisible{% endunless %} font-55 btn btn-dark text-uppercase as-gtm-product-checkout"
+                      href="{{ routes.cart_url }}/{{ variant.id }}:1">{{ 'products.product.buy_now' | t }}</a>
+                    {%- endcomment -%}
+                    {% endif %}
+                    {% else %}
+                    {% render 'product-sign-up', color: 'dark' %}
+                    {% endif %}
+                    {% endif %}
+                  </div>
+                  {% endunless %}
+
+                  <div class="mt-5 as-resells d-none">
+                    <label class="text-uppercase mb-3">{{ 'products.resellers.title' | t }}</label>
+                    <div class="d-flex font-base">
+                      <div class="flex-grow-1">
+                        <div class="d-flex position-relative contact-dropdown-wrap as-category-wrap">
+                          <a class="h-35 contact-dropdown bg-transparent cursor-pointer d-flex text-dark text-decoration-none w-100"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span
+                              class="as-category-text form-control d-flex align-items-center">
+                              {{ 'products.resellers.select' | t }}
+                            </span>
+                            <span class="form-control w-auto border-start-0 flex-center px-1">
+                              {% render 'icon-chevron-down' %}
+                            </span>
+                          </a>
+                          <ul class="dropdown-menu py-0 as-resells-ul w-100 bg-dark border-0"
+                            style="max-height: 18.75rem;overflow-y: scroll;">
+
+                          </ul>
+                          <script type="text/template" id="as-{{ option }}-resells-tpl">
+                          {% raw %}
+                            {{#data}}
+                            <li>
+                              <a class="px-1 dropdown-item text-uppercase nav-link cursor-pointer" href='{{link}}' target="_blank" rel="noopener">{{ name }}</a>
+                            </li>
+                            {{/data}}
+                          {% endraw %}
+                          </script>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+      </div>
+    </div>
+    <div class="container-fits-viewport as-scrollmagic-item"></div>
+  </div>
+</section>
+{%- comment -%}
+{% unless product.metafields.my_fields.hide_purchase_and_notify %}
+{% unless product.metafields.my_fields.third_party_purchase_link != blank %}
+{% if product.available %}
+{% unless product.metafields.my_fields.invitation_code %}
+<div class="fixed-buy-now as-fixed-buy-now">
+  <a class="{% unless current_variant.available %}invisible{% endunless %} font-55 btn btn-dark text-uppercase"
+    href="{{ routes.cart_url }}/{{ current_variant.id }}:1">{{ 'products.product.buy_now' | t }}</a>
+</div>
+{% endunless %}
+{% endif %}
+{% endunless %}
+{% endunless %}
+{%- endcomment -%}
+{% schema %}
+{
+  "name": "ear1",
+  "class": "snap-child as-snap-list font-base position-relative overflow-hidden",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "lead_graph",
+      "label": "Lead paragraph"
+    }
+  ]
+}
+{% endschema %}

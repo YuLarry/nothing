@@ -1,0 +1,20 @@
+{% if shop.customer_accounts_enabled %}
+<div class="container-fits-viewport-100 d-flex bg-light">
+  {% render 'account-background' %}
+  <div class="cart-width px-1 px-sm-0">
+    <div class="px-3 px-sm-6 font-base bg-light">
+      <div class="d-none d-md-block site-header">
+        <div class="navbar navbar-height">
+          <!-- <h1 class="display-3 mb-0 text-uppercase">{{'customer.register.section_title' | t }}</h1> -->
+          <span></span>
+        </div>
+      </div>
+      
+      <div class="pt-9 pt-md-6">{% render 'account-register' %}</div>
+    </div>
+  </div>
+</div>
+{% else %}
+{% render '404-template' %}
+{% endif %}
+<script src="{{ 'customers-register-index.min.js' | asset_url }}" defer="defer"></script>

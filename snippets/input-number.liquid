@@ -1,0 +1,8 @@
+<div class="input-group input-group-sm input-group-number w-auto mt-2 me-2 as-input-group-number">
+  <button class="btn btn-sm btn-outline-secondary as-form-control-number-minus" type="button">{% render 'icon-minus' %}</button>
+  <input type="number" 
+    name="updates[]" id="updates_{{ key }}" data-key="{{ key }}"
+    class="as-update-item-quantity _form-control-number form-control text-center as-form-control-number" 
+    step="1" min="1" max="100" value="{{ quantity }}">
+  <button class="btn btn-sm btn-outline-secondary as-form-control-number-plus" type="button">{% render 'icon-plus' %}</button>
+</div>

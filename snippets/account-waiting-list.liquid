@@ -1,0 +1,24 @@
+<div data-invite-page="{{ request.origin }}{{ settings.pre_order_page.url }}" {% if customer %}data-user-email="{{ customer.email }}"{% endif %} class="as-account-components as-waiting-list-content d-none col-sm-6 user-waiting-list" data-router="#waiting-list">
+  <div class="h-100 font-base text-uppercase">
+    {% assign title = 'customer.waiting_list.title' | t %}
+    {% render 'page-title', title: title %}
+    <div>
+      <p class="mb-0">{{ 'customer.waiting_list.your_place' | t }}</p>
+      <div class="as-ranking mb-1 user-ranking font-ndot55"></div>
+      <div class="mb-0">{{ 'customer.waiting_list.of_total_html' | t }}</div>
+      <hr class="d-none d-md-block">
+      <div class="info">
+        <p>{{ 'customer.waiting_list.note' | t }}</p>
+        <p>{{ 'customer.waiting_list.referral_num_note_html' | t }}</p>
+      </div>
+      <div class="d-flex mt-4">
+        <input id="referral-link-input" type="text" class="as-referral-link-input bg-transparent display-6 form-control" placeholder="" value="" readonly>
+      </div>
+      <div class="row">
+      <div class="col-md-4 mt-3">
+        <button data-copy="{{ 'customer.waiting_list.copy_link' | t }}" data-copied="{{ 'customer.waiting_list.copied' | t }}" data-clipboard-target="#referral-link-input" class="as-copy btn btn-dark text-uppercase">{{ 'customer.waiting_list.copy_link' | t }}</button>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

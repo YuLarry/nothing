@@ -1,0 +1,124 @@
+
+<main id="root" class="bg-light customer-support-tpl">
+  <section class="container-fits-viewport text-black section-top section-bottom">
+    <div class="container-topic gx-2 gx-sm-5 mt-3 mt-sm-1 font-base">
+      <div class="d-flex justify-content-between flex-column flex-xl-row h-100">
+        <div class="position-relative d-flex justify-content-between">
+          <div class="mw-text-href w-left-sidebar">
+            {% assign title = 'service_center.title' | t %}
+            {% render 'page-title', title: title  %}
+            <ul class="list-unstyled mb-0">
+              {%- for link in linklists.service-center.links -%}
+                <li class="nav-item pt-1 pb-sm-1 pb-2 {{ page.handle }}  {{link.handle}}">
+                  <a class="{% if link.active %}active{% endif %} d-flex nav-before-arrow dark-link text-uppercase" 
+                  {% if link.url contains 'https://' or link.url contains 'http://' %} target="_blank" rel="noopener"{% endif %}
+                    href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+    
+        <div class="flex-grow-1 d-flex mt-4 mt-xl-0">
+          <div class="h-100 d-flex justify-content-between w-left-container"></div>
+          <div class="mw-text-3 h-100">
+            <div class="tab-content">
+              <div class="tab-pane show active">
+                <h5 class="text-uppercase font-base">{{ page.title }}</h5>
+                <div class="d-flex position-relative contact-dropdown-wrap mt-6">
+                  <a class="contact-dropdown select-dropdown bg-transparent cursor-pointer d-flex text-dark text-decoration-none w-100" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="as-state-text px-1 flex-grow-1 border-bottom border-end border-start border-top dot-border-dark d-flex align-items-center">
+                      {{ 'service_center.e_waste.state' | t }}
+                    </span>
+                    <span class="border-bottom border-end border-top border-start-0 dot-border-dark flex-center px-1">
+                      {% render 'icon-chevron-down' %}
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu py-0 as-state-json w-100 bg-white border-0" style="max-height:216px;overflow-y:scroll;">
+                    {% raw %}
+                    <script type="text/hogan" id="tpl-state-json">
+                      {{#data}}
+                        <li>
+                          <a class="px-2 dropdown-item nav-link as-state-list cursor-pointer">{{.}}</a>
+                        </li>
+                      {{/data}}
+                    </script>
+                    {% endraw %}
+                  </ul>
+                </div> 
+                <div class="d-flex position-relative contact-dropdown-wrap mt-2">
+                  <a class="contact-dropdown select-dropdown bg-transparent cursor-pointer d-flex text-dark text-decoration-none w-100 as-city-wrap disabled" disabled data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="as-city-text px-1 flex-grow-1 border-bottom border-end border-start border-top dot-border-dark d-flex align-items-center" data-city='{{ 'service_center.e_waste.city' | t }}'>
+                      {{ 'service_center.e_waste.city' | t }}
+                    </span>
+                    <span class="border-bottom border-end border-top border-start-0 dot-border-dark flex-center px-1">
+                      {% render 'icon-chevron-down' %}
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu py-0 as-city-json w-100 bg-white border-0" style="max-height:216px;overflow-y:scroll;">
+                    
+                  </ul>
+                  
+                  {% raw %}
+                  <script type="text/hogan" id="tpl-city-json">
+                    {{#data}}
+                      <li>
+                        <a class="px-2 dropdown-item nav-link as-city-list cursor-pointer">{{.}}</a>
+                      </li>
+                    {{/data}}
+                  </script>
+                  {% endraw %}
+                </div> 
+                {% assign jsonData = page.metafields.global.json %}
+                <script type="text/hogan" id="tpl-data-json">
+                  {{ jsonData | json }}
+                </script>
+                <div class="mt-6">
+                  <ul class="list-unstyled mb-0 as-list-json">
+                  </ul>
+                  <div class="d-flex mt-9 as-customer-support-show-more d-none">
+                    <button class="btn btn-dark font-55 text-uppercase">{{ 'service_center.e_waste.show_more' | t }}</button>
+                  </div>
+                  {% raw %}
+                  <script type="text/hogan" id="tpl-list-json">
+                    {{#data}}
+                      <li class="support-list">
+                        <div class="border-bottom-0 border-end-0 border-start-0 border-top d-flex dot-border-dark">
+                          <div class="form-key py-2 border-bottom-0 border-end border-start-0 border-top-0 dot-border-dark">{% endraw %}{{ 'service_center.e_waste.point_name' | t }}{% raw %}</div>
+                          <div class="py-2 ps-2">{{ collection_point_name }}</div>
+                        </div>
+                        <div class="border-bottom-0 border-end-0 border-start-0 border-top d-flex dot-border-dark">
+                          <div class="form-key py-2 border-bottom-0 border-end border-start-0 border-top-0 dot-border-dark">{% endraw %}{{ 'service_center.e_waste.address' | t }}{% raw %}</div>
+                          <div class="py-2 ps-2">{{ address }}</div>
+                        </div>
+                        <div class="border-bottom-0 border-end-0 border-start-0 border-top d-flex dot-border-dark">
+                          <div class="form-key py-2 border-bottom-0 border-end border-start-0 border-top-0 dot-border-dark">{% endraw %}{{ 'service_center.e_waste.city' | t }}{% raw %}</div>
+                          <div class="py-2 ps-2">{{ city }}</div>
+                        </div>
+                        <div class="border-bottom-0 border-end-0 border-start-0 border-top d-flex dot-border-dark">
+                          <div class="form-key py-2 border-bottom-0 border-end border-start-0 border-top-0 dot-border-dark">{% endraw %}{{ 'service_center.e_waste.state' | t }}{% raw %}</div>
+                          <div class="py-2 ps-2">{{ state }}</div>
+                        </div>
+                        <div class="border-bottom border-end-0 border-start-0 border-top d-flex dot-border-dark">
+                          <div class="form-key py-2 border-bottom-0 border-end border-start-0 border-top-0 dot-border-dark">{% endraw %}{{ 'service_center.e_waste.contact_no' | t }}{% raw %}</div>
+                          <div class="py-2 ps-2">{{ contact_no }}</div>
+                        </div>
+                        {% endraw %}
+                        <div class="py-3 list-placeholder">//</div>
+                        {% raw %}
+                      </li>
+                    {{/data}}
+                  </script>
+                  {% endraw %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% comment %} 空div,占位用 {% endcomment %}
+        <div class="mw-text-href"></div>
+      </div>
+    </div>
+  </section>
+  
+</main>

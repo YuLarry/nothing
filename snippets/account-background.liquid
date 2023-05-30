@@ -1,0 +1,22 @@
+<div class="cart-bg-img d-none d-sm-block">
+  {% if settings.account_bg %}
+    <figure class="h-100 mb-0 w-100">
+      <picture class="w-100">
+        <img class="img-fluid w-100 h-100 object-fit-cover"
+          srcset="{{ settings.account_bg | img_url: 'master' }}" 
+          src="{{ settings.account_bg | img_url: 'master' }}"
+          alt="{{ settings.account_bg | img_url: 'master' }}">
+      </picture>
+    </figure>
+  {% else %}
+    <figure class="h-100 mb-0 w-100">
+      <picture class="w-100">
+        <img class="img-fluid w-100 h-100 object-fit-cover"
+          srcset="https://place-hold.it/1920x1080/fff" 
+          src="https://place-hold.it/1920x1080/fff"
+          alt="bg">
+      </picture>
+    </figure>
+  {% endif %}
+</div>
+  

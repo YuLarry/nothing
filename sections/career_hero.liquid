@@ -1,0 +1,25 @@
+
+{% if section.settings.title %}
+{% render 'aboutus-title', title: section.settings.title %}
+{% endif %}
+<div class="">
+  {% render 'richtext', richtext: section.settings.description  %}
+</div>
+{% schema %}
+{
+  "name": "Richtext",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "label": "Description",
+      "id": "description"
+    }
+  ]
+}
+{% endschema %}
+

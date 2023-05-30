@@ -1,0 +1,19 @@
+<div class="nbg-secondary p-4" id="{{ section.settings.hash_id }}">
+  <div class="row">
+    <div class="col-md-2">
+      <p class="fs-small text-uppercase" style="font-family: Lettera Mono LL Cond Light;">{{ section.settings.title }}
+      </p>
+    </div>
+    <div class="col-md-10">
+      <ol class="ps-0">
+        <div class="row fs-small">
+          {% for block in section.blocks %}
+            <div class="col-md-6 ps-6" style="font-family: Lettera Mono LL Cond Light;">
+              {{ block.settings.lead_graph | replace: '/p>', '/li>' | replace: '<p', '<li' }}
+            </div>
+          {% endfor %}
+        </div>
+      </ol>
+    </div>
+  </div>
+</div>

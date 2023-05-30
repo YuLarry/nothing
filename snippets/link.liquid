@@ -1,0 +1,2 @@
+{% if link contains 'https://' %}target="_blank" rel="noopener" {% endif %}
+{% if link contains '#' and link contains '_popup' %}data-bs-toggle="modal" data-bs-target="{{ link }}"{% endif %}

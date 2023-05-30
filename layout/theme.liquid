@@ -1,0 +1,141 @@
+<!doctype html>
+<html class="html {% if settings.fonts == 'korea' %}font-korea{% elsif settings.fonts == 'japanese' %}font-japanese{% endif %}" lang="{{ shop.locale }}" {% if shop.locale == 'ar' and settings.enable_rtl %}dir="rtl"{% endif %}>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1, viewport-fit=cover">
+    {% comment %} 复活节找彩蛋活动 {% endcomment %}
+    {% render 'easter-code', code_location: page.handle  %}
+
+    {%- if canonical_url != blank -%}
+      <link rel="canonical" href="{{ canonical_url }}">
+    {%- endif -%}
+
+    {% render 'head-alternates' %}
+    
+    {{ settings.head_html }}
+    
+    {%- if settings.gmc_code != blank -%}
+      <meta name="google-site-verification" content="{{ settings.gmc_code }}" />
+    {%- endif -%}
+
+    {%- liquid
+      render 'noindex'
+      render 'favicon'
+      render 'meta-title'
+      render 'store-json'
+    -%}
+    
+    {% unless request.design_mode %}
+    <script src="{{ 'country-index.min.js' | asset_url }}" defer="defer"></script>
+    {% endunless %}
+    {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    {% render 'social-meta-tags' %}
+
+    <meta name="theme-color" content="{{ settings.color_primary }}">
+
+    {% if shop.locale == 'ar' and settings.enable_rtl %}
+      {{ 'index.rtl.min.css' | asset_url | stylesheet_tag }}
+    {% else %}
+      {{ 'index.min.css' | asset_url | stylesheet_tag }}
+    {% endif %}
+    
+    {% comment %}<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@300;400;500;700&amp;display=swap" rel="stylesheet">{% endcomment %}
+    
+    <style>body.invisible {visibility: hidden;}</style>
+    <noscript>
+      <style>body.invisible {visibility: visible !important;}</style>
+    </noscript>
+
+    <script>
+      var theme = {
+        moneyFormat: {{ shop.money_format | json }}
+      };
+    </script>
+
+    {% render 'font-family' %}
+
+    {%- if template contains 'customer' -%}
+      {{ "shopify_common.js" | shopify_asset_url | script_tag }}
+      {{ "customer_area.js"  | shopify_asset_url | script_tag }}
+    {%- endif -%}
+    <script src="{{ 'index.min.js' | asset_url }}" defer="defer"></script>
+    {% comment %}<script src="{{ 'lazysizes.js' | asset_url }}" async="async"></script>{% endcomment %}
+    <script>
+      window.lazySizesConfig = window.lazySizesConfig || {};
+      window.lazySizesConfig.customMedia = {
+        '--small': '(max-width: 576px)',
+        '--medium': '(max-width: 768px)',
+        '--large': '(max-width: 992px)',
+        '--xlarge': '(max-width: 1200px)'
+      };
+    </script>
+    
+    {% render 'track-pre-set' %}
+
+    {{ content_for_header }}
+
+    {% render 'preconnect' %}
+    
+    {%- if settings.ga_autotrack -%}
+    <script async src="{{ 'autotrack.js' | asset_url }}"></script>
+    {%- endif -%}
+  </head>
+  
+  {%- liquid 
+    if request.page_type == 'customers/register' or request.page_type == 'customers/login'
+      if shop.customer_accounts_enabled
+        assign templateClass = request.page_type | handle
+      else
+        assign templateClass = '404'
+      endif
+    else
+      assign templateClass = request.page_type | handle
+    endif 
+  -%}
+
+  <body id="{{ page_title | handle }}" data-template={{ template | json }} class="fs-base {% if template.name == 'login' or page.template_suffix == 'redirect'  %}d-none{% endif %} invisible prototype {% if customer %}customer-logged-in {% endif %}template-{{ templateClass }}">
+    <!--[if IE]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
+    {% render 'change-currency' %}
+    <div class="fixed-top _site-progress-bar as-site-progress-bar">
+      {% render 'progress' %}
+    </div>
+    {% section 'header' %}
+    {{ content_for_layout }}
+    {% render 'account-api' %}
+    
+    {% section 'footer' %}
+    
+    <aside>
+      {%- liquid 
+        unless request.page_type == 'cart'
+          render 'cart-form-offcanvas'
+        endunless
+        render 'cart-script'
+        render 'loading'
+        render 'cookie-banner'
+        render 'country-banner'
+      -%}
+
+      {% comment %} {% render 'marquee' %} {% endcomment %}
+    </aside>
+    {{ settings.forter_html }}
+
+    {% comment %} 复活节找彩蛋活动 {% endcomment %}
+    {% if settings.enable_easter %}
+    {{ page.metafields.my_fields.easter_text }}
+    {% endif %}
+
+    <script src="{{ 'track-index.min.js' | asset_url }}"></script>
+    {% if settings.enable_rs %}
+      <script src="{{ 'rudderstack-track-index.min.js' | asset_url }}"></script>
+    {% endif %}
+
+  </body>
+
+</html>

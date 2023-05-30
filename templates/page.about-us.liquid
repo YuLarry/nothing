@@ -1,0 +1,32 @@
+<main id="root" class="tempalte-about-us bg-light">
+  {% section 'page-template-about-us_banner' %}
+  <section class="px-2 text-black pt-4 section-bottom _feature-products-section">
+    <div class="container-topic px-2 mt-sm-1 font-base section-bottom">
+      <div class="row mx-n2">
+        <div class="col-sm-3 col-xl-2 px-2" style="z-index: 2;">
+          {% assign blog = blogs[settings.blog] %}
+          {% render 'sidebar-newsroom', handle: page.handle, blog: blog %}
+        </div>
+        
+        <div class="col-sm-8 px-2">
+          <div class="row">
+            <div class="col-sm-9">
+              {% section 'page-template-about-us_video' %}
+              <div class="dot-border-dark border-bottom mb-2 mt-6 pt-sm-6"></div>
+              {% section 'page-template-about-us_roadmap' %}
+              <div class="dot-border-dark border-bottom mb-2 mt-6 pt-sm-6"></div>
+            </div>
+            <div class="col-sm-9 col-xl-12">
+              {% section 'page-template-about-us_investores' %}
+            </div>
+            <div class="col-sm-9">
+              <div class="dot-border-dark border-bottom mb-2 mt-6 pt-sm-6"></div>
+              {% section 'page-template-about-us_hero' %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+</main>

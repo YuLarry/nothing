@@ -1,0 +1,81 @@
+<div class="container-core">
+  <input type="hidden" value="{{ settings.queryWorkOrderDetail }}" class="as-queryWorkOrderDetail">
+  {% if customer %}
+  <input type="hidden" value="{{ customer.email }}" class="as-customer-email">
+  {% endif %}
+
+  <div class="tpl-track-list-wrap">
+    
+  </div>
+</div>
+<script type="text/hogan" id="tpl-track-list">
+  <div class="">
+    <h3 class="fs-h2">{{ 'service_portal.track.your_work_order_status' | t }}</h3>
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+      <div class="mt-4 mt-md-5">
+        <div class="row gx-0 flex-column-reverse flex-sm-row">
+          <div class="col-sm-8 col-md-6">
+            <div class="row mb-4">
+              <span class="col-6">{{ 'service_portal.track.ticket_number' | t }}:</span>
+              <span class="col-6">@{data.workOrderNumber}@</span>
+            </div>
+            <div class="row row-cols-2 gx-0 d-none">
+              <select type="text" name="pickUpTime" class="form-control form-select border-0 w-50">
+                @{#childWork}@
+                  <option value="@{workOrderNumber}@">@{workOrderNumber}@</option>
+                @{/childWork}@
+              </select>
+            </div>
+          </div>
+          <div class="text-start text-sm-end mb-4 mb-sm-0 col-sm-4 col-md-6">(@{data.status}@)</div>
+        </div>
+      </div>
+    </div>
+    @{#childWork}@
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+      <div class="mt-4 mt-md-5">
+        <div class="row gx-0">
+          <div class="col-sm-8 col-md-6">
+            <div class="d-sm-none mb-4">(@{status}@)</div>
+            <div class="row mb-4">
+              <span class="col-6">{{ 'service_portal.track.sub_ticket_number' | t }}:</span>
+              <span class="col-6">@{workOrderNumber}@</span>
+            </div>
+            <div class="row row-cols-2">
+              <span class="col-6">{{ 'service_portal.track.service_type' | t }}:</span>
+              <span class="col-6">@{type}@</span>
+            </div>
+            <div class="row row-cols-2">
+              <span class="col-6">{{ 'service_portal.track.product' | t }}:</span>
+              <span class="col-6">@{modelName}@</span>
+            </div>
+            <div class="row row-cols-2">
+              <span class="col-6">{{ 'service_portal.track.SN_IMEI' | t }}:</span>
+              <span class="col-6">@{SN_IMEI}@</span>
+            </div>
+          </div>
+          <div class="col-sm-4 col-md-6 mt-5 mt-sm-0">
+            <div class="row h-100">
+              <div class="d-flex flex-column justify-content-between offset-md-6 col-md-6">
+                <div class="text-end d-sm-block d-none">(@{status}@)</div>
+                <button class="btn btn-primary w-100 as-track-detail-btn" data-number="@{workOrderNumber}@" type="submit">{{ 'service_portal.track.view_detail' | t }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-start mt-3 text-start text-md-end text-danger invalid-feedback as-track-error-tips">
+          {{ 'service_portal.error.other_error' | t }}
+        </div>
+      </div>
+    </div>
+    @{/childWork}@
+  </div>
+</script>
+
+{% schema %}
+{
+  "name": "After sale track detail",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9 as-track-list"
+}
+{% endschema %}

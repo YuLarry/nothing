@@ -1,0 +1,253 @@
+{%- comment -%}保证点击地图上除门店外的地点边距正常{%- endcomment -%}
+<style>
+  .gm-style.poi-info-window {
+    padding: 20px;
+  }
+  @media (max-width: 1023.98px) {
+    .tabs-ribbon-wrapper {
+      position: sticky;
+      top: 0;
+    }
+  }
+  .paragraph-without-margin p {
+    margin-bottom: 0;
+  }
+</style>
+
+<div class="container-fits-viewport responsive row g-0 as-location-target store-locator-container" data-color='light'>
+  <div class="col-lg position-relative overflow-hidden">
+    
+    <embed-map class="as-map-wrapper w-100 h-100">
+      <div class="as-map map-wrapper ratio w-100 h-100"></div>
+      <div id="as-is-mobile-flag" class="d-block d-lg-none"></div>
+      {%- comment -%}Hide controls until they are moved into the map.{%- endcomment -%}
+      <div class="d-none">
+        <input class="as-default-latitude" type="hidden" name="default_latitude" value="{{ section.settings.latitude }}">
+        <input class="as-default-longitude" type="hidden" name="default_longitude" value="{{ section.settings.longitude }}">
+
+        {%- comment -%}地图上门店icon{%- endcomment -%}
+        <div class="as-store-marker">
+          <svg width="35" height="45" viewBox="0 0 35 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0H35V26.2921L17.5 45L0 26.2921V0Z" fill="black"/>
+            <path d="M16.0632 22.4347H15.1654C14.6688 22.4347 14.4013 22.1673 14.4013 21.6706V11.0495H14.5159L20.8007 23.2752H21.4693V11.5079C21.4693 11.0113 21.7368 10.7438 22.2334 10.7438H23.1313V9.90332H18.9096V10.7438H19.8074C20.3041 10.7438 20.5715 11.0113 20.5715 11.5079V19.7603H20.4569L15.3373 9.90332H11.8416V10.7438H12.7394C13.236 10.7438 13.5035 11.0113 13.5035 11.5079V21.6706C13.5035 22.1673 13.236 22.4347 12.7394 22.4347H11.8416V23.2752H16.0632V22.4347Z" fill="white"/>
+            <path d="M10.6847 24.4392C8.62568 23.1072 7.32228 21.2495 7.32228 17.8144V15.1856C7.32228 11.5753 8.62568 9.89278 10.6847 8.56082L10.288 8C7.54896 9.38454 6 12.1536 6 16.5C6 20.8464 7.54896 23.6155 10.288 25L10.6847 24.4392Z" fill="white"/>
+            <path d="M24.712 25C27.451 23.6155 29 20.8464 29 16.5C29 12.1536 27.451 9.38454 24.712 8L24.3153 8.56082C26.3743 9.89278 27.6777 11.5753 27.6777 15.1856V17.8144C27.6777 21.2495 26.3743 23.1072 24.3153 24.4392L24.712 25Z" fill="white"/>
+          </svg>              
+        </div>
+
+        <div class="as-store-marker-sm">
+          <svg fill="#000000" stroke="#000000" version="1.1" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 1024 1024">
+            <path fill="none" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" stroke-width="64" d="M864 512c0 194.404-157.596 352-352 352s-352-157.596-352-352c0-194.404 157.596-352 352-352v0c194.404 0 352 157.596 352 352v0z"></path>
+            <path d="M736 512c0 123.712-100.288 224-224 224s-224-100.288-224-224c0-123.712 100.288-224 224-224v0c123.712 0 224 100.288 224 224v0z"></path>
+          </svg>
+        </div>
+      </div>
+      {% raw %}
+        <script type="text/hogan" id="tpl-store-content">
+          {{#data}}
+          <div class="pt-4 px-4 pb-6 fs-base bg-light" style="width: 395px;">
+            <div>
+              <div class="d-flex justify-content-between my-3"></div>
+              <div class="paragraph-without-margin">{{#address}}{{{address}}}{{/address}}</div>
+              <a class="link-primary paragraph-without-margin" 
+                data-id="open_in_google_map"
+                target="_blank" 
+                rel="noopener" 
+                href="https://maps.google.com/?q={{latitude}},{{longitude}}">{% endraw %}{{ section.settings.link }}{% raw %}</a>
+            </div>
+            {{#workinghours}}
+            <dl class="mb-0">
+              <dt>{% endraw %}{{ 'sections.store_locator.working_hours' | t }}{% raw %}:</dt>
+              <dd class="mb-0 paragraph-without-margin">{{{workinghours}}}</dd>
+            </dl>
+            {{/workinghours}}
+          </div>
+          {{/data}}
+        </script>
+      {% endraw %}
+      <script type="application/json" class="as-store-position-data">
+        [
+          {
+            "latitude": {{ section.settings.latitude | default: 0 }},
+            "longitude": {{ section.settings.longitude | default: 0 }},
+            "address": "{{ section.settings.address }}",
+            "workinghours": "{{ section.settings.working_hours }}",
+            "link": "{{ section.settings.link }}"
+          }
+        ]
+      </script>
+    </embed-map>
+  </div>
+  <div class="col-lg-auto w-lg-fixed px-4 pt-1 pb-6 py-lg-0 position-relative">
+    <div class="container-fits-viewport responsive row">
+      <div class="col align-self-end pt-lg-7 {% unless section.settings.secondary_btn_text != blank %}pb-lg-7{% endunless %}">
+        {% if section.settings.pages or section.settings.subline %}
+          <div class="row gx-2">
+            <div class="col-4 col-md-6 col-lg-4">{{ section.settings.pages }}</div>
+            <div class="col-8 col-md-6 col-lg-8">{{ section.settings.subline }}</div>
+          </div>
+        {% endif %}
+        <div class="row gy-0 gx-0 gx-md-2 gx-lg-0">
+          {% if section.settings.heading != blank %}
+            <div class="col-12 col-md-6 col-lg-12">
+              <h2 class="mt-3 mt-lg-6 mb-0 fs-h1">{{ section.settings.heading }}</h2>
+            </div>
+          {% endif %}
+          {% if section.settings.lead_paragraph != blank or section.settings.login_button != blank %}
+            <div class="col-12 col-md-6 col-lg-12">
+              {% if section.settings.lead_paragraph != blank %}
+                <div class="mt-3 mt-lg-5">
+                  {{ section.settings.lead_paragraph | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="link-dark text-decoration-underline"' }}
+                </div>
+              {% endif %}
+              {% if section.settings.primary_btn_text != blank %}
+                <a {% render 'link', link: section.settings.primary_btn_link %} href="{{ section.settings.primary_btn_link }}" class="btn btn-primary mt-3 mt-lg-5">{{ section.settings.primary_btn_text }}</a>
+              {% endif %}
+              {% if section.settings.secondary_btn_text != blank %}
+                <a {% render 'link', link: section.settings.secondary_btn_link %} href="{{ section.settings.secondary_btn_link }}" class="text-primary mt-3 mt-lg-4 d-block">{{ section.settings.secondary_btn_text }}</a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if section.settings.address != blank or section.settings.working_hours != blank  or section.settings.link != blank %}
+<div>
+  <button type="button" class="d-none btn btn-primary" data-bs-toggle="modal" data-bs-target="#as-local-store-modal">Open modal</button>
+  <div class="modal fade" 
+    id="as-local-store-modal"
+    tabindex="-1" 
+    aria-labelledby="as-local-store-modalLabel" 
+    aria-hidden="true">
+    <div class="modal-dialog d-flex align-items-end mx-auto my-0 h-100">
+      <div class="modal-content bg-light">
+        <div class="modal-header p-0">
+          <button type="button"
+            class="link-dark position-absolute top-0 end-0 me-4 mt-4 p-0 border-0 bg-transparent z-index-1 text-decoration-underline"
+            data-bs-dismiss="modal"
+            aria-label="{{ 'sections.store_locator.close' | t }}">{{ 'sections.store_locator.close' | t }}</button>
+        </div>
+        <div class="modal-body p-4 py-6 pt-7">
+          <ul class="as-local-store-list list-unstyled mb-0 disabled-distance">
+            <li 
+              class="as-local-store">
+              <div>
+                <div class="paragraph-without-margin">{{ section.settings.address }}</div>
+                {%- assign google_map_link = 'https://maps.google.com/?q=' | append: section.settings.latitude | append: ',' | append: section.settings.longitude -%}
+                <a class="link-primary paragraph-without-margin" 
+                  data-id="open_in_google_map"
+                  {% render 'link', link: google_map_link %}
+                  href="{{ google_map_link }}">{{ section.settings.link }}</a>
+              </div>
+              {%- if section.settings.working_hours != blank -%}
+                <dl class="mb-0">
+                  <dt>{{ 'sections.store_locator.working_hours' | t }}:</dt>
+                  <dd class="mb-0 paragraph-without-margin">{{ section.settings.working_hours }}</dd>
+                </dl>
+              {%- endif -%}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,places&key=AIzaSyBLhxN1MfVES4M5icRoAOMrB116aeMT97g"></script>
+
+{% schema %}
+{
+  "name": "Embed map",
+  "tag": "section",
+  "class": "embed-map position-relative overflow-hidden bg-light",
+  "settings": [
+    {
+      "type": "text",
+      "id": "pages",
+      "label": "Pages"
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Subline"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "lead_paragraph",
+      "label": "Lead paragraph",
+      "default": "<p>Lead paragraph</p>"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "primary_btn_text",
+      "label": "Primary button text",
+      "info": "Button only show when text are filled"
+    },
+    {
+      "type": "url",
+      "id": "primary_btn_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_btn_text",
+      "label": "Secondary button text",
+      "info": "Button only show when text are filled"
+    },
+    {
+      "type": "url",
+      "id": "secondary_btn_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "header",
+      "content": "EMBED MAP"
+    },
+    {
+      "type": "text",
+      "id": "latitude",
+      "label": "Latitude"
+    },
+    {
+      "type": "text",
+      "id": "longitude",
+      "label": "Longitude"
+    },
+    {
+      "type": "richtext",
+      "id": "address",
+      "label": "Address"
+    },
+    {
+      "type": "richtext",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "richtext",
+      "id": "working_hours",
+      "label": "Working hours"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Embed map",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

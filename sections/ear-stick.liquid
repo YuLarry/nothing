@@ -1,0 +1,165 @@
+{%- liquid
+                 assign currentStore = request.host
+                 assign diff_variant = false
+                 if product.metafields.my_fields.display_different_variant != blank
+                   assign diff_variant = true
+                   assign diff_variant_data = product.metafields.my_fields.display_different_variant.value
+                   assign current_store_variant_id = null
+                   for data in diff_variant_data
+                     for store in data.stores
+                       if store == currentStore
+                         assign current_store_variant_id = data.variant | plus: 0
+                         break
+                       endif
+                     endfor
+                   endfor
+                 endif
+                 
+                 assign current_variant = product.selected_or_first_available_variant
+                 if diff_variant
+                   for variant in product.variants
+                     if variant.id  == current_store_variant_id
+                       assign current_variant = variant
+                     endif
+                   endfor
+                 endif
+                   
+                if product.has_only_default_variant	
+                  assign hide_purchase_and_notify = product.metafields.my_fields.hide_purchase_and_notify	
+                else	
+                  assign hide_purchase_and_notify = current_variant.metafields.my_fields.hide_purchase_and_notify	
+                endif
+                if hide_purchase_and_notify	
+                  assign resellers_blocks = section.blocks | where: 'type', 'resellers'
+                endif
+               -%}
+
+{% comment %}
+  在购买页中以变体图片为节点，将产品图分组，形如 A1 $$ B1;;B2;;B3 $$ C1;;C2
+{% endcomment %}
+{%- capture image_list -%}
+  {%- for product_image in product.images -%}
+    {%- if product_image.variants.first.id != blank -%}
+      {%- comment -%}
+        If product image is attached to a variant, image.attached_to_variant not working!
+      {%- endcomment -%}
+      {%- unless forloop.first -%}$${%- endunless -%}
+      {{ product_image.id }}
+      ::{{ product_image.position }}
+      ||{{ product_image.alt }}
+    {%- else -%}
+      {%- unless forloop.first -%};;{%- endunless -%}
+      {{ product_image.position }}
+      ||{{ product_image.alt }}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+<div class="container-fits-viewport as-location-target main-product-content" data-color='light'>
+  <div class="row g-0">
+    <div class="col media-content">
+      <div class="container-fits-viewport sticky-top figure-wrap d-flex">
+        <div class="position-lg-absolute h-100 w-100">
+          <div class="position-relative w-100 h-100 overflow-hidden">
+            {%- assign title = 'products.ear_stick.ear_stick' | t -%}
+
+            {%- if title != blank -%}
+              <div class="position-absolute z-index-1 font-size-calc">
+                {% render 'product-special-title', title: title, color: dark %}
+              </div>
+            {%- endif -%}
+            {%- for variant in product.variants -%}
+              {% capture variant_image_strs %}
+                {%- render 'get-product-images-by-variant-id', image_list: image_list, target_variant: variant, all_images: product.images -%}
+              {% endcapture %}
+              {% assign variant_image_strs = variant_image_strs | split: ';;' %}
+              <div class="as-gallery-wrapper w-100 h-100 {% if current_variant.id != variant.id %}d-none{% endif %}" data-variant-id="{{ variant.id }}">
+                {%- liquid 
+                   assign variant_image_str = variant_image_strs[2] | default: variant_image_strs[0]
+                   assign variant_image = variant_image_str | split: '||'
+                   assign variant_image_pos = variant_image[0] | plus: 0 | minus: 1
+                   assign variant_image_alt = variant_image[1]
+                 -%}
+                {%- assign image = product.images[variant_image_pos] -%}
+                <div class="ratio product-media-img">
+                  <img class="h-100 w-100 object-fit-cover"
+                    width="auto"
+                    height="auto"
+                    sizes="(max-width: 1023px) 100vw, calc(100vw - 28rem)"
+                    srcset="{{ image | img_url: '414x' }} 414w,
+                            {{ image | img_url: '576' }} 576w,
+                            {{ image | img_url: '892x' }} 892w,
+                            {{ image | img_url: '1292x' }} 1292w,
+                            {{ image | img_url: '1592x' }} 1592w,
+                            {{ image | img_url: '1892x' }} 1892w,
+                            {{ image | img_url: '2192x' }} 2192w,
+                            {{ image | img_url: '2492x' }} 2492w,
+                            {{ image | img_url: '2792x' }} 2792w,
+                            {{ image | img_url: '3092x' }} 3092w,
+                            {{ image | img_url: '3392x' }} 3392w"
+                        src="{{ section.settings.image | img_url: '1472x' }}"
+                    alt="{{ variant_image_alt | escape }}">
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-auto purchase-content px-4 pt-1 pt-lg-0 d-flex flex-column justify-content-end">
+      {% render 'ear-stick-purchased', current_variant: current_variant, diff_variant: diff_variant, resellers_blocks: resellers_blocks %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "ear-stick",
+    "class": "as-accessory-purchase-area main-product main-product-accessory mb-6 mb-md-8 mb-lg-0",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "lead_paragraph",
+        "label": "Lead paragraph"
+      }, {
+        "type": "richtext",
+        "id": "store_locator_text",
+        "label": "Store locator text",
+        "default": "<p>Want to collect it at a store? Find a store</p>"
+      }, {
+        "type": "richtext",
+        "id": "shipping_text",
+        "label": "Shipping text"
+      }, {
+        "type": "checkbox",
+        "id": "show_price",
+        "label": "Show Price",
+        "default": true
+      },
+      {
+        "type": "richtext",
+        "id": "discount_info",
+        "label": "Discount info"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Resellers",
+        "type": "resellers",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button label"
+          }, 
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button linnk"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

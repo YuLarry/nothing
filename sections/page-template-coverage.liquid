@@ -1,0 +1,74 @@
+
+<ul class="list-unstyled mb-0 mt-n6 mt-sm-n9">
+  {% for block in section.blocks limit: 2 %}
+    <li class="mt-6 mt-sm-9">
+      {% render 'article-block', block: block %}
+      {% unless forloop.last %}
+      <!-- <div class="dot-border-dark border-top pb-3 my-6"></div> -->
+      {% endunless %}
+    </li>
+  {% endfor %}
+  {% if section.blocks.size > 2 %}
+    <div class="d-flex mt-7 as-showmore-btn row">
+      <div class="col-md-7">
+        <button class="btn btn-primary">{{ 'blogs.show_more' | t }}</button>
+      </div>
+    </div>
+    {% for block in section.blocks offset: 2 %}
+      <li class="mt-6 mt-sm-9 d-none as-article-list">
+        <!-- <div class="dot-border-dark border-top pb-3 my-6"></div> -->
+        {% render 'article-block', block: block %}
+      </li>
+    {% endfor %}
+  {% endif %}
+</ul>
+
+{% schema %}
+{
+  "name": "Coverage",
+  "blocks": [
+    {
+      "name": "Coverage",
+      "type": "coverage",
+      "settings": [
+        {
+          "label": "Image",
+          "type": "image_picker",
+          "info": "860px x auto .jpg recommended",
+          "id": "img"
+        },
+        {
+          "label": "Article name",
+          "type": "richtext",
+          "id": "name"
+        },
+        {
+          "label": "Article title",
+          "type": "text",
+          "id": "subtext",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipiscing"
+        },
+        {
+          "label": "Article time",
+          "type": "text",
+          "id": "heading",
+          "default": "16 December 2021"
+        },
+        {
+          "label": "Article excerpt",
+          "type": "text",
+          "id": "text",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipiscing"
+        },
+        {
+          "label": "Article Link",
+          "type": "url",
+          "id": "url"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+

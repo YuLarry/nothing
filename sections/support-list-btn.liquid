@@ -1,0 +1,52 @@
+<div class="container-core">
+  {% if section.settings.title != blank %}
+  <h3 class="fs-h2">{{ section.settings.title }}</h3>
+  {% endif %}
+  <div class="{% if section.settings.title != blank %}mt-5 mt-sm-6{% endif %}">
+    <ul class="mb-0 list-unstyled row row-cols-sm-2 row-cols-md-3 mt-n4">
+      {%- for block in section.blocks -%}
+        <li class="mt-4">
+          <a class="btn-lg btn btn-outline w-100" {% render 'link', link: block.settings.url %} 
+            href="{{ block.settings.url }}">{{ block.settings.title }}</a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "list of button",
+  "tag": "section",
+  "class": "bg-light mb-7 mb-sm-9",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "How can we help you?"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "list",
+      "type": "list",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Url"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

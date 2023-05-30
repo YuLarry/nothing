@@ -1,0 +1,12 @@
+{%- assign image2x = images['loading.gif'] -%}
+<section class="{% if custom_css %}{{ custom_css }}{% else %}as-page-loading{% endif %} page-loading flex-center" style="background: {{settings.loading_bg_color}};">
+  {% if image2x != blank %}
+    {% assign image_width = image2x.width | divided_by: 2 | append: 'x' %}
+    <img 
+      width="{{image2x.width | divided_by: 2 }}"
+      height="{{ image2x.height | divided_by: 2 }}"
+      srcset="{{ image2x | img_url: image_width }} 1x, {{ image2x | img_url: 'master' }} 2x" 
+      src="{{ image2x | img_url: image_width }}"
+      alt="loading">
+  {% endif %}
+</section>

@@ -1,0 +1,89 @@
+<address-autocomplete>
+  <div class="mt-4">
+    <div class="form-floating overflow-hidden rounded-pill">
+      <select class="form-control form-select border-0 as-form-input as-country-region as-region-select" name="receiveCountryRegion" placeholder="{{ 'service_portal.submit.Country_Region' | t }}"></select>	
+      <label>{{ 'service_portal.submit.Country_Region' | t }}</label>	
+    </div>	
+    <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">	
+      {{ 'service_portal.submit.Country_Region' | t }} {{ 'general.error_message.format_error' | t }}	
+    </div>	
+  </div>	
+  <div class="mt-4">	
+    <div class="form-floating overflow-hidden rounded-pill">	
+      <input data-type="street_address,street_number,route" type="text" name="receiveAddress1" class="as-predictive-address form-control border-0 as-form-input" 	
+        {% unless posttype == 'PickupOrDropoff' %}required{% endunless %} placeholder="{{ 'service_portal.submit.Street_and_house_number' | t }}">	
+      <label>{{ 'service_portal.submit.Street_and_house_number' | t }}</label>	
+    </div>	
+    <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">	
+      {{ 'service_portal.submit.Street_and_house_number' | t }} {{ 'general.error_message.format_error' | t }}	
+    </div>	
+  </div>
+  <div class="mt-4 as-dynamic-state">	
+    <div class="form-floating overflow-hidden rounded-pill">
+      <input type="text" name="receiveProvinceState" class="as-predictive-state form-control border-0 as-form-input as-form-input-norequired" 	
+        placeholder="{{ 'service_portal.submit.State' | t }}" />
+      <label>{{ 'service_portal.submit.State' | t }}</label>	
+    </div>	
+  </div>	
+  <div class="row row-cols-md-2">	
+    <div class="mt-4">	
+      <div class="form-floating overflow-hidden rounded-pill">	
+        <input type="text" name="receiveFirstName" class="form-control border-0 as-form-input" 	
+          {% unless posttype == 'PickupOrDropoff' %}required{% endunless %} placeholder="{{ 'service_portal.submit.Firstname' | t }}">	
+        <label>{{ 'service_portal.submit.Firstname' | t }}</label>	
+      </div>	
+      <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">	
+        {{ 'service_portal.submit.Firstname' | t }} {{ 'general.error_message.format_error' | t }}	
+      </div>	
+    </div>	
+    <div class="mt-4">	
+      <div class="form-floating overflow-hidden rounded-pill">	
+        <input type="text" name="receiveLastName" class="form-control border-0 as-form-input" 	
+          {% unless posttype == 'PickupOrDropoff' %}required{% endunless %} placeholder="{{ 'service_portal.submit.LastName' | t }}">	
+        <label>{{ 'service_portal.submit.LastName' | t }}</label>	
+      </div>	
+      <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">	
+        {{ 'service_portal.submit.LastName' | t }} {{ 'general.error_message.format_error' | t }}	
+      </div>	
+    </div>	
+  </div>	
+  <div class="mt-4">	
+    <div class="form-floating overflow-hidden rounded-pill">	
+      <input type="text" name="receiveAddress2" class="form-control border-0 as-form-input as-form-input-norequired" 	
+        placeholder="{{ 'service_portal.submit.Apartment' | t }}">	
+      <label>{{ 'service_portal.submit.Apartment' | t }}</label>	
+    </div>	
+  </div>	
+  <div class="row row-cols-md-2">	
+    <div class="mt-4">	
+      <div class="form-floating overflow-hidden rounded-pill">	
+        <input type="text" name="receiveZip" class="as-predictive-postcode form-control border-0 as-form-input" 	
+          {% unless posttype == 'PickupOrDropoff' %}required{% endunless %} placeholder="{{ 'service_portal.submit.Postal_code' | t }}">	
+        <label>{{ 'service_portal.submit.Postal_code' | t }}</label>	
+      </div>	
+      <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">	
+        {{ 'service_portal.submit.Postal_code' | t }} {{ 'general.error_message.format_error' | t }}	
+      </div>	
+    </div>	
+    <div class="mt-4">	
+      <div class="form-floating overflow-hidden rounded-pill">	
+        <input type="text" name="receiveCity" class="as-predictive-city form-control border-0 as-form-input"
+          {% unless posttype == 'PickupOrDropoff' %}required{% endunless %} placeholder="{{ 'service_portal.submit.City_town' | t }}">	
+        <label>{{ 'service_portal.submit.City_town' | t }}</label>	
+      </div>	
+      <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">	
+        {{ 'service_portal.submit.City_town' | t }} {{ 'general.error_message.format_error' | t }}	
+      </div>	
+    </div>	
+  </div>	
+  <div class="mt-4">	
+    <div class="form-floating overflow-hidden rounded-pill">	
+      <input type="text" name="receiveTel" class="form-control border-0 as-form-input" 	
+        {% unless posttype == 'PickupOrDropoff' %}required{% endunless %} placeholder="{{ 'service_portal.submit.Phone_number' | t }}">	
+      <label>{{ 'service_portal.submit.Phone_number' | t }}</label>	
+    </div>	
+    <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">	
+      {{ 'service_portal.submit.Phone_number' | t }} {{ 'general.error_message.format_error' | t }}
+    </div>
+  </div>
+</address-autocomplete>

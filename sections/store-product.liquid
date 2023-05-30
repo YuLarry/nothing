@@ -1,0 +1,71 @@
+<div class="container-fluid">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="fs-h2 mb-0">{{ section.settings.heading }}</h2>
+  {%- endif -%}
+
+  <div class="row row-cols-1 {% if section.blocks.size > 1 %}row-cols-lg-2{% endif %}">
+    {% for block in section.blocks %}
+      <div class="col">
+        {% render 'store-product', settings: block.settings, id: block.id %}
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Store Product",
+  "tag": "section",
+  "class": "store-product my-6 my-md-8",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Audio"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Product",
+      "type": "product",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Desktop image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile image"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_price",
+          "label": "Show Price",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "buy_now_text",
+          "label": "Buy now text",
+          "default": "Buy Now"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store Product",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

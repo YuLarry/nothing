@@ -1,0 +1,41 @@
+{%- assign image_xs = '576x500' -%}
+{%- assign image_md = '992x720' -%}
+{%- assign image_lg = '1200x800' -%}
+{%- assign image_xl = '1920x800' -%}
+<picture>
+  <!--[if IE]><video style="display: none;><![endif]-->
+  {% if mobile_image != blank %}
+  <source media="--small" sizes="(max-width: 576px) 100vw, 576px" 
+    srcset="{{ mobile_image | img_url: image_xs }} 1x, 
+    {{ mobile_image | img_url: image_xs, scale: 2 }} 2x,
+    {{ mobile_image | img_url: image_xs, scale: 3 }} 3x">
+  {% else %}
+  <source media="--small" sizes="(max-width: 576px) 100vw, 576px" 
+    srcset="https://iph.href.lu/{{ image_xs }}?bg=E7E5ED&amp;fg=cccccc 1x, 
+      https://iph.href.lu/{{ image_xs }}?bg=E7E5ED&amp;fg=cccccc 2x,
+      https://iph.href.lu/{{ image_xs }}?bg=E7E5ED&amp;fg=cccccc 3x">
+  {% endif %}
+  {% if desktop_image != blank %}
+  <source media="--medium" sizes="--medium 100vw, 992px" 
+    srcset="{{ desktop_image | img_url: image_md, crop: 'center' }} 1x, 
+    {{ desktop_image | img_url: image_md, crop: 'center', scale: 2 }} 2x">
+  <source media="--large" sizes="--large 100vw, 1200px" 
+    srcset="{{ desktop_image | img_url: image_lg, crop: 'center' }} 1x, 
+    {{ desktop_image | img_url: image_lg, crop: 'center', scale: 2 }} 2x">
+  <img loading="lazy" class="" 
+    src="{{ desktop_image | img_url: image_xl }}"
+    srcset="{{ desktop_image | img_url: image_xl, crop: 'center' }} 1x, {{ desktop_image | img_url: image_xl, crop: 'center', scale: 2 }} 2x" 
+    alt="{{ desktop_image.alt }}" >
+  {% else %}
+  <source media="--medium" sizes="--medium 100vw, 992px" 
+    srcset="https://iph.href.lu/{{ image_md }}?bg=E7E5ED&amp;fg=cccccc 1x, 
+      https://iph.href.lu/{{ image_md }}?bg=E7E5ED&amp;fg=cccccc 2x">
+  <source media="--large" sizes="--large 100vw, 1200px" 
+    srcset="https://iph.href.lu/{{ image_lg }}?bg=E7E5ED&amp;fg=cccccc 1x, 
+      https://iph.href.lu/{{ image_lg }}?bg=E7E5ED&amp;fg=cccccc 2x">
+  <img loading="lazy" class="object-fit-cover" 
+    srcset="https://iph.href.lu/{{ image_xl }}?bg=E7E5ED&amp;fg=cccccc 1x, https://iph.href.lu/{{ image_xl }}?bg=E7E5ED&amp;fg=cccccc 2x" 
+    alt="..." >
+  {% endif %}
+  <!--[if IE]></video><![endif]-->
+</picture>

@@ -1,0 +1,37 @@
+{% render 'specs-template',
+  title: section.settings.title,
+  blocks: section.blocks
+ %}
+{% schema %}
+{
+  "name": "SPEC",
+  "tag": "div",
+  "class": "accordion-item",
+  "settings": [
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "title"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "specs",
+      "type": "specs",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "specs key"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "specs value"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

@@ -1,0 +1,37 @@
+<div class="container-core">
+  <h3 class="fs-h2">{{ 'service_portal.submit.RMA_title' | t }}</h3>
+  <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+    <div class="mt-4 mt-md-5">
+      <p class="mb-3">{{ 'service_portal.submit.RMA_subline' | t }}</p>
+      <form class="mt-4 px-lg-6 as-rma-form as-service-portal-form" 
+        method="post" autocomplete="false" novalidate="true"
+        action="{{ settings.checkRMACode }}">
+        <div class="form-floating overflow-hidden rounded-pill">
+          <input type="text" name="RMACode" class="form-control border-0 as-form-input as-form-rma-code" required id="rma-code" placeholder="{{ 'service_portal.submit.RMA_label' | t }}">
+          <label for="rma-code">{{ 'service_portal.submit.RMA_label' | t }}</label>
+        </div>
+        <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+          {{ 'service_portal.submit.RMA_label' | t }} {{ 'general.error_message.format_error' | t }}
+        </div>
+        {% assign des = 'service_portal.submit.RMA_description_html' | t %}
+        <div class="mt-3 px-4 richtext">
+          {% render 'richtext', richtext: des %} 
+        </div>
+        <div class="text-start mt-3 px-4 text-danger invalid-feedback as-form-error-tips">
+          {{ 'service_portal.error.other_error' | t }}
+        </div>
+        <div class="text-start mt-3 px-4 text-danger invalid-feedback as-form-error-tips-421 as-form-error-tips-special">
+          {{ 'service_portal.error.421_error' | t }}
+        </div>
+        <button class="btn btn-lg btn-primary w-100 mt-5 mt-sm-6 as-btn" type="submit">{{ 'service_portal.general.next_step' | t }}</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "After sale RMA",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9 d-none as-tab-content"
+}
+{% endschema %}

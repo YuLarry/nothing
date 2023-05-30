@@ -1,0 +1,73 @@
+<div class="container-core">
+  <h3 class="fs-h2">{{ 'service_portal.track.input_number_subline' | t }}</h3>
+  <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+    <div class="mt-4 mt-md-5">
+      <form class="mt-4 px-lg-6 as-track-form" 
+        method="post" autocomplete="false" novalidate="true"
+        data-link-list="{{ routes.root_url }}pages/support-request-status-business"
+        data-link-detail="{{ routes.root_url }}pages/support-request-status"
+        action="{{ settings.queryWorkOrderDetail }}">
+        <div class="mt-4">
+          <div class="mt-4 form-floating overflow-hidden rounded-pill">
+            <input type="text" class="form-control border-0 as-form-input" 
+              required name="workOrderNo" placeholder="{{ 'service_portal.track.workOrderNo' | t }}">
+            <label>{{ 'service_portal.track.workOrderNo' | t }}</label>
+          </div>
+          <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+            {{ 'service_portal.track.workOrderNo' | t }} {{ 'general.error_message.format_error' | t }}
+          </div>
+          {% assign des = 'service_portal.track.workOrderNo_description' | t %}
+          <div class="text-muted fs-small mt-3 px-4 richtext">
+            {% render 'richtext', richtext: des %}
+          </div>
+        </div>
+        <div class="mt-4">
+          <div class="mt-4 form-floating overflow-hidden rounded-pill">
+            <input type="text" name="email" class="form-control border-0 as-form-input as-send-verification-email" 
+            pattern='^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+              required placeholder="{{ 'service_portal.track.email' | t }}">
+            <label>{{ 'service_portal.track.email' | t }}</label>
+          </div>
+          <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+            {{ 'service_portal.track.email' | t }} {{ 'general.error_message.format_error' | t }}
+          </div>
+        </div>
+        <div class="row row-cols-md-2">
+          <div class="mt-4">
+            <div class="form-floating overflow-hidden rounded-pill">
+              <input type="text" class="form-control border-0 as-form-input as-track-code-input" 
+                required name="code" placeholder="{{ 'service_portal.track.verification_code' | t }}">
+              <label>{{ 'service_portal.track.verification_code' | t }}</label>
+            </div>
+            <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+              {{ 'service_portal.track.verification_code' | t }} {{ 'general.error_message.format_error' | t }}
+            </div>
+          </div>
+          <div class="mt-4">
+            <button class="btn btn-lg btn-primary w-100 as-send-verification-code" type="button" data-action="{{ settings.sendVerificationCode }}">{{ 'service_portal.track.send_verification_code' | t }}<span class="as-btn-countdown"></span></button>
+            <div class="text-start mt-3 px-4s text-danger invalid-feedback as-verification-code-error">	
+              {{ 'service_portal.error.other_error' | t }}
+            </div>	
+          </div>
+        </div>
+        <div class="mt-6">
+          <div class="text-start mb-3 px-4 text-danger invalid-feedback as-form-error-tips">
+            {{ 'service_portal.error.other_error' | t }}
+          </div>
+          <div class="text-start mb-3 px-4 text-danger invalid-feedback as-form-error-tips-464 as-form-error-tips-special">	
+            {{ 'service_portal.error.464_error' | t }}
+          </div>	
+          <button class="btn btn-lg btn-primary w-100 as-btn" type="submit">{{ 'service_portal.general.submit' | t }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Input order number",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9 as-tab-content as-footer2bottom"
+}
+{% endschema %}

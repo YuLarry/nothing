@@ -1,0 +1,239 @@
+{% if product.selected_variant %}
+{%- assign current_variant = product.selected_variant -%}
+{% else %}
+{%- assign current_variant = product.variants.first -%}
+{% endif %}
+{% for block in section.blocks %}
+<!-- <section class="container-fits-viewport snap-bgs font-base as-snap-bg as-snap-list position-relative section-top section-bottom"> -->
+<section class="position-relative as-snap-list z-index-2 container-fits-viewport{% unless forloop.first %} hero-text-{{ block.settings.text_color }}{% endunless %}">
+  {% unless forloop.first %}
+  <figure class="mb-0">
+  {% if block.settings.checkbox_img %}
+    <picture>
+      {% if block.settings.imageMob %}
+      <source media="(max-width: 576px)" 
+        sizes="(max-width: 576px) 100vw, 576px" 
+        srcset="
+          {{ block.settings.imageMob | img_url: 'master' }}" >
+      {% endif %}
+      {% if block.settings.imagePad %}
+      <source media="(max-width: 1280px)" 
+        sizes="(max-width: 1280px) 100vw, 1280px"
+        srcset="
+          {{ block.settings.imagePad | img_url: '600x' }} 600w,
+          {{ block.settings.imagePad | img_url: '857x' }} 857w,
+          {{ block.settings.imagePad | img_url: '1069x' }} 1069w,
+          {{ block.settings.imagePad | img_url: '1280x' }} 1280w">
+      {% endif %}
+      <img class="position-absolute h-100 w-100 object-fit-cover"
+        sizes="(max-width: 2160px) 100vw, 2160px"
+        width="{{block.settings.image.width}}"
+        height="{{block.settings.image.height}}"
+        loading="lazy"
+        srcset="
+          {{ block.settings.image | img_url: '1494x' }} 1494w,
+          {{ block.settings.image | img_url: '1560x' }} 1560w,
+          {{ block.settings.image | img_url: '1660x' }} 1660w,
+          {{ block.settings.image | img_url: '1901x' }} 1901w,
+          {{ block.settings.image | img_url: '2040x' }} 2040w,
+          {{ block.settings.image | img_url: '2155x' }} 2155w,
+          {{ block.settings.image | img_url: '2160x' }} 2160w,
+          {{ block.settings.image | img_url: '3840x' }} 3840w" 
+        src="{{ block.settings.image | img_url: '2160x' }}"
+        alt="{{ block.settings.image.alt }}">
+    </picture>
+  {% elsif block.settings.checkbox_video %}
+    <video class="video object-fit-cover container-fits-viewport w-100 as-video" webkit-playsinline playsinline autoplay muted loop>
+      <source 
+        id="as-video-source" 
+        data-src="{{ block.settings.video_pc }}" 
+        data-src-sm="{{ block.settings.video_mob }}" 
+        src="{{ block.settings.video_pc }}" type="video/mp4">
+    </video>
+  {% endif %}
+  </figure>
+  {% endunless %}
+  <section class="section-with-mask px-1 px-sm-0 position-relative">
+    <div class="container-topic px-3 px-sm-6">
+      <div class="row pb-7 pb-sm-0 container-fits-viewport justify-content-end">
+        <div class="col-12 col-sm-4 col-xl-3 pb-7 pb-sm-0 align-self-end align-self-sm-center text-{{ block.settings.text_color }} as-location-target" data-color='{{ block.settings.text_color }}'>
+          {% if block.settings.title0 != blank %}<p class="mb-5 fs-h1 font-ndot55">{{ block.settings.title0 }}</p>{% endif %}
+          <div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small">
+            {{ block.settings.lead_graph_1 | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+          </div></div></div></div></div>
+          {% if block.settings.title != blank %}<p class="my-5 fs-h1 font-ndot55">{{ block.settings.title }}</p>{% endif %}
+          <div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small">
+            {{ block.settings.lead_graph_2 | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+          </div></div></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+{%- comment -%}
+<!-- 图文分开固定滚动版本 保留至2.0上线 -->
+{% unless forloop.first %}
+<!-- <section class="container-fits-viewport snap-bgs font-base as-snap-bg as-snap-list position-relative section-top section-bottom"> -->
+<section class="as-snap-list container-fits-viewport hero-text-{{ block.settings.text_color }} as-scrollmagic-item z-index-2">
+  <figure class="mb-0">
+  {% if block.settings.checkbox_img %}
+    <picture>
+      {% if block.settings.imageMob %}
+      <source media="(max-width: 576px)" 
+        sizes="(max-width: 576px) 100vw, 576px" 
+        srcset="
+          {{ block.settings.imageMob | img_url: 'master' }}" >
+      {% endif %}
+      {% if block.settings.imagePad %}
+      <source media="(max-width: 1280px)" 
+        sizes="(max-width: 1280px) 100vw, 1280px"
+        srcset="
+          {{ block.settings.imagePad | img_url: '600x' }} 600w,
+          {{ block.settings.imagePad | img_url: '857x' }} 857w,
+          {{ block.settings.imagePad | img_url: '1069x' }} 1069w,
+          {{ block.settings.imagePad | img_url: '1280x' }} 1280w">
+      {% endif %}
+      <img class="position-absolute h-100 w-100 object-fit-cover"
+        sizes="(max-width: 2160px) 100vw, 2160px"
+        width="{{block.settings.image.width}}"
+        height="{{block.settings.image.height}}"
+        loading="eager"
+        srcset="
+          {{ block.settings.image | img_url: '1494x' }} 1494w,
+          {{ block.settings.image | img_url: '1560x' }} 1560w,
+          {{ block.settings.image | img_url: '1660x' }} 1660w,
+          {{ block.settings.image | img_url: '1901x' }} 1901w,
+          {{ block.settings.image | img_url: '2040x' }} 2040w,
+          {{ block.settings.image | img_url: '2155x' }} 2155w,
+          {{ block.settings.image | img_url: '2160x' }} 2160w,
+          {{ block.settings.image | img_url: '3840x' }} 3840w" 
+        src="{{ block.settings.image | img_url: '2160x' }}"
+        alt="{{ block.settings.image.alt }}">
+    </picture>
+  {% elsif block.settings.checkbox_video %}
+    <video class="video object-fit-cover container-fits-viewport w-100 as-video" webkit-playsinline playsinline autoplay muted loop>
+      <source 
+        id="as-video-source" 
+        data-src="{{ block.settings.video_pc }}" 
+        data-src-sm="{{ block.settings.video_mob }}" 
+        src="{{ block.settings.video_pc }}" type="video/mp4">
+    </video>
+  {% endif %}
+  </figure>
+</section>
+{% endunless %}
+<section class="section-with-mask px-1 px-sm-0{% if forloop.last %} position-relative{% else %} as-scrollmagic-item{% endif %} z-index-2">
+  <div class="container-topic px-3 px-sm-6">
+    <div class="row pb-7 pb-sm-0 container-fits-viewport justify-content-end">
+      <div class="col-12 col-sm-4 col-xl-3 pb-7 pb-sm-0 align-self-end align-self-sm-center text-{{ block.settings.text_color }} as-location-target" data-color='{{ block.settings.text_color }}'>
+        <p class="mb-0 fs-h1 font-ndot55">{{ block.settings.title }}</p>
+        <div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small">
+          <div class="mt-5">{{ block.settings.lead_graph_2 | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}</div>
+        </div></div></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% unless forloop.last %}
+<div class="container-fits-viewport as-scrollmagic-item"></div>
+{% endunless %}
+{%- endcomment -%}
+{% endfor %}
+
+{% schema %}
+{
+  "name": "hero",
+  "class": "snap-child is-sticky mb-full as-snap-wraps",
+  "tag": "div",
+  "blocks": [
+    {
+      "name": "Brand assets",
+      "type": "Assets",
+      "settings": [
+        {
+          "type":      "select",
+          "id":        "text_color",
+          "label":     "Text color",
+          "options": [
+            {
+              "value": "dark",
+              "label": "Dark"
+            },
+            {
+              "value": "white",
+              "label": "Light"
+            }
+          ],
+          "default":   "dark"
+        },
+        {
+          "type": "text",
+          "id": "title0",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "lead_graph_1",
+          "label": "Lead paragraph"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "lead_graph_2",
+          "label": "Lead paragraph"
+        },
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "checkbox",
+          "label": "Enable Image",
+          "default": false,
+          "id": "checkbox_img",
+          "info": "Check when the background is picture"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop image",
+          "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+        },
+        {
+          "type": "image_picker",
+          "id": "imagePad",
+          "label": "Pad image",
+          "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+        },
+        {
+          "type": "image_picker",
+          "id": "imageMob",
+          "label": "Mobile image",
+          "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+        },
+        {
+          "type": "checkbox",
+          "label": "Enable Video",
+          "default": false,
+          "id": "checkbox_video",
+          "info": "Check when the background is video"
+        },
+        {
+          "type": "text",
+          "id": "video_pc",
+          "label": "Desktop video link"
+        },
+        {
+          "type": "text",
+          "id": "video_mob",
+          "label": "Mobile video link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,67 @@
+<div class="position-relative">
+  <ul class="list-unstyled mb-0 pt-3">
+    {% for item in order.line_items %}
+    <li class="row mt-2 position-relative">
+      <a class="stretched-link" href="{{ item.url | within: collections.all }}"></a>
+      <div class="col-3 col-xl-2 position-relative">
+        <img loading="lazy" width="{{ item.image.width }}" 
+          height="{{ item.image.height }}"  
+          src="{{ item | img_url: '180x' }}" 
+          srcset="{{ item | img_url: '180x' }} 1x, {{ item | img_url: '360x' }} 2x, {{ item | img_url: '520x' }} 3x"
+          alt="{{ item.title | escape }}" class="img-fluid">
+        <!-- Image -->
+      </div>
+      <div class="col-9 col-xl-10">
+            <div class="">
+              <span>{{item.quantity}}&nbsp;&nbsp;x&nbsp;&nbsp;{{ item.product.title }}</span>
+            </div>
+            {% unless item.variant.title contains 'Default' %}
+              {%- for option in item.product.options_with_values -%}
+                <div class="">
+                  <span>{{ option.name }}:</span>
+                  <span>{{ item.variant.options[forloop.index0] }}</span>
+                </div>
+              {%- endfor -%}
+            {% endunless %}
+            <div class="">
+              <span>{{ 'cart.general.price' | t }}:</span>
+              <span>
+                {% if item.original_price > item.final_price %}
+                <del class="me-2 text-muted">{{ item.original_price | money }}</del>
+                {% endif %}
+                {{ item.final_price | money }}
+              </span>
+            </div>
+      </div>
+    </li>
+    {% endfor %}
+    <li class="py-3">
+          <dl class="d-flex justify-content-between mb-0">
+            <dt class="mb-0">{{ 'customer.order.subtotal' | t }}</dt>
+            <dt class="mb-0">{{ order.line_items_subtotal_price | money }}</dt>
+          </dl>
+          <dl class="d-flex justify-content-between mb-0">
+            <dt class="mb-0">{{ 'customer.order.shipping' | t }}</dt>
+            <dt class="mb-0">{{ order.shipping_price | money }}</dt>
+          </dl>
+          <dl class="d-flex justify-content-between mb-0">
+            <dt class="mb-0">{{ 'customer.order.tax' | t }}</dt>
+            <dt class="mb-0">{{ order.tax_price | money }}</dt>
+          </dl>
+          <div class="dot-border-dark border-top my-2"></div>
+          <dl class="d-flex justify-content-between mb-0">
+            <dt class="mb-0">{{ 'customer.order.total' | t }}</dt>
+            <dt class="mb-0">{{ order.total_price | money }}</dt>
+          </dl>
+          {% if order.metafields.shipping.est_shipping_time != blank %}
+            <div class="dot-border-dark border-top my-2"></div>
+            <dl class="mb-0">
+              {{ order.metafields.shipping.est_shipping_time }}       
+            </dl>
+          {% endif %}
+    </li>
+  </ul>
+  {% if request.page_type contains 'customers/account' %}
+  <a href="{{ order.customer_url }}" class="stretched-link d-none"></a>
+  {% endif %}
+</div>

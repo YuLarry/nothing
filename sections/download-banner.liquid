@@ -1,0 +1,209 @@
+<style>
+  .qr-code{
+    max-width: 296px;
+  }
+  .google-play svg{
+    max-width: 100%;
+  }
+  @media screen and (max-width: 576px) {
+    .content-wrap{
+      max-width: 204px;
+    }
+  }
+  @media screen and (max-width: 1280px) {
+    .qr-code, .google-play{
+      max-width: 204px;
+    }
+  }
+</style>
+
+<div class="{% if section.settings.show_mask_on_mob %}product-tpl {% endif %}">
+  <div class="position-absolute h-100 w-100 top-0 start-0 as-location-target" data-color='{{ section.settings.text_color }}'>
+    <figure class="h-100 mb-0 w-100 bg-light">
+      {% if section.settings.image %}
+      <picture class="w-100 h-100 d-none d-sm-block">
+        <img class="img-fluid w-100 h-100 object-fit-cover"
+          srcset="
+            {{ section.settings.image | img_url: '600x' }} 600w,
+            {{ section.settings.image | img_url: '857x' }} 857w,
+            {{ section.settings.image | img_url: '1069x' }} 1069w,
+            {{ section.settings.image | img_url: '1244x' }} 1244w,
+            {{ section.settings.image | img_url: '1494x' }} 1494w,
+            {{ section.settings.image | img_url: '1560x' }} 1560w,
+            {{ section.settings.image | img_url: '1660x' }} 1660w,
+            {{ section.settings.image | img_url: '1901x' }} 1901w,
+            {{ section.settings.image | img_url: '2040x' }} 2040w,
+            {{ section.settings.image | img_url: '2155x' }} 2155w,
+            {{ section.settings.image | img_url: '2160x' }} 2160w,
+            {{ section.settings.image | img_url: '3840x' }} 3840w" 
+          src="{{ section.settings.image | img_url: '2160x' }}"
+          alt="{{ section.settings.image.alt }}">
+      </picture>
+      {% endif %}
+      {% if section.settings.imageMob %}
+        <picture class="w-100 h-100 d-block d-sm-none">
+          <img class="img-fluid w-100 h-100 object-fit-cover"
+          srcset="{{ section.settings.imageMob | img_url: 'master' }}" 
+          src="{{ section.settings.imageMob | img_url: 'master' }}"
+          alt="{{ section.settings.imageMob.alt }}">
+        </picture>
+      {% endif %}
+    </figure>
+  </div>
+  {%- liquid 
+    if section.settings.block_alignment_in_mobile == 'top'
+      assign justifyContent = 'justify-content-start justify-content-sm-center'
+    elsif section.settings.block_alignment_in_mobile == 'center'
+      assign justifyContent = 'justify-content-center'
+    elsif section.settings.block_alignment_in_mobile == 'bottom'
+      assign justifyContent = 'justify-content-end justify-content-sm-center'
+    endif 
+  -%}
+  <div class="{{ justifyContent }} {% if section.settings.show_mask_on_mob %}section-with-mask {% endif %}container-fits-viewport section-top section-bottom text-{{ section.settings.text_color }} w-100 position-relative d-flex flex-column container-topic px-3 px-sm-6">
+    {% if section.settings.block_alignment_in_mobile != 'top' %}
+    <div class="d-sm-none"></div>
+    {% endif %}
+    <div class="d-none d-sm-block"></div>
+
+    <div class="py-7 py-sm-9">
+      <div class="row justify-content-end">
+        <div class="col-12 col-sm-4 col-xl-3">
+          {% if section.settings.heading != blank %}
+            <h2 class="mb-0 fs-h1 w-100">{{ section.settings.heading }}</h2>
+          {% endif %}
+          <div class="content-wrap">    
+          {% if section.settings.lead_graph != blank %}
+            <div class="mt-5">
+              {{ section.settings.lead_graph | replace: '<p', '<p class="fs-h2 mb-0"' | replace: '<a', '<a class="text-white text-decoration-underline"' }}
+            </div>
+          {% endif %}
+          {% if section.settings.googleplay_link != blank %}
+            <div class="mt-6 mt-sm-7">
+              <a {% if section.settings.link contains 'https://' or section.settings.link contains 'http://' %}target="_blank" rel="noopener noreferrer"{% endif %}
+                  href="{{ section.settings.googleplay_link }}">
+                <span class="d-none d-sm-block google-play">
+                  {% render 'icon-googleplay-pc' %}
+                </span>
+                <span class="d-block d-sm-none google-play">
+                  {% render 'icon-googleplay-mob' %}
+                </span>
+              </a>
+            </div>
+          {% endif %}
+          {% if section.settings.google_link_note != blank %}
+            <div class="mt-2">{{ section.settings.google_link_note | replace: '<p', '<p class="small mb-0 opacity-30"' | replace: '<a', '<a class="text-white text-decoration-underline"' }}</div>
+          {% endif %}
+          {% if section.settings.qr_code_text != blank %}
+            <div class="mt-7 mt-sm-5">{{ section.settings.qr_code_text | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="text-white text-decoration-underline"' }}</div>
+          {% endif %}
+          {% if section.settings.qr_code != blank %}
+            <div class="ratio ratio-1x1 mt-7 mt-sm-9 qr-code">
+              <img loading="lazy" src="{{ section.settings.qr_code | img_url: 'master' }}">
+            </div>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Download banner",
+  "class": "position-relative overflow-hidden snap-child as-snap-list",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type":      "select",
+      "id":        "text_color",
+      "label":     "Text color",
+      "options": [
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "white",
+          "label": "Light"
+        }
+      ],
+      "default":   "dark"
+    },
+    {
+      "label": "Show Mask On Mob",
+      "type": "checkbox",
+      "id": "show_mask_on_mob"
+    },
+    {
+      "type": "richtext",
+      "id": "lead_graph",
+      "label": "Description"
+    },
+    {
+      "type": "url",
+      "id": "googleplay_link",
+      "label": "Google Play link"
+    },
+    {
+      "type": "richtext",
+      "id": "google_link_note",
+      "label": "Google link note"
+    },
+    {
+      "type": "richtext",
+      "id": "qr_code_text",
+      "label": "QR code text"
+    },
+    {
+      "type": "image_picker",
+      "id": "qr_code",
+      "label": "QR Code"
+    },
+    {
+      "type": "select",
+      "id": "block_alignment_in_mobile",
+      "label": "Block alignment in Mobile",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }  
+      ],
+      "default": "center"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop image",
+      "info": "1920px x 1200px .jpg recommended"
+    },
+    {
+      "type": "image_picker",
+      "id": "imageMob",
+      "label": "Mobile image",
+      "info": "576px x 812px .jpg recommended"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Download banner",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

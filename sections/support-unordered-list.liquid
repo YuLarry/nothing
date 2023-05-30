@@ -1,0 +1,72 @@
+<div class="container-core">
+  {% if section.settings.title != blank %}
+  <h3 class="fs-h2">{{ section.settings.title }}</h3>
+  {% endif %}
+  <div class="{% if section.settings.title != blank %}mt-5 mt-sm-6 dot-border-dark border-top{% endif %}">
+    <div class="mt-4 mt-md-5">
+      {% if section.settings.subline != blank %}
+      <p class="mb-3">{{ section.settings.subline }}</p>
+      {% endif %}
+      <{% if section.settings.if_unordered %}ul{% else %}ol{% endif %} class="mb-0">
+        {% for block in section.blocks %}
+          <li>{% render 'richtext', richtext: block.settings.title %}</li>
+        {% endfor %}
+      </{% if section.settings.if_unordered %}ul{% else %}ol{% endif %}>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Unordered list",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "subline"
+    },
+    {
+      "label": "If unordered list",
+      "type": "checkbox",
+      "id": "if_unordered",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "name": "list",
+      "type": "list",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "list"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Unordered list",
+      "blocks": [
+        {
+          "type": "list"
+        },
+        {
+          "type": "list"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

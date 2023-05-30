@@ -1,0 +1,47 @@
+
+<div class="mb-7 mb-sm-9 pt-7 pt-sm-9 as-page-title">
+  <div class="container-core">
+    <div class="fst-italic mb-5 mb-md-6 mb-lg-7">{{ 'service_portal.general.support_centre' | t }}</div>
+    <h1 class="fs-h1 mb-0">{{ 'service_portal.imei.title' | t }}</h1>
+    <div class="mt-5 mt-md-6 mt-lg-8 dot-border-dark border-bottom">
+      <div class="row">
+        <div class="pb-1 pb-lg-3 col-md-8">
+          {{ 'service_portal.imei.description' | t }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-core">
+  <h3 class="fs-h2">{{ 'service_portal.imei.input_your_imei_number' | t }}</h3>
+  <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+    <div class="mt-5 mt-md-7">
+      <form class="px-lg-6 as-imei-form" 
+        method="get" autocomplete="false" novalidate="true"
+        action="{{ settings.imei }}">
+        <div class="form-floating overflow-hidden rounded-pill">
+          <input type="text" name="unique_no" class="form-control border-0 as-form-input" required placeholder="{{ 'service_portal.imei.imei_number_label' | t }}" required>
+          <label>{{ 'service_portal.imei.imei_number_label' | t }}</label>
+        </div>
+        <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+          {{ 'service_portal.imei.imei_number_label' | t }} {{ 'general.error_message.format_error' | t }}
+        </div>
+        {% assign des = 'service_portal.imei.find_your_imei_number_html' | t %}
+        <div class="mt-3 px-4 richtext">
+          {% render 'richtext', richtext: des %} 
+        </div>
+        <button class="btn btn-lg btn-primary w-100 mt-5 mt-sm-6 as-btn" type="submit">{{ 'service_portal.general.submit' | t }}</button>
+        <div class="text-start mt-3 px-4 text-danger invalid-feedback as-form-error-tips">
+          {{ 'service_portal.imei.error' | t }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Input IMEI number",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9 as-imei-track as-footer2bottom"
+}
+{% endschema %}

@@ -1,0 +1,78 @@
+{% if section.settings.title %}
+{% render 'aboutus-title', title: section.settings.title %}
+{% endif %}
+<div class="">
+  {% for block in section.blocks %}
+    <div class="border-top"></div>
+    <div class="row justify-content-between align-items-center py-3">
+      <div class="col-8 d-flex justify-content-between align-items-lg-center flex-column flex-lg-row">
+        <h5 class="mb-0 font-base">{{ block.settings.title }}</h5>
+        <p class="mb-0 text-lg-end text-nowrap">{{ block.settings.base }}</p>
+      </div>
+      <div class="col-auto">
+        <a href="{{ block.settings.button_link }}" class="btn btn-danger" target="_blank" rel="noopener noreferrer">{{ section.settings.apply_button_text }}</a>
+      </div>
+    </div>
+    {% if forloop.last %}<div class="border-top"></div>{% endif %}
+  {% endfor %}
+  {% if section.settings.button_text != blank %}
+  <div class="pt-4 pt-sm-5 d-sm-inline-block">
+    <a href="{{ section.settings.button_link }}" class="btn btn-primary w-100 text-uppercase" target="_blank" rel="noopener noreferrer">{{ section.settings.button_text }}</a>
+  </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "New job openings",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "View all Button Text"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "View all Button Link"
+    },
+    {
+      "type": "text",
+      "id": "apply_button_text",
+      "label": "Apply Button Text"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "New job openings",
+      "type": "job",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "base",
+          "label": "Base"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

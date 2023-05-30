@@ -1,0 +1,15 @@
+{% style %}
+@media (max-width: 1023.98px){
+  .custom-position { {{ badge_position }} }
+}
+{% endstyle %}
+<div class="position-absolute z-index-1 image-width-calc custom-position pt-7">
+  <img
+    width="{{ image.width }}"
+    height="{{ image.height }}"
+    src="{{ image | img_url: '250x' }}"
+    srcset="{{ image | img_url: '250x' }} 1x, {{ image | img_url: '500x' }} 2x, {{ image | img_url: '750x' }} 3x"
+    alt=""
+    class="img-fluid lazyload w-100"
+  >
+</div>

@@ -1,0 +1,17 @@
+{% if shop.customer_accounts_enabled %}
+  {% if customer %}
+    <input class="_as-login-flag" type="hidden">
+  {% endif %}
+{% endif %}
+<input class="_as-lang" type="hidden" value="{{settings.store_code}}">
+<input class="_as-home" type="hidden" value="{{request.origin}}">
+<input class="_as-source" type="hidden" value="store">
+<input class="_as-store" type="hidden" value="{{ shop.permanent_domain | remove: ".myshopify.com" }}">
+<input class="_as-callback" type="hidden" value="{{ request.origin | append: routes.account_login_url }}">
+<input class="_as-account-url" type="hidden" value="{{ routes.account_url }}">
+<input class="_as-return-to as-update-redirect" type="hidden" data-link="{{ request.origin | append: '/pages/redirect' }}" value="{{ request.host | append: '/pages/redirect' }}">
+
+<input class="_as-invites-api" type="hidden" value="{{ settings.invites_api_host }}">
+
+<div class="as-lg-pc-flag d-lg-none"></div>
+<div class="as-md-pc-flag d-md-none"></div>

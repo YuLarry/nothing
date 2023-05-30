@@ -1,0 +1,35 @@
+
+<div class="cart-bg-img d-none d-sm-block">
+  <figure class="h-100 mb-0 w-100">
+    <picture class="w-100">
+      <img class="img-fluid w-100 h-100 object-fit-cover"
+        srcset="{{ section.settings.image | img_url: 'master' }}" 
+        src="{{ section.settings.image | img_url: 'master' }}"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        loading="eager"
+        alt="{{ section.settings.image.alt }}">
+    </picture>
+  </figure>
+</div>
+
+<div class="cart-width position-relative px-2 py-2 px-sm-5 py-md-3 font-base cart-z-index" id="site-cart">
+  {% render 'cart-form', offcanvas: false %}
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "class": "container-fits-viewport text-black d-flex bg-light",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ]
+}
+{% endschema %}
+
+

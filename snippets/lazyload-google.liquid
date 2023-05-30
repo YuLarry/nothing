@@ -1,0 +1,42 @@
+{% comment %} lazyload third party script {% endcomment %}
+<template class="as-lazyload-content">https://www.recaptcha.net/recaptcha/api.js?onload=onRecaptchaLoad</template>
+
+<script>
+  
+  function appendScript(content) {
+    const element = document.createElement("script");
+    element.src = content;
+    document.body.appendChild(element);
+  }
+
+  const lazyloadContent = document.querySelectorAll('.as-lazyload-content')
+  if (lazyloadContent.length > 0) {
+    if (window.addEventListener) {
+      window.addEventListener(
+        "load",
+        () => {
+          lazyloadContent.forEach((content) => {
+            appendScript(content.innerHTML)
+          })
+          false
+        }
+      );
+    } else if (window.attachEvent) {
+      window.attachEvent(
+        "onload",
+        () => {
+          lazyloadContent.forEach((content) => {
+            appendScript(content.innerHTML)
+          })
+        }
+      );
+    } else {
+      window.onload = () => {
+        lazyloadContent.forEach((content) => {
+          appendScript(content.innerHTML)
+        })
+      }
+    }
+  }
+
+</script>

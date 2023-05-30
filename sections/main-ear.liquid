@@ -1,0 +1,374 @@
+{% capture estimated_delivery_time %}{%- render 'delivery-time' -%}{% endcapture %}
+{% capture current_delivery_time %}{%- render 'current-delivery-time' -%}{% endcapture %}
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign selected_variant = product.selected_variant
+
+  assign current_available = current_variant.available
+  	
+  if product.has_only_default_variant	
+    assign hide_purchase_and_notify = product.metafields.my_fields.hide_purchase_and_notify	
+  else	
+    assign hide_purchase_and_notify = current_variant.metafields.my_fields.hide_purchase_and_notify	
+  endif
+
+  assign current_shipping_info = null	
+
+  assign delivery_text = null
+  assign delivery_data = selected_variant.metafields.my_fields.delivery_time.value
+  unless hide_purchase_and_notify
+    if current_available
+      if delivery_data != blank
+        if selected_variant.inventory_quantity <= delivery_data.last.quantity
+          assign current_available = false
+        endif
+      endif
+      for delivery_policy in delivery_data
+          if selected_variant.inventory_quantity > delivery_policy.quantity
+            assign delivery_text = delivery_policy.text
+            break
+          endif
+      endfor
+    endif
+  endunless
+
+  unless hide_purchase_and_notify	
+    if current_available	
+      assign current_shipping_info = current_variant.metafields.my_fields.shipping_info	
+      unless current_shipping_info
+        assign current_shipping_info = section.settings.shipping_text | replace: '<p', '<p class="mb-0"' | replace: '$current_delivery_time$', current_delivery_time | replace: '$delivery_time$', estimated_delivery_time
+      endunless
+    endif
+  endunless
+  if hide_purchase_and_notify	
+    assign resellers_blocks = section.blocks | where: 'type', 'resellers'
+    assign has_resellers_blocks = false
+    for temp in resellers_blocks
+      assign has_resellers_blocks = true
+    endfor
+  endif
+
+  assign rotate360_blocks = section.blocks | where: 'type', 'rotate360'
+  assign has_rotate360_blocks = false
+  for temp in rotate360_blocks
+    assign has_rotate360_blocks = true
+  endfor
+
+  assign quick_link_blocks = section.blocks | where: 'type', 'quick_link'
+  assign has_quick_link_blocks = false
+  for temp in quick_link_blocks
+    assign has_quick_link_blocks = true
+  endfor
+
+  assign dot_holder_blocks = section.blocks | where: 'type', 'dot_holder'
+-%}
+
+{% comment %} 在购买页中以变体图片为节点，将产品图分组，形如 A1 $$ B1;;B2;;B3 $$ C1;;C2 {% endcomment %}
+{%- capture image_list -%}
+  {%- for product_image in product.images -%}
+    {%- if product_image.variants.first.id != blank -%}
+      {%- comment -%} If product image is attached to a variant, image.attached_to_variant not working! {%- endcomment -%}
+      {%- unless forloop.first -%}$${%- endunless -%}
+      {{ product_image.id }}::{{ product_image.position }}||{{ product_image.alt }}
+    {%- else -%}
+      {%- unless forloop.first -%};;{%- endunless -%}{{ product_image.position }}||{{ product_image.alt }}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+<div id="{{ section.settings.id_for_hash }}">
+  <div class="product-wrap as-location-target main-product-ear2" data-color="dark">
+
+    <div class="row g-0">
+      <div class="col media-content">
+        <div class="container-fits-viewport sticky-top figure-wrap d-flex">
+          <div class="position-lg-absolute h-100 w-100">
+            <div class="position-relative w-100 h-100 overflow-hidden">
+              {%- if section.settings.title != blank -%}
+                <div class="position-absolute z-index-1 font-size-calc">
+                  {% render 'product-special-title', title: section.settings.title, color: dark %}
+                </div>
+              {%- endif -%}
+              {%- for variant in product.variants -%}
+                {% capture variant_image_strs %}
+                  {%- render 'get-product-images-by-variant-id', image_list: image_list, target_variant: variant, all_images: product.images -%}
+                {% endcapture %}
+                {% assign variant_image_strs = variant_image_strs | split: ';;' %}
+                <div class="as-gallery-wrapper w-100 h-100 {% if current_variant.id != variant.id %}d-none{% endif %}" data-variant-id="{{ variant.id }}">
+                  {%- liquid 
+                     assign variant_image_str = variant_image_strs[2] | default: variant_image_strs[0]
+                     assign variant_image = variant_image_str | split: '||'
+                     assign variant_image_pos = variant_image[0] | plus: 0 | minus: 1
+                     assign variant_image_alt = variant_image[1]
+                   -%}
+                  {%- assign image = product.images[variant_image_pos] -%}
+                  <div class="ratio product-media-img">
+                    <img class="h-100 w-100 object-fit-cover"
+                      width="auto"
+                      height="auto"
+                      sizes="(max-width: 1023px) 100vw, calc(100vw - 28rem)"
+                      srcset="{{ image | img_url: '414x' }} 414w,
+                              {{ image | img_url: '576' }} 576w,
+                              {{ image | img_url: '892x' }} 892w,
+                              {{ image | img_url: '1292x' }} 1292w,
+                              {{ image | img_url: '1592x' }} 1592w,
+                              {{ image | img_url: '1892x' }} 1892w,
+                              {{ image | img_url: '2192x' }} 2192w,
+                              {{ image | img_url: '2492x' }} 2492w,
+                              {{ image | img_url: '2792x' }} 2792w,
+                              {{ image | img_url: '3092x' }} 3092w,
+                              {{ image | img_url: '3392x' }} 3392w"
+                          src="{{ image | img_url: '1472x' }}"
+                      alt="{{ variant_image_alt | escape }}">
+                  </div>
+                </div>
+              {%- endfor -%}
+              {% if section.settings.badge_image != blank %}
+                {% render 'product-badge-image', image: section.settings.badge_image, badge_position: section.settings.badge_position %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col col-auto purchase-content px-4 pt-1 pt-lg-0 d-flex flex-column justify-content-end">
+        {% render 'ear-purchased',
+          heading: section.settings.heading,
+          current_shipping_info: current_shipping_info,
+          delivery_text: delivery_text,
+          current_variant: current_variant,
+          current_available: current_available,
+          selected_variant: selected_variant,
+          estimated_delivery_time: estimated_delivery_time,
+          current_delivery_time: current_delivery_time,
+          has_resellers_blocks: has_resellers_blocks,
+          hide_purchase_and_notify: hide_purchase_and_notify,
+          dot_holder_blocks: dot_holder_blocks
+        %}
+      </div>
+    </div>
+  </div>
+  <div class="as-fixed-bar as-sticky-bar sticky-bar position-fixed bg-white w-100 py-3 py-lg-0">
+    <div class="row h-100 g-0 bar-content py-0 py-lg-1">
+      <div class="col d-lg-flex align-items-center justify-content-end px-4">
+        <div class="d-lg-block d-none">
+          {% for block in quick_link_blocks %}
+          <a data-id="fl_tab_click" data-sectionName="{{ forloop.index }}" class="as-customer-select-list text-start text-dark px-2" href="{{ block.settings.link }}">{{ block.settings.link_text }}</a>
+          {% endfor %}
+        </div>
+        <div class="position-relative customer-select w-100 as-customer-select d-lg-none d-block z-index-2">
+          <ol class="list-unstyled w-100 customer-select-lists overflow-hidden mb-0">
+            {% for block in quick_link_blocks %}
+            <li class="py-1">
+              <a data-id="fl_tab_click" data-sectionName="{{ forloop.index }}" class="as-customer-select-list btn px-0 cursor-pointer d-flex justify-content-between {% if forloop.first %}active{% endif %}" href="{{ block.settings.link }}">{{ block.settings.link_text }}</a>
+            </li>
+            {% endfor %}
+          </ol>
+          <div class="btn px-0 cursor-pointer d-flex justify-content-between align-items-center">
+            <span class="as-customer-selected">{% for block in quick_link_blocks %}{% if forloop.first %}{{ block.settings.link_text }}{% endif %}{% endfor %}</span>
+            <div class="end-0 pe-4 position-absolute">
+              <div class="customer-select-arrow flex-center" >
+                {% render 'select-arrow' %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col col-lg-auto w-lg-fixed align-self-end align-self-lg-center px-4 as-sticky-bar {% if hide_purchase_and_notify %}{% unless has_resellers_blocks %}d-none{% endunless %}{% else %}{% unless current_available %}d-none{% endunless %}{% endif %}">
+        
+        {% for block in resellers_blocks %}
+        <div class="">
+          <a class="btn btn-primary" href="{{ block.settings.button_link }}">{{ block.settings.button_label }}</a>
+        </div>
+        {% endfor %}
+        <div class="as-product-form-wrap{% if hide_purchase_and_notify %} d-none{% endif %}{% unless current_available %} d-none{% endunless %}">
+          <div class="">
+            <product-form class="product-form">
+              {% liquid
+                            assign productFormClass = 'form'
+                            assign productFormClass = productFormClass | append: ' as-async-add-form'
+                            %}
+              {%- form 'product', product, id: product_form_id, class: productFormClass, novalidate:
+                    'novalidate', data-type: 'add-to-cart-form' -%}
+                <input class="as-form-quantity" type="hidden" name="id" value="{{ current_variant.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <input type="hidden" name="accessories" value="">
+                <div class="d-grid as-form-button-wrap">
+                  {% render 'add-error-message' %}
+                  <button name="add" type="submit" class="btn btn-primary">
+                    {{ "products.general.add_to_cart" | t }}
+                  </button>
+                </div>
+              {%- endform -%}
+            </product-form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/hogan" class="as-variant-price-template">
+  @{#data}@
+    {% assign target_price = '@{price}@' %}
+    <div class="d-inline">{{ 'products.product.price.from_price_html' | t: price: target_price }}</div>
+  @{/data}@
+</script>
+
+{% schema %}
+{
+  "name": "ear main-product",
+  "class": "main-product main-product-phone1 b-version",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Dot title"
+    },{
+      "type": "image_picker",
+      "id": "badge_image",
+      "label": "Badge image",
+      "info": "PNG"
+    },
+    {
+      "type":      "select",
+      "id":        "badge_position",
+      "label":     "Pin the mob badege on",
+      "options": [
+        {
+          "value": "left:0;bottom:0;",
+          "label": "LeftBottom"
+        },
+        {
+          "value": "left:0;top:0;",
+          "label": "LeftTop"
+        },
+        {
+          "value": "right:0;bottom:0;",
+          "label": "RightBottom"
+        },
+        {
+          "value": "right:0;top:0;",
+          "label": "RightTop"
+        }
+      ],
+      "default": "right:0;bottom:0;"
+    },
+    {
+      "type": "text",
+      "id": "pages",
+      "label": "Left subtitle"
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Right subtitle"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "lead_paragraph",
+      "label": "Lead paragraph"
+    },
+    {
+      "type": "text",
+      "id": "id_for_hash",
+      "label": "ID for hash"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Badge"
+    },
+    {
+      "type": "richtext",
+      "id": "store_locator_text",
+      "label": "Store locator text",
+      "default": "<p>Want to collect it at a store? Find a store</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_text",
+      "label": "Shipping text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variant_box",
+      "label": "Show variant box",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show Price",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "discount_info",
+      "label": "Discount info"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Resellers",
+      "type": "resellers",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        }, 
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button linnk"
+        }
+      ]
+    },
+    {
+      "name": "Dot holder",
+      "type": "dot_holder",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "dot_image",
+          "label": "image"
+        },
+        {
+          "type": "richtext",
+          "id": "dot_text",
+          "label": "text",
+          "default": "<p>Special thank you for black dot holders, Learn more</p>"
+        }
+      ]
+    },
+    {
+      "name": "Quick link",
+      "type": "quick_link",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Please use it to add anchors."
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text"
+        }, 
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

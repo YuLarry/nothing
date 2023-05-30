@@ -1,0 +1,129 @@
+
+<div class="as-location-target container-video d-flex gx-0 justify-content-center m-auto position-relative" data-color='{{ section.settings.text_color }}'>
+  <input type="hidden" id="as-is-lg-flag" class="d-block d-lg-none" />
+  <video class="video container-fits-viewport w-100 as-video" webkit-playsinline playsinline>
+    <source 
+      id="as-video-source" 
+      data-src="{{ section.settings.video_src }}" 
+      data-src-sm="{{ section.settings.video_sm_src }}" 
+      src="{{ section.settings.video_src }}" type="video/mp4">
+  </video>
+  <div class="media-btn as-backdrop container-fits-viewport cursor-pointer flex-center active overflow-hidden position-absolute">
+    <figure class="d-flex justify-content-center m-auto h-100 as-backdrop-image w-100">
+      <picture class="picture w-100">
+        <source media="(max-width: 768px)" 
+          sizes="(max-width: 1125px) 100vw, 1125px"
+          srcset="
+            {{ section.settings.mobile_image | img_url: '320x' }} 320w,
+            {{ section.settings.mobile_image | img_url: '597x' }} 597w,
+            {{ section.settings.mobile_image | img_url: '795x' }} 795w,
+            {{ section.settings.mobile_image | img_url: '985x' }} 985w,
+            {{ section.settings.mobile_image | img_url: '1125x' }} 1125w">
+        <img loading="lazy" class="w-100 object-fit-cover h-100"
+          sizes="(max-width: 1920px) 100vw, 1920px" 
+          src="{{ section.settings.desktop_image | img_url: 'master' }}"
+          srcset="
+            {{ section.settings.desktop_image | img_url: '753x' }} 753w,
+            {{ section.settings.desktop_image | img_url: '1133x' }} 1133w,
+            {{ section.settings.desktop_image | img_url: '1428x' }} 1428w,
+            {{ section.settings.desktop_image | img_url: '1720x' }} 1720w,
+            {{ section.settings.desktop_image | img_url: '1920x' }} 1920w" 
+          alt="{{ section.settings.desktop_image.alt }}" >
+      </picture>
+    </figure>
+    <!-- <button class="as-play-btn position-absolute zindex-1 px-0 flex-center bg-transparent border-0 media-voice-wrap text-dark">
+      {% render 'icon-play' %}
+    </button> -->
+    <button class="btn dot-btn py-3 px-4 text-{{ section.settings.text_color }} text-uppercase as-play-btn position-absolute zindex-1">
+      <span class="align-items-center d-flex position-relative">{{ 'homepage.video.title' | t }}</span>
+    </button>
+    
+  </div>
+  <div class="progress-wrap as-progress-wrap is-active px-3 px-sm-4 px-xl-6">
+    <div class="px-1 px-sm-0">
+      <div class="progress as-progress">
+        <div class="as-current-progress current-progress">
+          
+        </div>
+      </div>
+      <ul class="d-flex font-55 font-base justify-content-between list-unstyled mb-0 text-{{ section.settings.text_color }} mt-3 mt-sm-4">
+        <li class="">
+          <div>
+            <span class="as-current-time current-time d-none d-md-inline-block">00:00</span>
+            <span class="text-uppercase as-pasuse cursor-pointer d-none">{{ 'homepage.video.pause' | t }}</span>
+            <span class="text-uppercase as-play cursor-pointer">{{ 'homepage.video.play' | t }}</span>
+          </div>
+        </li>
+        <li class=""></li>
+        <li class="">
+          <div>
+            <span class="text-uppercase cursor-pointer as-muted">{{ 'homepage.video.mute' | t }}</span>
+            <span class="as-ovre-time over-time text-end d-none d-md-inline-block">00:00</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Video",
+    "tag": "section",
+    "class": "as-video-wrap w-100 snap-child as-snap-list",
+    "settings": [
+      {
+        "type":      "select",
+        "id":        "text_color",
+        "label":     "Text color",
+        "options": [
+          {
+            "value": "dark",
+            "label": "Dark"
+          },
+          {
+            "value": "white",
+            "label": "Light"
+          }
+        ],
+        "default":   "dark"
+      },
+      {
+        "type": "header",
+        "content": "Placeholder Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "desktop_image",
+        "label": "Desktop image",
+        "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+      },
+      {
+        "type": "image_picker",
+        "id": "mobile_image",
+        "label": "Mobile image",
+        "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+      },
+      {
+        "type": "header",
+        "content": "Video"
+      },
+      {
+        "type": "text",
+        "id": "video_src",
+        "label": "Desktop video link"
+      },
+      {
+        "type": "text",
+        "id": "video_sm_src",
+        "label": "Mobile video link"
+      }
+    ],
+    "presets": [
+    {
+      "name": "video",
+      "category": "Content"
+    }
+  ]
+  }
+{% endschema %}

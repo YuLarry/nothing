@@ -1,0 +1,223 @@
+<div class="as-pc-flag d-lg-none"></div>
+<div class="container-fluid">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="fs-h2 mb-0">{{ section.settings.heading }}</h2>
+  {%- endif -%}
+</div>
+
+{%- assign accessories_collection = section.settings.accessories_collection -%}
+<style>
+  .accessories-content-{{ section.id }} .price .price__sale {
+    align-items: baseline;
+  }
+  .accessories-content-{{ section.id }} .add-to-cart:focus {
+    outline: none;
+  }
+  .accessories-content-{{ section.id }} .picture {
+    --bs-aspect-ratio: calc(492 / 407 * 100%);
+  }
+  .accessories-content-{{ section.id }} .swiper-slide {
+    --nothing-swiper-slide-width: 25%;
+  }
+  .accessories-content-{{ section.id }} .enable-pc .swiper-slide {
+    --nothing-swiper-slide-width: 23%;
+  }
+  @media (max-width: 1023px) {
+    .accessories-content-{{ section.id }} .picture {
+      --bs-aspect-ratio: calc(335 / 280 * 100%);
+    } 
+  }
+</style>
+
+{%- liquid
+  assign show_accessory = false
+  for accessory in accessories_collection
+    if accessory.available
+      assign show_accessory = true
+    endif
+  endfor
+-%}
+
+<div class="accessories-content-{{ section.id }} as-accessories-with-modal-list">
+  
+  {% if show_accessory %}
+    {% assign acc_count = 0 %}
+
+    {%- for accessory in accessories_collection -%}
+      {%- if accessory.available -%}
+
+      {% liquid
+        assign currentStore = request.host
+        assign diff_variant = false
+        if accessory.metafields.my_fields.display_different_variant != blank
+          assign diff_variant = true
+          assign diff_variant_data = accessory.metafields.my_fields.display_different_variant.value
+          assign current_store_variant_id = null
+          for data in diff_variant_data
+            for store in data.stores
+              if store == currentStore
+                assign current_store_variant_id = data.variant | plus: 0
+                break
+              endif
+            endfor
+          endfor
+        endif
+
+        assign current_accessory_variant = accessory.selected_or_first_available_variant
+        if diff_variant
+          for variant in accessory.variants
+            if variant.id  == current_store_variant_id
+              assign current_accessory_variant = variant
+            endif
+          endfor
+        endif
+      %}
+      
+      {% if diff_variant == false or diff_variant and current_accessory_variant.available  %}
+        {% assign acc_count = acc_count | plus: 1 %}
+
+        {% liquid
+          if section.settings.enable_ear1_promotion and accessory.handle == 'ear-1'
+            assign enable_promotion = true
+          else
+            assign enable_promotion = false
+          endif
+        %}
+
+        <div class="d-none as-all-selection">
+          <label for="accessory-{{ accessory.id }}-variant" class="form-label visually-hidden">Variant</label>
+          <select id="accessory-{{ accessory.id }}-variant" class="as-accessory-variant" name="id" data-type="accessory" data-url="{{ accessory.url }}" data-section="{{ section.id }}" data-product-id="{{ accessory.id }}">
+            {%- for variant in accessory.variants -%}
+              {% liquid
+                if enable_promotion
+                  assign variant_compare_at_price = variant.price
+                  assign variant_price = variant.price | times: 80 | divided_by: 100
+                else
+                  assign variant_price = variant.price
+                  assign variant_compare_at_price  = variant.compare_at_price
+                endif
+              %}
+
+              <option data-show-promotion-text="{{enable_promotion}}" data-price="{{ variant_price }}" 
+                {% if diff_variant %}
+                  {% if variant.id == current_store_variant_id %}
+                    selected
+                  {% endif %}
+                {% else %}
+                  {% if forloop.first %}selected{% endif %}
+                {% endif %}
+                {% if variant_compare_at_price > variant_price %}
+                  data-compare-price="{{ variant_compare_at_price }}"
+                {% else %}
+                  data-compare-price="{{ variant_price }}"
+                {% endif %}
+                data-handle="{{ accessory.handle }}"
+                data-name="{{ accessory.title }}"
+                data-title="{{ variant.title }}"
+                data-variant-title="{{ accessory.title }} - {{ variant.title }}"
+                data-sku="{{ variant.sku }}"
+                class="as-accessory-variant-option" value="{{ variant.id }}"
+                {% if variant.option1 %}data-option1="{{ variant.option1 }}"{% endif %}>
+                  {{ variant.title }}
+                </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      {% endif %}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {% render 'accessories-content', 
+      section: section,
+      product_blocks: accessories_collection,
+      count: acc_count,
+      picture_sizes: '(min-width: 767px) 100vw, 25vw'
+    %}
+
+    <div class="offcanvas offcanvas-top accessory-offcanvas as-accessory-offcanvas" id="productCardModal" aria-hidden="true" aria-labelledby="productCardModal" tabindex="-1">
+      <div class="d-block d-lg-flex flex-lg-row-reverse justify-content-lg-between px-4 mt-5 mt-lg-5">
+        <a data-bs-dismiss="offcanvas" aria-label="Close" href="javascript:void(0);" class="text-reset d-block mb-3 mb-lg-0 font-ndot55">(&nbsp;{{ 'cart.general.close' | t }}&nbsp;)</a>
+        <div>
+          {%- if section.settings.heading != blank -%}
+            <h2 class="fs-h2 mb-0">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="offcanvas-body mb-lg-8">
+        {% render 'accessories-content', 
+          section: section,
+          product_blocks: accessories_collection,
+          count: acc_count,
+          picture_sizes: '(min-width: 767px) 100vw, 25vw',
+          env: 'modal'
+        %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<script type="text/hogan" class="as-item-price-template">
+  @{#data}@
+    <div> 
+      @{#show_compare}@
+        <s class="d-inline">@{format_compared_price}@</s>
+      @{/show_compare}@
+        <div class="d-inline @{#show_compare}@ text-danger @{/show_compare}@">@{format_price}@</div>
+      @{#show_compare}@
+        <div class="d-inline text-danger">
+          @{#show_promotion_text}@
+            {{ section.settings.ear1_promotion_text }}
+          @{/show_promotion_text}@
+          @{^show_promotion_text}@
+            (-@{discount}@)
+          @{/show_promotion_text}@
+        </div>
+      @{/show_compare}@ 
+    </div>
+  @{/data}@
+</script>
+
+<script src="{{ 'cards-swiper-index.min.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Accessories with modal",
+  "tag": "section",
+  "class": "my-6 my-lg-8 accessories-with-modal cards-swiper as-cards-swiper-wrapper as-purchase-recommendation",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Accessories."
+    },
+    {
+      "type": "product_list",
+      "id": "accessories_collection",
+      "label": "Accessories"
+    },
+    {
+      "type": "richtext",
+      "id": "ear_stick_discount_info",
+      "label": "Ear stick discount info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_ear1_promotion",
+      "label": "Enable ear1 promotion price and text",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "ear1_promotion_text",
+      "label": "Ear1 promotion text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accessories with modal",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

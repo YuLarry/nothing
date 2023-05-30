@@ -1,0 +1,70 @@
+{% if isheader %}
+<div class="accordion bg-white px-2 d-sm-none" id="accordionExample">
+  <div class="accordion-item px-2">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="as-accordion-button accordion-button navbar-height py-0 text-uppercase collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        {{ 'customer.addresses.address_form.company' | t }}
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+{% endif %}
+      <div class="d-none d-sm-block">
+        {% assign title = 'customer.addresses.address_form.company' | t %}
+        {% render 'page-title-v2', title: title  %}
+      </div>
+      <ul class="{% if isheader %}accordion-fits-viewport w-100{% else %}d-none d-sm-block{% endif %} list-unstyled my-0">
+        <li class="nav-item pt-1 pb-sm-1 pb-2">
+          <a class="{% if handle == 'about' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+            href="{{ routes.root_url }}pages/about">{{ 'general.company.about_us' | t }}</a>
+        </li>
+        <li class="nav-item pt-1 pb-sm-1 pb-2">
+          <a class="{% if handle == 'blog' or handle == 'brand-assets' or handle == 'coverage' or request.page_type == 'article' or current_tags %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+            href="{{ blog.url }}">{{ 'general.company.newsroom' | t }}</a>
+        
+          <ul class="list-unstyled mb-0 ps-2">
+            <li class="nav-item pt-1 pb-sm-1 pb-2">
+              <a class="{% if handle == 'blog' or request.page_type == 'article' %}{% unless current_tags %}active{% endunless %}{% endif %} d-flex nav-before-arrow text-uppercase" 
+                href="{{ blog.url }}">{{ 'blogs.all' | t }}</a>
+            </li>
+            <li class="nav-item pt-1 pb-sm-1 pb-2">
+              <a class="{% if handle == 'coverage' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+                href="{{ routes.root_url }}pages/coverage">{{ 'blogs.coverage' | t }}</a>
+            </li>
+            {%- comment -%}
+            {%- for tag in blog.all_tags %}
+              <li class="nav-item pt-1 pb-sm-1 pb-2">
+                <a class="{% if current_tags contains tag %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+                  href="{{ blog.url }}/tagged/{{ tag | handleize }}">{{ tag | capitalize }}</a>
+              </li>
+            {%- endfor -%}
+            {%- endcomment -%}
+            <li class="nav-item pt-1 pb-sm-1 pb-2">
+              <a class="{% if handle == 'brand-assets' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+                href="{{ routes.root_url }}pages/brand-assets">{{ 'blogs.brand_assets' | t }}</a>
+            </li>
+          </ul> 
+        </li>
+        <li class="nav-item pt-1 pb-sm-1 pb-2">
+          {% comment %} <a class="d-flex nav-before-arrow text-uppercase" 
+            href="https://nothing.community/">{{ 'general.company.community' | t }}</a> {% endcomment %}
+          <a class="d-flex nav-before-arrow text-uppercase" 
+          href="{{ routes.root_url }}pages/nothing-community">{{ 'general.company.community' | t }}</a>
+        </li>
+        <li class="nav-item pt-1 pb-sm-1 pb-2">
+          <a class="{% if handle == 'career' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+            href="{{ routes.root_url }}pages/career">{{ 'general.company.careers' | t }}</a>
+        </li>
+        <li class="nav-item pt-1 pb-sm-1 pb-2">
+          <a class="{% if handle == 'business-enquiry' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+            href="{{ routes.root_url }}pages/business-enquiry">{{ 'general.company.contact' | t }}</a>
+        </li>
+        <li class="nav-item pt-1 pb-sm-1 pb-2">
+          <a class="d-flex nav-before-arrow text-uppercase" 
+            href="{{ routes.root_url }}pages/privacy-policy">{{ 'general.legal.title' | t }}</a>
+        </li>
+      </ul>
+{% if isheader %}
+    </div>
+  </div>
+</div>
+{% endif %}

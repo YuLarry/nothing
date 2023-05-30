@@ -1,0 +1,35 @@
+<form method="post" 
+  action="{{ settings.subscribe_api }}" 
+  accept-charset="UTF-8" 
+  enctype="multipart/form-data"
+  class="needs-validation as-general-form" 
+  novalidate="true" 
+  autocomplete="off">
+  <div>
+    {% unless place == 'homepage' %}
+      <label class="text-uppercase mb-2 pb-2" for="sign-up-email">{{ 'products.notify_me.title' | t }}</label>
+    {% endunless %}
+    <div>
+      {% if settings.store_tag != blank or settings.notify_me_tag != blank %}
+        <input type="hidden" name="tags" value="{{settings.store_tag}},{{settings.notify_me_tag}}">
+      {% endif %}
+      <div class="input-group input-group-overlay">
+        <input class="as-form-input z-index-0 bg-transparent placeholder-{{ color }} dot-border-{{ color }} border-{{ color }} font-change form-control text-{{ color }}"
+          type="email" name="email" id="sign-up-email" 
+          placeholder="{{ 'products.notify_me.email' | t }}" 
+          pattern='^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+          required>
+        <button class="btn btn-{{ color }} font-55 z-index-0">
+          {% if place == 'homepage' %}{{ 'products.notify_me.submit' | t }}{% else %}{{ 'products.notify_me.submit' | t }}{% endif %}
+        </button>
+      </div>
+      <div class="text-start px-0 mt-2 text-danger invalid-feedback as-error-tips text-uppercase">
+        {{ 'products.notify_me.email' | t }}{{ 'general.error_message.format_error' | t }}
+      </div>
+    </div>
+  </div>
+  <div class="as-tips-success d-none text-danger mt-2 text-uppercase">{{ 'products.notify_me.success' | t }}</div>
+
+  <div data-default="{{ 'products.notify_me.error' | t }}" data-error406="{{ 'general.newsletter_form.distributor_error' | t }}" class="as-tips-error d-none text-danger mt-2 text-uppercase">{{ 'products.notify_me.error' | t }}</div>
+
+</form>

@@ -1,0 +1,114 @@
+
+<div class="container-core">
+  <h3 class="fs-h2">{{ 'service_portal.submit.product_information_title' | t }}</h3>
+  <input type="hidden" value="{{settings.upload}}" class="as-upload-file-api">
+  <form class="as-service-portal-form as-form-no-action" autocomplete="false" novalidate="true">
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+      <div class="mt-4 mt-md-5">
+        <p class="mb-3">{{ 'service_portal.submit.product_subline' | t }}</p>
+        <div class="px-lg-6">
+          <div class="mt-4 form-floating overflow-hidden rounded-pill">
+            <input type="text" name="model" class="form-control border-0 as-form-input as-form-modelName" 
+              required placeholder="{{ 'service_portal.submit.model_label' | t }}">
+            <label>{{ 'service_portal.submit.model_label' | t }}</label>
+          </div>
+          <div class="mt-4 form-floating overflow-hidden rounded-pill">
+            <input type="text" name="SN_IMEI" form="submitWorkOrder" class="form-control border-0 as-form-input as-form-SN_IMEI" 
+              required id="SN_IMEI" placeholder="{{ 'service_portal.submit.sn_imei_label' | t }}">
+            <label for="SN_IMEI">{{ 'service_portal.submit.sn_imei_label' | t }}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+      <div class="mt-4 mt-md-5">
+        <p class="mb-3">{{ 'service_portal.submit.purchase_subline' | t }}</p>
+        <div class="px-lg-6">
+          <div class="mt-4">
+            <div class="form-floating overflow-hidden rounded-pill">
+              <select type="text" name="purchaseChannel" form="submitWorkOrder" class="form-control form-select border-0 as-form-input" 
+                required id="purchase-channel">
+                {% for block in section.blocks %}
+                  <option value="{% unless block.settings.disabled %}{{ block.settings.title }}{% endunless %}">{{ block.settings.title }}</option>
+                {% endfor %}
+              </select>
+              <label for="purchase-channel">{{ 'service_portal.submit.pruchase_method_label' | t }}</label>
+            </div>
+            <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+              {{ 'service_portal.submit.pruchase_method_label' | t }} {{ 'general.error_message.format_error' | t }}
+            </div>
+          </div>
+          <div class="mt-4 form-floating overflow-hidden rounded-pill">
+            <input type="date" name="purchaseDate" form="submitWorkOrder" class="form-control border-0 as-form-input as-purchase-date d-flex align-items-center justify-content-start" 
+              id="purchase-date" placeholder="{{ 'service_portal.submit.pruchase_date_label' | t }}">
+            <label for="purchase-date">{{ 'service_portal.submit.pruchase_date_label' | t }}</label>
+          </div>
+          <div class="mt-4">
+            <div class="mt-4 form-floating overflow-hidden rounded-pill">
+              <input type="text" name="orderNumber" form="submitWorkOrder" class="form-control border-0 as-form-input" 
+                required id="order-number" placeholder="{{ 'service_portal.submit.order_number_label' | t }}">
+              <label for="order-number">{{ 'service_portal.submit.order_number_label' | t }}</label>
+            </div>
+            <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+              {{ 'service_portal.submit.order_number_label' | t }} {{ 'general.error_message.format_error' | t }}
+            </div>
+          </div>
+          {% assign des = 'service_portal.submit.order_number_description_html' | t %}
+          <div class="text-muted fs-small mt-3 px-4 richtext">
+            {% render 'richtext', richtext: des %}
+          </div>
+          <div class="mt-5 as-upload-file">
+            <p class="mb-4">{{ 'service_portal.submit.purchase_voucher' | t }}</p>
+            <div class="row row-cols-4 gx-0 flex-column">
+              <input type="hidden" form="submitWorkOrder" name="purchaseVoucher" class="as-hidden-input" />
+              <input accept="image/jpg,image/png,image/jpeg" class="visually-hidden as-upload-input" id="purchaseVoucher" type="file">
+              <div class="as-upload-image-wrap d-none mb-3 position-relative">
+                <div class="as-upload-reset cursor-pointer end-0 position-absolute text-primary w-100 h-100" style="background: rgba(0, 0, 0, .5)">
+                  <button type="button" class="btn-close end-0 p-2 position-absolute top-0 border-0"></button>
+                </div>
+                <img class="as-upload-image w-100" />
+              </div>
+              <label for="purchaseVoucher">
+                <a class="btn btn-primary">{{ 'service_portal.general.upload' | t }}</a>
+              </label>
+            </div>
+            {% assign file_type = 'service_portal.general.file_type' | t %}
+            <div class="text-muted fs-small mt-3 px-4 richtext">
+              {% render 'richtext', richtext: file_type %}
+            </div>
+          </div>
+          <div>
+            <button class="as-next-step btn btn-lg btn-primary mt-5 mt-sm-6 as-btn" type="submit">{{ 'service_portal.general.next_step' | t }}</button>
+            <p class="as-pre-step cursor-pointer mb-0 mt-3 text-center text-primary">{{ 'service_portal.general.go_back' | t }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% schema %}
+{
+  "name": "Product information",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9 as-tab-content d-none",
+  "blocks": [
+    {
+      "name": "Purchase method",
+      "type": "method",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Text"
+        },
+        {
+          "type": "checkbox",
+          "id": "disabled",
+          "label": "Disabled",
+          "default": false
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

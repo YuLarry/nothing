@@ -1,0 +1,16 @@
+<div class="accordion" id="collapse-{{ section.id }}">
+  {% for block in section.blocks %}
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="collapse-{{ block.id }}-summary">
+      <button class="accordion-button collapsed text-start" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ block.id }}-details" aria-expanded="true" aria-controls="collapse-{{ block.id }}-details">
+        <span class="pe-2">{{ block.settings.title }}</span>
+      </button>
+    </h2>
+    <div id="collapse-{{ block.id }}-details" class="accordion-collapse collapse" aria-labelledby="collapse-{{ block.id }}-summary" data-parent="#collapse-{{ section.id }}">
+      <div class="accordion-body">
+        {{ block.settings.details }}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

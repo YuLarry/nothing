@@ -1,0 +1,393 @@
+{%- comment -%}保证点击地图上除门店外的地点边距正常{%- endcomment -%}
+<style>
+  .gm-style.poi-info-window {
+    padding: 20px;
+  }
+  @media (max-width: 1023.98px) {
+    .tabs-ribbon-wrapper {
+      position: sticky;
+      top: 0;
+    }
+  }
+</style>
+
+{%- liquid
+  assign metafields_store_locator_local = page.metafields.custom.store_locator.value['Local stores']
+  assign metafields_store_locator_online = page.metafields.custom.store_locator.value['Online stores']
+  
+  assign store_type_list = ''
+  for property in metafields_store_locator_local
+    assign store_type_list = store_type_list | append: property.storetype | append: ','
+  endfor
+  assign store_type_list = store_type_list | split: ',' | uniq
+
+  assign category_list = ''
+  for property in metafields_store_locator_local
+    assign category_list = category_list | append: property.category | append: ','
+  endfor
+  assign category_list = category_list | split: ',' | uniq
+
+  assign online_store_block_list = section.blocks | where: 'type', 'online_store'
+-%}
+
+{%- liquid 
+  assign show_map = section.settings.show_map
+  if show_map
+    assign mob_top_placeholder_class = 'd-none d-lg-block'
+    assign wrapper_class = 'tab-content'
+    assign store_aside_class = 'as-store-aside tab-pane fade'
+    assign store_aside_active_class = 'show active'
+    assign store_map_class = ''
+    assign store_img_class = 'online-store-img-wrapper'
+    assign nav_tab_class = 'as-nav-tab'
+  else
+    assign mob_top_placeholder_class = ''
+    assign wrapper_class = 'd-none d-lg-block'
+    assign store_aside_class = ''
+    assign store_aside_active_class = ''
+    assign store_map_class = 'd-none'
+    assign store_img_class = ''
+    assign nav_tab_class = ''
+  endif
+-%}
+
+<div class="as-store-locator-container store-locator-container container-fits-viewport row g-0 " data-enable-filter-by-region="{{ section.settings.enable_display_maps_by_country }}">
+  <a class="d-none as-current-position"></a>
+  <div id="as-is-mobile-flag" class="d-block d-lg-none"></div>
+  <div class="col-lg position-relative overflow-hidden {{ wrapper_class }}">
+    {%- assign active_store_aside = true -%}
+    {%- if metafields_store_locator_local.size > 0 -%}
+      <google-map class="as-map-wrapper map-wrapper w-100 h-100 {{ store_aside_class }} {{ store_map_class }} {% if active_store_aside %}{{ store_aside_active_class }}{% endif %}" data-id="as-local-stores-tab">
+        <div class="as-map w-100 h-100"></div>
+        {%- comment -%}Hide controls until they are moved into the map.{%- endcomment -%}
+        <div class="d-none">
+          <input class="as-default-latitude" type="hidden" name="default_latitude" value="{{ section.settings.default_latitude | default: metafields_store_locator_local[0].latitude }}">
+          <input class="as-default-longitude" type="hidden" name="default_longitude" value="{{ section.settings.default_longitude | default: metafields_store_locator_local[0].longitude }}">
+
+          {%- comment -%}获取当前位置的icon{%- endcomment -%}
+          <div class="as-position-control control-wrapper">
+            <button class="as-get-current-pos control" title="Current Position">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                <path fill="none" stroke="currentColor" d="M11,5.5A5.5,5.5,0,1,1,5.5,0,5.5,5.5,0,0,1,11,5.5Z" transform="translate(2.5 2.5)" stroke-miterlimit="10" stroke-width="1"/>
+                <path fill="currentColor" stroke="none" d="M7,3.5A3.5,3.5,0,1,1,3.5,0,3.5,3.5,0,0,1,7,3.5" transform="translate(4.5 4.5)"/>
+                <path fill="none" stroke="currentColor" d="M.5,2.5V0" transform="translate(7.5 13.5)" stroke-miterlimit="10" stroke-width="1"/>
+                <path fill="none" stroke="currentColor" d="M.5,2.5V0" transform="translate(7.5)" stroke-miterlimit="10" stroke-width="1"/>
+                <path fill="none" stroke="currentColor" d="M2.5.5H0" transform="translate(0 7.5)" stroke-miterlimit="10" stroke-width="1"/>
+                <path fill="none" stroke="currentColor" d="M2.5.5H0" transform="translate(13.5 7.5)" stroke-miterlimit="10" stroke-width="1"/>
+              </svg>
+            </button>
+          </div>
+
+          {%- comment -%}地图上门店icon{%- endcomment -%}
+          <div class="as-store-marker">
+            <svg fill="none" height="45" viewBox="0 0 35 45" width="35" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><clipPath id="a"><path d="m0 2h34.9448v41.5328h-34.9448z"/></clipPath><g clip-path="url(#a)"><path d="m17.4323 36.0755c9.2171 0 16.6887-7.4716 16.6887-16.6887 0-9.2172-7.4716-16.68905-16.6887-16.68905-9.21684 0-16.688159 7.47185-16.688159 16.68905.000286 9.2171 7.471599 16.6887 16.688159 16.6887z" fill="#020202"/><g stroke="#000"><path d="m17.4309 36.0757c9.217 0 16.6888-7.4718 16.6888-16.6887 0-9.217-7.4718-16.68876-16.6888-16.68876-9.21691 0-16.688712 7.47176-16.688712 16.68876 0 9.2169 7.471802 16.6887 16.688712 16.6887z" stroke-width="1.25028"/><path d="m29.0296 32.061-11.121 11.2561-11.71867-10.941 11.20647-.1571h.0001z" fill="#020202" stroke-miterlimit="10" stroke-width=".286433"/></g></g></svg>
+          </div>
+          <div class="as-store-marker-specific">
+            <svg width="35" height="45" viewBox="0 0 35 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_301_4298)">
+              <path d="M17.4312 36.3001C26.6882 36.3001 34.1921 28.7965 34.1921 19.5395C34.1921 10.2825 26.6882 2.77832 17.4312 2.77832C8.17451 2.77832 0.670898 10.2825 0.670898 19.5395C0.671474 28.7965 8.17509 36.3001 17.4312 36.3001Z" fill="#C8132E"/>
+              <path d="M17.4315 36.2995C26.6881 36.2995 34.1921 28.7955 34.1921 19.5389C34.1921 10.2823 26.6881 2.77832 17.4315 2.77832C8.17487 2.77832 0.670898 10.2823 0.670898 19.5389C0.670898 28.7955 8.17487 36.2995 17.4315 36.2995Z" stroke="#C8132E" stroke-width="1.25568"/>
+              <path d="M17.3947 32.2815L5.78223 32.4446L17.9151 43.7722L29.4291 32.1187L17.3947 32.2815Z" fill="#C8132E"/>
+              <path d="M13.622 14.5691C14.1554 14.5691 14.5745 14.1499 14.5745 13.6165C14.5745 13.0831 14.1554 12.6639 13.622 12.6639C13.0885 12.6639 12.6694 13.0831 12.6694 13.6165C12.6694 14.1499 13.0885 14.5691 13.622 14.5691ZM21.2426 14.5691C21.776 14.5691 22.1951 14.1499 22.1951 13.6165C22.1951 13.0831 21.776 12.6639 21.2426 12.6639C20.7091 12.6639 20.29 13.0831 20.29 13.6165C20.29 14.1499 20.7091 14.5691 21.2426 14.5691ZM13.622 17.4268C14.1554 17.4268 14.5745 17.0077 14.5745 16.4742C14.5745 15.9408 14.1554 15.5216 13.622 15.5216C13.0885 15.5216 12.6694 15.9408 12.6694 16.4742C12.6694 17.0077 13.0885 17.4268 13.622 17.4268ZM15.5271 17.4268C16.0605 17.4268 16.4797 17.0077 16.4797 16.4742C16.4797 15.9408 16.0605 15.5216 15.5271 15.5216C14.9937 15.5216 14.5745 15.9408 14.5745 16.4742C14.5745 17.0077 14.9937 17.4268 15.5271 17.4268ZM21.2426 17.4268C21.776 17.4268 22.1951 17.0077 22.1951 16.4742C22.1951 15.9408 21.776 15.5216 21.2426 15.5216C20.7091 15.5216 20.29 15.9408 20.29 16.4742C20.29 17.0077 20.7091 17.4268 21.2426 17.4268ZM13.622 20.2845C14.1554 20.2845 14.5745 19.8654 14.5745 19.332C14.5745 18.7985 14.1554 18.3794 13.622 18.3794C13.0885 18.3794 12.6694 18.7985 12.6694 19.332C12.6694 19.8654 13.0885 20.2845 13.622 20.2845ZM17.4323 20.2845C17.9657 20.2845 18.3848 19.8654 18.3848 19.332C18.3848 18.7985 17.9657 18.3794 17.4323 18.3794C16.8988 18.3794 16.4797 18.7985 16.4797 19.332C16.4797 19.8654 16.8988 20.2845 17.4323 20.2845ZM21.2426 20.2845C21.776 20.2845 22.1951 19.8654 22.1951 19.332C22.1951 18.7985 21.776 18.3794 21.2426 18.3794C20.7091 18.3794 20.29 18.7985 20.29 19.332C20.29 19.8654 20.7091 20.2845 21.2426 20.2845ZM13.622 23.1423C14.1554 23.1423 14.5745 22.7231 14.5745 22.1897C14.5745 21.6562 14.1554 21.2371 13.622 21.2371C13.0885 21.2371 12.6694 21.6562 12.6694 22.1897C12.6694 22.7231 13.0885 23.1423 13.622 23.1423ZM19.3374 23.1423C19.8709 23.1423 20.29 22.7231 20.29 22.1897C20.29 21.6562 19.8709 21.2371 19.3374 21.2371C18.804 21.2371 18.3848 21.6562 18.3848 22.1897C18.3848 22.7231 18.804 23.1423 19.3374 23.1423ZM21.2426 23.1423C21.776 23.1423 22.1951 22.7231 22.1951 22.1897C22.1951 21.6562 21.776 21.2371 21.2426 21.2371C20.7091 21.2371 20.29 21.6562 20.29 22.1897C20.29 22.7231 20.7091 23.1423 21.2426 23.1423ZM13.622 26C14.1554 26 14.5745 25.5809 14.5745 25.0474C14.5745 24.514 14.1554 24.0948 13.622 24.0948C13.0885 24.0948 12.6694 24.514 12.6694 25.0474C12.6694 25.5809 13.0885 26 13.622 26ZM21.2426 26C21.776 26 22.1951 25.5809 22.1951 25.0474C22.1951 24.514 21.776 24.0948 21.2426 24.0948C20.7091 24.0948 20.29 24.514 20.29 25.0474C20.29 25.5809 20.7091 26 21.2426 26Z" fill="white"/>
+              </g>
+              <defs>
+              <clipPath id="clip0_301_4298">
+              <rect width="35" height="42" fill="white" transform="translate(0 2)"/>
+              </clipPath>
+              </defs>
+            </svg>       
+          </div>
+
+          <div class="as-store-marker-sm">
+            <svg fill="#000000" stroke="#000000" version="1.1" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 1024 1024">
+              <path fill="none" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="10" stroke-width="64" d="M864 512c0 194.404-157.596 352-352 352s-352-157.596-352-352c0-194.404 157.596-352 352-352v0c194.404 0 352 157.596 352 352v0z"></path>
+              <path d="M736 512c0 123.712-100.288 224-224 224s-224-100.288-224-224c0-123.712 100.288-224 224-224v0c123.712 0 224 100.288 224 224v0z"></path>
+            </svg>
+          </div>
+
+          {% raw %}
+          <script type="text/hogan" id="tpl-store-content">
+            {{#data}}
+            <div class="pt-4 px-4 pb-6 fs-base bg-light" style="width: 395px;">
+              {% endraw %}
+              {%- assign enable_to_render_storetype = false -%}
+              {%- assign enable_to_render_category = false -%}
+              {%- if section.settings.show_store_type and store_type_list.size > 0 -%}
+                {%- assign enable_to_render_storetype = true -%}
+              {%- elsif section.settings.show_category and category_list.size > 0 -%}
+                {%- assign enable_to_render_category = true -%}
+              {%- endif -%}
+              {%- if enable_to_render_storetype or enable_to_render_category -%}
+              {% raw %}
+              <div class="fs-small">
+                {{#storetype}}
+                  <span class="me-2">(&nbsp;{{storetype}}&nbsp;)</span>
+                {{/storetype}}
+
+                {{#category}}
+                  <span>(&nbsp;{{category}}&nbsp;)</span>
+                {{/category}}
+              </div>
+              {% endraw %}
+              {%- endif -%}
+              {% raw %}
+              <div>
+                <div class="d-flex justify-content-between my-4">
+                  {{#aspname}}
+                  <span>{{aspname}}</span>
+                  {{/aspname}}
+                  {{#distancehtml}}
+                  <span class="distance ms-2 flex-shrink-0 {% endraw %}{% unless section.settings.show_distance %}d-none{% endunless %}{% raw %}"><span class="as-distance">{{distancehtml}}</span> {% endraw %}{{ 'sections.store_locator.km' | t }}{% raw %}</span>
+                  {{/distancehtml}}
+                </div>
+                <div>{{#address}}{{{address}}}{{/address}}{{#city}}, {{city}}{{/city}}{{#province}}, {{province}}{{/province}}</div>
+                <a class="link-primary" 
+                  data-id="open_in_google_map"
+                  target="_blank" 
+                  rel="noopener" 
+                  href="https://maps.google.com/?q={{latitude}},{{longitude}}">{% endraw %}{{ 'sections.store_locator.open_in_google_map' | t }}{% raw %}</a>
+              </div>
+              {{#workinghours}}
+              <dl class="mb-0">
+                <dt>{% endraw %}{{ 'sections.store_locator.working_hours' | t }}{% raw %}:</dt>
+                <dd class="mb-0">{{workinghours}}</dd>
+              </dl>
+              {{/workinghours}}
+              {{#closedon}}
+              <dl class="mb-0">
+                <dt>{% endraw %}{{ 'sections.store_locator.closed_on' | t }}{% raw %}:</dt>
+                <dd class="mb-0">{{closedon}}</dd>
+              </dl>
+              {{/closedon}}
+              {{#contacthtml}}
+              <dl class="mb-0">
+                <dt class="d-none">Phone:</dt>
+                <dd class="mb-0">{{{contacthtml}}}</dd>
+              </dl>
+              {{/contacthtml}}
+              {{#note}}
+              <dl class="mb-0">
+                <dd class="mb-0">{{{note}}}</dd>
+              </dl>
+              {{/note}}
+            </div>
+            {{/data}}
+          </script>
+          {% endraw %}
+        </div>
+      </google-map>
+      {%- assign active_store_aside = false -%}
+    {%- endif -%}
+    
+    <figure class="mb-0 {{ store_aside_class }} {{ store_img_class }} {% if active_store_aside %}{{ store_aside_active_class }}{% endif %}" data-id="as-online-stores-tab">
+      <picture>
+        {%- assign image = section.settings.image -%}
+        <img 
+          class="position-lg-absolute w-100 h-100 object-fit-cover"
+          sizes="(max-width: 768px) 100vw, 75vw"
+          srcset="
+            {%- if image.width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}
+            {%- if image.width >= 857 -%}{{ image | image_url: width: 857 }} 857w,{%- endif -%}
+            {%- if image.width >= 1069 -%}{{ image | image_url: width: 1069 }} 1069w,{%- endif -%}
+            {%- if image.width >= 1244 -%}{{ image | image_url: width: 1244 }} 1244w,{%- endif -%}
+            {%- if image.width >= 1494 -%}{{ image | image_url: width: 1494 }} 1494w,{%- endif -%}
+            {%- if image.width >= 1560 -%}{{ image | image_url: width: 1560 }} 1560w,{%- endif -%}
+            {%- if image.width >= 1660 -%}{{ image | image_url: width: 1660 }} 1660w,{%- endif -%}
+            {%- if image.width >= 1901 -%}{{ image | image_url: width: 1901 }} 1901w,{%- endif -%}
+            {%- if image.width >= 2040 -%}{{ image | image_url: width: 2040 }} 2040w,{%- endif -%}
+            {%- if image.width >= 2160 -%}{{ image | image_url: width: 2160 }} 2160w,{%- endif -%}
+            {%- if image.width >= 3840 -%}{{ image | image_url: width: 3840 }} 3840w,{%- endif -%}" 
+          src="{{ image | img_url: '2160x' }}"
+          alt="{{ image.alt }}"
+          width="{{ image.width }}"
+          height="{{ image.height }}">
+      </picture>
+    </figure>
+  </div>
+  <div class="col-lg-auto w-lg-fixed px-4 pb-0 py-lg-0 position-relative">
+    {%- if metafields_store_locator_local.size > 0 or metafields_store_locator_online.size > 0 -%}
+      <div class="d-lg-flex flex-lg-column content-wrapper pt-md-3">
+        <div class="site-header {{ mob_top_placeholder_class }}">
+          <div class="navbar navbar-height">
+            <span></span>
+          </div>
+        </div>
+
+        {%- if section.settings.note != blank -%}
+          <div class="fs-small d-none d-lg-block">{{ section.settings.note }}</div>
+        {%- endif -%}
+
+        <div class="dot-border-dark d-none d-lg-block" style="border-top-style: dotted;"></div>
+
+        <div class="tabs-ribbon-wrapper bg-light">
+          <ul class="row nav nav-tabs pt-3 mb-7 border-0 flex-shrink-0"
+            role="tablist">
+
+            {%- if section.settings.note != blank -%}
+              <div class="fs-small d-block d-lg-none">{{ section.settings.note | replace: '<p', '<p class="mb-5"' }}</div>
+            {%- endif -%}
+
+            {%- assign active_nav_link = true -%}
+            {%- assign active_local_store_ribbon = true -%}
+            {%- if metafields_store_locator_local.size > 0 -%}
+              <li class="nav-item col-6 col-lg-4" role="presentation">
+                <button class="{{ nav_tab_class }} nav-link p-0 border-0 text-start font-ndot55 text-uppercase bg-transparent{% if active_nav_link %} active{% endif %}" 
+                  id="local-stores-tab" 
+                  data-bs-toggle="tab" 
+                  data-bs-target="#as-local-stores-tab" 
+                  type="button" 
+                  role="tab" 
+                  aria-controls="as-local-stores-tab" 
+                  aria-selected="true">{{ 'sections.store_locator.local_store' | t }}</button>
+              </li>
+              {%- assign active_nav_link = false -%}
+            {%- endif -%}
+  
+            {%- if metafields_store_locator_online.size > 0 -%}
+              <li class="nav-item col-6 col-lg-4" role="presentation">
+                <button class="{{ nav_tab_class }} nav-link p-0 border-0 text-start font-ndot55 bg-transparent{% if active_nav_link %} active{% endif %}" 
+                  id="online-stores-tab" 
+                  data-bs-toggle="tab" 
+                  data-bs-target="#as-online-stores-tab" 
+                  type="button" 
+                  role="tab" 
+                  aria-controls="as-online-stores-tab" 
+                  aria-selected="false">{{ 'sections.store_locator.online_store' | t }}</button>
+              </li>
+            {%- endif -%}
+          </ul>
+
+          {%- comment -%}初始化页面时，是否展示Local Stores的功能区{%- endcomment -%}
+          {%- if active_nav_link -%}
+            {%- assign active_local_store_ribbon = false -%}
+          {%- endif -%}
+          <div class="as-local-store-ribbon pb-1 {% unless active_local_store_ribbon %}d-none{% endunless %}">
+            {% render 'local-store-ribbon',
+              section: section,
+              store_type_list: store_type_list,
+              category_list: category_list
+            %}
+          </div>
+        </div>
+      
+        <div class="tab-content overflow-hidden flex-grow-1">
+          {%- assign active_tab_pane = true -%}
+          {%- if metafields_store_locator_local.size > 0 -%}
+            <div class="tab-pane h-100 fade{% if active_tab_pane %} show active{% endif %}" 
+              id="as-local-stores-tab" 
+              role="tabpanel" 
+              aria-labelledby="local-stores-tab">
+              <div class="d-flex flex-column h-100">
+                <div class="local-store-list-wrapper flex-grow-1 as-local-store-wrapper" 
+                  style="overflow-y: auto;">
+                  <div class="no-store pb-8">
+                    <p class="mb-0 text-danger">{{ 'sections.store_locator.no_locations' | t }}</p>
+                    <p class="mb-0 text-danger">{{ 'sections.store_locator.modify_your_selections_or_input' | t }}</p>
+                  </div>
+        
+                  {% render 'local-store-list',
+                    list_class: 'local-store-list pb-8 dot-border-dark border-top',
+                    item_class: 'local-store-info cursor-pointer dot-border-dark border-bottom',
+                    type_category_class: '',
+                    always_render_type_category_dom: false,
+                    section: section,
+                    store_type_list: store_type_list,
+                    category_list: category_list,
+                    metafields_store_locator_local: metafields_store_locator_local
+                  %}
+                </div>
+              </div>
+            </div>
+            {%- assign active_tab_pane = false -%}
+          {%- endif -%}
+    
+          {%- if metafields_store_locator_online.size > 0 -%}
+            <div class="tab-pane h-100 fade{% if active_tab_pane %} show active{% endif %}" 
+              id="as-online-stores-tab" 
+              role="tabpanel" 
+              aria-labelledby="online-stores-tab">
+              <ul class="h-100 list-unstyled mb-0 pb-8" style="overflow-y: auto;">
+                {%- for property in metafields_store_locator_online -%}
+                  <li class="dot-border-dark border-bottom pt-3 pb-5 {% if forloop.first %}border-top{% endif %}">
+                    <div class="d-flex justify-content-between  py-1">
+                      {%- if property.aspname != blank -%}
+                        <div class="d-flex align-items-center">
+                          {%- assign search_terms = property.aspname | append: '' -%}
+                          {%- assign filter_block = online_store_block_list | map: 'settings' | where: 'asp_name', search_terms | first -%}
+                          {%- assign current_logo = filter_block.logo_image -%}
+                          {%- if current_logo != blank -%}
+                            <img 
+                              class="me-1" 
+                              src="{{ current_logo | img_url: 'x20', scale: 2 }}"
+                              srcset="
+                                {{ current_logo | img_url: 'x20' }} 1x,
+                                {{ current_logo | img_url: 'x20', scale: 2 }} 2x,
+                                {{ current_logo | img_url: 'x20', scale: 3 }} 3x"
+                              width="{{ 20 | times: current_logo.aspect_ratio | round }}"
+                              height="20"
+                              loading="lazy"
+                              alt="{{ current_logo.alt | escape }}">
+                          {%- endif -%}
+                          <span>{{ property.aspname }}</span>
+                        </div>
+                      {%- endif -%}
+                      {%- if property.link != blank -%}
+                        <div>
+                          <a class="link-primary text-nowrap" 
+                            {% render 'link', link: property.link %} 
+                            href="{{ property.link }}">(&nbsp;{{ 'sections.store_locator.shop_now' | t }}&nbsp;)</a>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<store-modal>
+  <button type="button" class="d-none btn btn-primary" data-bs-toggle="modal" data-bs-target="#as-local-store-modal">Open modal</button>
+  <div class="modal fade" 
+    id="as-local-store-modal" 
+    tabindex="-1" 
+    aria-labelledby="as-local-store-modalLabel" 
+    aria-hidden="true">
+    <div class="modal-dialog d-flex align-items-end mx-auto my-0 h-100">
+      <div class="modal-content bg-light">
+        <div class="modal-header p-0">
+          <button type="button"
+            class="link-dark position-absolute top-0 end-0 me-4 mt-4 p-0 border-0 bg-transparent z-index-1 text-decoration-underline"
+            data-bs-dismiss="modal"
+            aria-label="{{ 'sections.store_locator.close' | t }}">{{ 'sections.store_locator.close' | t }}</button>
+        </div>
+        <div class="modal-body p-4 pb-6">
+          {% render 'local-store-list',
+            list_class: '',
+            item_class: 'd-none',
+            type_category_class: 'me-8',
+            always_render_type_category_dom: true,
+            section: section,
+            store_type_list: store_type_list,
+            category_list: category_list,
+            metafields_store_locator_local: metafields_store_locator_local
+          %}
+        </div>
+      </div>
+    </div>
+  </div>
+</store-modal>
+
+{%- if metafields_store_locator_local -%}
+  <script>
+    var metafields_store_locator_local = {{ metafields_store_locator_local | json }};
+  </script>
+{%- endif -%}
+
+
+<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry,places&key=AIzaSyBLhxN1MfVES4M5icRoAOMrB116aeMT97g"></script>
+<script src="{{ 'store-locator-index.min.js' | asset_url }}" defer="defer"></script>

@@ -1,0 +1,55 @@
+<div class="container-core">
+  <div class="fst-italic mb-5 mb-md-6 mb-lg-7">{{ 'service_portal.general.support_centre' | t }}</div>
+  <h1 class="fs-h1 mb-0">{{ page.title }}</h1>
+  <div class="mt-5 mt-md-6 mt-lg-8 dot-border-dark border-bottom">
+    <div class="row">
+      <div class="pb-1 pb-lg-3 col-md-8 as-steps-description">
+        {% for block in section.blocks %}
+          {% if forloop.first %}
+            {{block.settings.des}}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="mt-6 mt-sm-6">
+    <ol class="d-flex flex-column flex-md-row list-unstyled mb-0 pt-1 text-muted">
+      {% for block in section.blocks %}
+        <li data-text="{{ block.settings.des }}" class="d-flex text-nowrap as-tab-nav{% if forloop.first %} text-dark{% endif %}">{{ block.settings.title }}
+          {%- unless forloop.last -%}<span class="align-items-center d-md-flex d-none mx-4">{% render 'icon-dot-right' %}</span>{%- endunless -%}
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "After sale steps",
+  "tag": "section",
+  "class": "mt-7 mt-sm-9 mb-7 mb-sm-9 as-submit-steps",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "list",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Text"
+        },
+        {
+          "type": "text",
+          "id": "des",
+          "label": "Description",
+          "default": "page description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Steps list"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,206 @@
+
+<div class="container-core">
+  <h3 class="fs-h2">{{ 'service_portal.submit.product_information_title' | t }}</h3>
+  <input type="hidden" value="{{settings.upload}}" class="as-upload-file-api">
+  <form class="as-form-no-action as-b-product-form" autocomplete="true" novalidate="true">
+    <input type="hidden" name="childWorkOrder" form="submitAgencyWorkOrder" class="as-childWorkOrder as-form-input" />
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+      <div class="mt-4 mt-md-5"><p class="mb-0">{{ 'service_portal.submit.option_label' | t }}</p></div>
+      <div class="as-product-wrap">
+      </div>
+      <script type="text/hogan" id="submit-item-list">
+        @{#data}@
+        <div class="as-product-wrap-list">
+          <div class="mt-4 mt-md-5">
+            <div class="d-flex justify-content-between">
+              <p class="mb-0">{{ 'service_portal.submit.product_title' | t }}</p>
+              <p class="mb-0 text-primary as-item-close cursor-pointer text-nowrap">{{ 'service_portal.general.remove' | t }}</p>
+            </div>
+            <div class="px-lg-6">
+              <div class="row row-cols-sm-2 row-cols-md-3">
+                <div class="">
+                  <div class="mt-4 form-floating overflow-hidden rounded-pill">
+                    <select type="text" class="form-control form-select border-0 as-form-input as-form-input-select" name="model"
+                      required name="model">
+                      {% for block in section.blocks %}
+                        {% if block.type == 'model' %}
+                        <option class="as-form-input-option" value="{% unless block.settings.disabled %}{{ block.settings.title | replace: ' ', '' }}{% endunless %}">{{ block.settings.title }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                    <label>{{ 'service_portal.submit.model_label' | t }}</label>
+                  </div>
+                  <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                    {{ 'service_portal.submit.model_label' | t }} {{ 'general.error_message.format_error' | t }}
+                  </div>
+                </div>
+                <div class="">
+                  <div class="mt-4 form-floating overflow-hidden rounded-pill">
+                    <input type="text" class="form-control border-0 as-form-input" name="SN_IMEI" @{#SN_IMEI}@value="@{SN_IMEI}@"@{/SN_IMEI}@ required placeholder="{{ 'service_portal.submit.sn_imei_label' | t }}">
+                    <label>{{ 'service_portal.submit.sn_imei_label' | t }}</label>
+                  </div>
+                  <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                    {{ 'service_portal.submit.sn_imei_label' | t }} {{ 'general.error_message.format_error' | t }}
+                  </div>
+                </div>
+                <div class="">
+                  <div class="mt-4 form-floating overflow-hidden rounded-pill">
+                    <input type="text" class="form-control border-0 as-form-input" name="issueTags" @{#issueTags}@value="@{issueTags}@"@{/issueTags}@ required placeholder="{{ 'service_portal.submit.issue_tag_label' | t }}">
+                    <label>{{ 'service_portal.submit.issue_tag_label' | t }}</label>
+                  </div>
+                  <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                    {{ 'service_portal.submit.issue_tag_label' | t }} {{ 'general.error_message.format_error' | t }}
+                  </div>
+                </div>
+                <div class="">
+                  <div class="mt-4 form-floating overflow-hidden rounded-pill">
+                    <input type="date" class="form-control border-0 as-form-input as-purchase-date d-flex align-items-center justify-content-start" name="purchaseDate" @{#purchaseDate}@value="@{purchaseDate}@"@{/purchaseDate}@ required placeholder="{{ 'service_portal.submit.purchaseDate_label' | t }}">
+                    <label>{{ 'service_portal.submit.purchaseDate_label' | t }}</label>
+                  </div>
+                  <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                    {{ 'service_portal.submit.purchaseDate_label' | t }} {{ 'general.error_message.format_error' | t }}
+                  </div>
+                </div>
+                <div class="">
+                  <div class="mt-4 form-floating overflow-hidden rounded-pill">
+                    <select type="text" class="form-control form-select border-0 as-form-input as-form-input-select" name="type" required>
+                      {% for block in section.blocks %}
+                        {% if block.type == 'type' %}
+                        <option class="as-form-input-option" value="{% unless block.settings.disabled %}{{ block.settings.value }}{% endunless %}">{{ block.settings.title }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                    <label>{{ 'service_portal.submit.type_label' | t }}</label>
+                  </div>
+                  <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                    {{ 'service_portal.submit.type_label' | t }} {{ 'general.error_message.format_error' | t }}
+                  </div>
+                </div>
+                <div class="">
+                  <div class="mt-4 form-floating rounded-pill">
+                    <input type="text" class="form-control border-0 as-form-input rounded-pill" name="remarkCode" @{#remarkCode}@value="@{remarkCode}@"@{/remarkCode}@ placeholder="{{ 'service_portal.submit.remarkCode_label' | t }}">
+                    <label>{{ 'service_portal.submit.remarkCode_label' | t }}</label>
+                    <div class="icon-warning">
+                      {% render 'icon-warning' %}
+                      <div class="warnning-modal">
+                       <div class="modal-body">
+                        {{ 'service_portal.submit.remark_code_description' | t }}
+                       </div>
+                        {% render 'icon-triangle' %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="">
+                  <div class="mt-4 form-floating overflow-hidden">
+                    <textarea maxlength="1000" class="form-control form-control-textarea border-0 rounded-3 as-form-input" name="issueDescription" required placeholder="{{ 'service_portal.submit.issueDescription_label' | t }}">@{#issueDescription}@@{issueDescription}@@{/issueDescription}@</textarea>
+                    <label>{{ 'service_portal.submit.issueDescription_label' | t }}</label>
+                  </div>
+                  <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                    {{ 'service_portal.submit.issueDescription_label' | t }} {{ 'general.error_message.format_error' | t }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        @{/data}@
+      </script>
+      <div class="mt-4 mt-md-5">
+        <div class="px-lg-6">
+          <div class="flex-column gx-0 row row-cols-lg-4 row-cols-md-3 row-cols-sm-2">
+            <div>
+              <a class="btn btn-primary as-add-item">{{ 'service_portal.general.add_an_item' | t }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 dot-border-dark border-top">
+          <div class="mt-4 mt-md-5"><p class="mb-3 mb-md-4">{{ 'service_portal.submit.upload_form' | t }}</p></div>
+          <div class="px-lg-6">
+            <div class="as-upload-file-xls">
+              <div class="">
+                <div class="flex-column gx-0 row row-cols-lg-4 row-cols-md-3 row-cols-sm-2">
+                  <input accept=".xls,.xlsx,.csv" class="visually-hidden as-upload-xls-input" id="upload-form" type="file">
+                  <label for="upload-form">
+                    <a class="btn btn-primary">{{ 'service_portal.general.upload' | t }}</a>
+                  </label>
+                </div>
+                {% assign file_type = 'service_portal.submit.upload_form_accept_html' | t %}
+                <div class="text-muted fs-small mt-3 richtext">
+                  {% render 'richtext', richtext: file_type %}
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-lg btn-primary mt-5 mt-sm-6 as-btn as-b-btn" type="submit">{{ 'service_portal.general.next_step' | t }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+{% schema %}
+{
+  "name": "Product information B",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9 d-none as-tab-content product-information-b",
+  "blocks": [
+    {
+      "name": "Product model",
+      "type": "model",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Text"
+        },
+        {
+          "type": "checkbox",
+          "id": "disabled",
+          "label": "Disabled",
+          "default": false
+        }
+      ]
+    },
+    {
+      "name": "Type",
+      "type": "type",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Text"
+        },
+        {
+          "type": "select",
+          "id": "value",
+          "label": "Api value",
+          "options": [
+            {
+              "value": "Replacement",
+              "label": "Replacement"
+            },
+            {
+              "value": "Repair",
+              "label": "Repair"
+            },
+            {
+              "value": "Return",
+              "label": "Return"
+            }
+          ],
+          "default": "Replacement"
+        },
+        {
+          "type": "checkbox",
+          "id": "disabled",
+          "label": "Disabled",
+          "default": false
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

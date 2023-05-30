@@ -1,0 +1,417 @@
+<section class="container-fits-viewport px-2 text-dark section-top section-bottom">
+  <div class="container-topic px-2 pt-header mt-sm-1 font-base">
+        <div class="row mx-n2">
+          <div class="col-sm-3 col-xl-2 px-2">
+            {% render 'sidebar-support'  %}
+          </div>
+          <div class="col-sm-6 px-2">
+              {% assign title = 'contact.support.title' | t %}
+              {% render 'page-title', title: title %}
+              <p class="mb-0">{% render 'richtext', richtext: section.settings.service_time  %}</p>
+              <p class="mt-6 mb-1">{{ 'contact.support.tell_us' | t }}</p>
+              <form class="as-contact-support-form w-100" 
+                action="{{ settings.contact_support_api }}" 
+                enctype="multipart/form-data"
+                novalidate="true" 
+                autocomplete="off"
+                method="post">
+                {%- comment -%}
+                <input type="hidden" name="country" id="as-local-country-code" value="">
+                {%- endcomment -%}
+
+                <google-recaptcha data-sitekey="{{ settings.google_recaptcha_sitekey }}" data-container-class="as-verify-code-recaptcha"></google-recaptcha>
+
+                <input type="hidden" name="store_code" value="{{ settings.store_code }}">
+                <input type="hidden" name="source" value="form_api">
+                <div class="">
+                  <div class="row">
+                    <div class="d-none  ">{{ 'contact.support.model.title' | t }}</div>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <div class="d-flex position-relative contact-dropdown-wrap as-category-wrap">
+                        <input type="hidden" class="as-current-select-option-type" name="product_type" value="earphones">
+                        <input type="hidden" class="as-current-select-option-value" name="product_model" value="ear_1">
+                        <input type="hidden" class="as-current-select-option-label" name="product_model_name" value="{{ 'contact.support.model.ear' | t }}">
+                        <a class="rounded-pill contact-dropdown select-dropdown bg-white cursor-pointer d-flex align-items-center justify-content-between text-dark text-decoration-none w-100" data-bs-toggle="dropdown" aria-expanded="false">
+                          <span class="as-category-text px-13 dot-border-dark text-ellipsis">
+                            {{ 'contact.support.model.ear' | t }}
+                          </span>
+                          <span class="dot-border-dark flex-center pe-4">
+                            {% render 'icon-chevron-down' %}
+                          </span>
+                        </a>
+                        <ul class="dropdown-menu py-0 w-100 bg-white border-0 is-model-optional fs-base">
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link as-model-opiton cursor-pointer text-ellipsis is-active is-ear-model-option" data-type="earphones" data-text="ear_1">{{ 'contact.support.model.ear' | t }}</a>
+                          </li>
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link as-model-opiton cursor-pointer text-ellipsis is-ear-model-option" data-type="earphones" data-text="ear_2">{{ 'contact.support.model.ear2' | t }}</a>
+                          </li>
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link as-model-opiton cursor-pointer text-ellipsis is-ear-stick-model-option" data-type="earphones" data-text="ear_stick">{{ 'contact.support.model.ear_stick' | t }}</a>
+                          </li>
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link as-model-opiton cursor-pointer text-ellipsis is-phone-model-option" data-type="phones" data-text="phone_1">{{ 'contact.support.model.phone' | t }}</a>
+                          </li>
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link as-model-opiton cursor-pointer text-ellipsis is-accessories-model-option" data-type="accessories" data-text="">{{ 'contact.support.model.accessories' | t }}</a>
+                          </li>
+                        </ul>
+                      </div> 
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="d-none  ">{{ 'contact.support.choose_an_option.title' | t }}</div>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <div class="d-flex position-relative contact-dropdown-wrap as-category-wrap as-contact-reason-wrap">
+                        <input type="hidden" class="as-current-select-option-value as-current-contact-reason" name="contact_reason" value="payment">
+                        <input type="hidden" class="as-current-select-option-label" name="contact_reason_label" value="{{ 'contact.support.choose_an_option.payment' | t }}">
+                        <a class="rounded-pill contact-dropdown select-dropdown bg-white cursor-pointer d-flex align-items-center justify-content-between text-dark text-decoration-none w-100" data-bs-toggle="dropdown" aria-expanded="false">
+                          <span class="as-category-text px-13 dot-border-dark text-ellipsis">
+                            {{ 'contact.support.choose_an_option.payment' | t }}
+                          </span>
+                          <span class="dot-border-dark flex-center pe-4">
+                            {% render 'icon-chevron-down' %}
+                          </span>
+                        </a>
+                        <ul class="dropdown-menu py-0 w-100 bg-white border-0 is-optional fs-base">
+                          <li class="as-category-link-wrapper">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis is-active" data-text="payment">{{ 'contact.support.choose_an_option.payment' | t }}</a>
+                          </li>
+                          <li class="as-category-link-wrapper">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text="order">{{ 'contact.support.choose_an_option.order' | t }}</a>
+                          </li>
+                          <li class="as-category-link-wrapper as-contact-reason-accessories">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text="accessories">{{ 'contact.support.choose_an_option.accessories' | t }}</a>
+                          </li>
+                          <li class="as-category-link-wrapper">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text="product_information">{{ 'contact.support.choose_an_option.info' | t }}</a>
+                          </li>
+                          <li class="as-category-link-wrapper as-special-reason-contact-wrapper as-product-assitance-wrapper">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis is-special-reason-contact-option1" data-text="product_assistance">{{ 'contact.support.choose_an_option.product' | t }}</a>
+                          </li>
+                          <li class="as-category-link-wrapper as-special-reason-contact-wrapper">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis is-special-reason-contact-option2" data-text="tracking_and_delivery">{{ 'contact.support.choose_an_option.shipping' | t }}</a>
+                          </li>
+                          <li class="as-category-link-wrapper as-special-reason-contact-wrapper">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis is-special-reason-contact-option1" data-text="warranty_and_return">{{ 'contact.support.choose_an_option.warranty' | t }}</a>
+                          </li>
+                          <li class="as-category-link-wrapper">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text="my_account">{{ 'contact.support.choose_an_option.account' | t }}</a>
+                          </li>
+                          <li class="as-category-link-wrapper">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text="other">{{ 'contact.support.choose_an_option.other' | t }}</a>
+                          </li>
+                        </ul>
+                      </div> 
+                    </div>
+                    <div class="d-none  ">{{ 'contact.support.language' | t }}</div>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <div class="d-flex position-relative contact-dropdown-wrap as-category-wrap as-lang-code text-uppercase">
+                        <input type="hidden" class="as-current-select-option-value" name="lang" value="en">
+                        <input type="hidden" class="as-current-select-option-label" name="lang_label" value="English">
+                        <a class="rounded-pill contact-dropdown select-dropdown bg-white cursor-pointer d-flex text-dark text-decoration-none w-100" data-bs-toggle="dropdown" aria-expanded="false">
+                          <span class="as-category-text px-13 flex-grow-1 dot-border-dark d-flex align-items-center">
+                            English
+                          </span>
+                          <span class="dot-border-dark flex-center pe-4">
+                            {% render 'icon-chevron-down' %}
+                          </span>
+                        </a>
+                        <ul class="dropdown-menu py-0 w-100 bg-white border-0 fs-base">
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text='en'>English</a>
+                          </li>
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text='fr'>French</a>
+                          </li>
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text='es'>Spanish</a>
+                          </li>
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text='it'>Italian</a>
+                          </li>
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text='nl'>Dutch</a>
+                          </li>
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text='ge'>German</a>
+                          </li>
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text='ja'>日本語</a>
+                          </li>
+                          <li class="">
+                            <a class="px-2 nav-link as-category-link cursor-pointer text-ellipsis" data-text='kr'>한국어</a>
+                          </li>
+                        </ul>
+                      </div> 
+                    </div>
+                  </div>
+                  <div class="mt-6 mb-1">
+                    {{ 'contact.support.enter_enquiry' | t }}
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-lg-6 mt-3 d-none">
+                      <label for="contact-us-order" class="d-none  ">{{ 'contact.support.order_number' | t }}</label>
+                      <div>
+                        <input type="text"
+                          id="contact-us-order"
+                          name="order_no"
+                          autocomplete="new-password"
+                          class="as-form-input border-0 rounded-pill form-control as-form0-input as-change-requird"
+                          placeholder="{{ 'contact.support.order_number' | t }}"
+                          maxlength="255"
+                          value="">
+                        <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                          {{ 'contact.support.order_number' | t }} {{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-3 d-none">
+                      <label for="contact-us-serial" data-serial-number="{{ 'contact.support.serial_number' | t }}"
+                      data-imei-number="{{ 'contact.support.imei_number' | t }}" class="d-none as-serial-label">{{ 'contact.support.serial_number' | t }}</label>
+                      <div>
+                        <input type="text"
+                          data-serial-number="{{ 'contact.support.serial_number' | t }}"
+                          data-imei-number="{{ 'contact.support.imei_number' | t }}"
+                          id="contact-us-serial"
+                          name="serial_no"
+                          autocomplete="new-password"
+                          class="as-form-input border-0 rounded-pill form-control as-form1-input as-phone-model-form1-input as-serial-input required"
+                          placeholder="{{ 'contact.support.serial_number' | t }}"
+                          maxlength="255"
+                          value="">
+                        <div data-serial-number="{{ 'contact.support.serial_number' | t }}" data-imei-number="{{ 'contact.support.imei_number' | t }}" data-serial-error-tips="{{ 'general.error_message.format_error' | t }}" class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips as-serial-error-tips">
+                          {{ 'contact.support.serial_number' | t }} {{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-3 d-none">
+                      <label for="contact-us-shipping" class="d-none  ">{{ 'contact.support.shipping_number' | t }}</label>
+                      <div>
+                        <input type="text"
+                          id="contact-us-shipping"
+                          name="shipping_no"
+                          autocomplete="new-password"
+                          class="as-form-input border-0 rounded-pill form-control as-form2-input"
+                          placeholder="{{ 'contact.support.shipping_number' | t }}"
+                          maxlength="255"
+                          value="">
+                        <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                          {{ 'contact.support.shipping_number' | t }} {{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6 offset-lg-6 d-none">
+                      <div>
+                        <div class="small as-form1-input as-phone-model-form1-input">{{ 'contact.support.serial_number_tip_html' | t }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-lg-6 mt-3 d-none">
+                      <label for="contact-us-vfirmware" class="d-none  ">{{ 'contact.support.vfirmware' | t }}</label>
+                      <div>
+                        <input type="text"
+                          id="contact-us-vfirmware"
+                          name="firmware_version"
+                          autocomplete="new-password"
+                          class="as-form-input border-0 rounded-pill form-control as-form1-input as-accessories-model-form1-input"
+                          placeholder="{{ 'contact.support.vfirmware' | t }}"
+                          maxlength="255"
+                          value="">
+                        <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                          {{ 'contact.support.vfirmware' | t }} {{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-3 d-none">
+                      <label for="contact-us-vapp" class="d-none  ">{{ 'contact.support.vapp' | t }}</label>
+                      <div>
+                        <input type="text"
+                          id="contact-us-vapp"
+                          name="app_version"
+                          autocomplete="new-password"
+                          class="as-form-input border-0 rounded-pill form-control as-form1-input as-accessories-model-form1-input"
+                          placeholder="{{ 'contact.support.vapp' | t }}"
+                          maxlength="255"
+                          value="">
+                        <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                          {{ 'contact.support.vapp' | t }} {{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {%- comment -%} system version{%- endcomment -%}
+                  <div class="row">
+                    <div class="col-12 col-lg-6 mt-3 d-none">
+                      <label for="contact-us-vsystem" class="d-none  ">{{ 'contact.support.vsystem' | t }}</label>
+                      <div>
+                        <input type="text"
+                          id="contact-us-vsystem"
+                          name="system_version"
+                          autocomplete="new-password"
+                          class="as-form-input border-0 rounded-pill form-control as-phone-model-form1-input"
+                          placeholder="System Version"
+                          maxlength="255"
+                          value="">
+                        <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                          {{ 'contact.support.vsystem' | t }} {{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 col-lg-6 mt-3">
+                      <div class="form-floating overflow-hidden rounded-pill">
+                        <input type="text"
+                          id="contact-us-f-name"
+                          name="first_name"
+                          autocomplete="new-password"
+                          class="as-form-input border-0 rounded-pill form-control"
+                          placeholder="{{ 'contact.support.first_name' | t }}"
+                          maxlength="255"
+                          value=""
+                          required>
+                        <label class="text-muted">{{ 'contact.support.first_name' | t }}</label>
+                      </div>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'contact.support.first_name' | t }} {{ 'general.error_message.format_error' | t }}
+                      </div>
+                      {%- comment -%}
+                      <label for="contact-us-f-name" class="d-none  ">{{ 'contact.support.first_name' | t }}</label>
+                      <div>
+                        <input type="text"
+                          id="contact-us-f-name"
+                          name="first_name"
+                          autocomplete="new-password"
+                          class="as-form-input border-0 rounded-pill form-control"
+                          placeholder="{{ 'contact.support.first_name' | t }}"
+                          value=""
+                          required>
+                        <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                          {{ 'contact.support.first_name' | t }} {{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div>{%- endcomment -%}
+                    </div>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <div class="form-floating overflow-hidden rounded-pill">
+                        <input type="text"
+                          id="contact-us-l-name"
+                          name="last_name"
+                          autocomplete="new-password"
+                          class="as-form-input border-0 rounded-pill form-control"
+                          placeholder="{{ 'contact.support.last_name' | t }}"
+                          maxlength="255"
+                          value=""
+                          required>
+                        <label class="text-muted">{{ 'contact.support.last_name' | t }}</label>
+                      </div>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'contact.support.last_name' | t }} {{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-lg-6 mt-3">
+                      <div class="form-floating overflow-hidden rounded-pill">
+                        <input type="email"
+                          id="contact-us-email"
+                          name="email"
+                          autocomplete="new-password"
+                          class="as-form-input as-form-input-be-confirmed border-0 rounded-pill form-control"
+                          placeholder="{{ 'contact.support.email' | t }}"
+                          value=""
+                          pattern='^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+                          required>
+                        <label class="text-muted">{{ 'contact.support.email' | t }}</label>
+                      </div>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'contact.support.email' | t }} {{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <div class="form-floating overflow-hidden rounded-pill">
+                        <input type="email"
+                          id="contact-us-confirm_email"
+                          autocomplete="new-password"
+                          name="confirm email"
+                          class="as-form-input as-form-input-confirm border-0 rounded-pill form-control"
+                          placeholder="{{ 'contact.support.confirm_email' | t }}"
+                          value=""
+                          pattern='^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+                          required>
+                        <label class="text-muted">{{ 'contact.support.confirm_email' | t }}</label>
+                      </div>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips" 
+                        data-err = '{{ 'contact.support.confirm_email' | t }} {{ 'general.error_message.format_error' | t }}'
+                        data-diff='{{ 'contact.support.confirm_email_err' | t }}'>
+                        {{ 'contact.support.confirm_email' | t }} {{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 mt-3">
+                      {% comment %} 当textarea标签中有空格或内容时，会不显示placeholder {% endcomment %}
+                      <div class="form-floating overflow-hidden">
+                        <textarea 
+                          id="contact-us-body"
+                          class="py-2 as-form-input border-0 rounded-3 form-control form-control-textarea"
+                          rows="5"
+                          name="message" 
+                          style="resize: none;"
+                          placeholder="{{ 'contact.support.message' | t }}"
+                          maxlength="3000"
+                          required></textarea>
+                        <label class="text-muted">{{ 'contact.support.message' | t }}</label>
+                      </div>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'contact.support.message' | t }} {{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-3 check-text font-mono">
+                  <div class="form-check mb-0">
+                    <input class="as-form-input-pre flex-center bg-transparent form-check-input rounded-0 mt-1 mt-lg-0" type="checkbox" id="read_policy" required />
+                    {%- capture policy -%}
+                      <a href="{{ routes.root_url }}pages/privacy-policy" class="dot-border-primary border-bottom text-primary">{{ 'general.event_banner.policy' | t }}</a>
+                    {%- endcapture -%}
+                    <label for="read_policy" class="ms-2">{{ 'contact.support.privacy_description_html' | t: policy: policy }}</label>
+                  </div>
+                  <div class="text-start pe-0 ps-5 mt-1 text-danger invalid-feedback as-error-tips">
+                    {{ 'contact.support.privacy_unselected' | t }}
+                  </div>
+                </div>
+                <div class="d-flex mt-5 row row-cols-lg-2 gx-0">
+                  <button type="submit" class="as-btn border-0 btn btn-lg btn-dark font-55 text-uppercase">{{ 'contact.support.submit' | t }}</button>
+                </div>
+                <div class="row">
+                  <div class="invalid-feedback  "></div>
+                  <div class="as-tips-success invalid-feedback text-danger mt-2">{{ 'contact.support.post_success' | t }}</div>
+                  <div class="as-tips-error invalid-feedback text-danger mt-2">{{ 'contact.support.post_error' | t }}</div>
+                  <div class="as-errors-content invalid-feedback">
+                    <div class="as-error" data-code="429">{{ 'contact.support.too_many_requests_error' | t }}</div>
+                    <div class="as-default-error">{{ 'contact.support.post_error' | t }}</div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact support",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "service_time",
+      "label": "Service time",
+      "default": "<p>Reach out, we're here! Our support specialists are available Monday to Sunday.</p><p>Alternatively, you can reach us by the tollfree number: (+44) 800 376 88 88</p>"
+    }
+  ]
+}
+{% endschema %}

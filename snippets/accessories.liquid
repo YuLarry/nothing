@@ -1,0 +1,123 @@
+{%- if product_blocks.size > 0 -%}
+  <div class="as-pc-flag d-lg-none"></div>
+  <div class="swiper-content-container container-fluid">
+    <div class="mt-4 mt-lg-5 overflow-hidden">
+      <div class="swiper as-cards-swiper mt-n4">
+        <div class="swiper-wrapper d-flex flex-lg-wrap">
+          {%- for block in product_blocks -%}
+            {%- assign product = block.settings.product -%}
+            {%- if product and product != empty -%}
+              {%- assign current_variant = product.selected_or_first_available_variant -%}
+    
+              <div class="swiper-slide mt-4">
+                {%- assign image = product.images[0] -%}
+                {%- if block.settings.image != blank -%}
+                  {%- assign image = block.settings.image -%}
+                {%- endif -%}
+                {%- if image -%}
+                  <div class="position-relative">
+                    <figure class="mb-1 mb-lg-2">
+                      <picture class="d-block picture ratio">
+                        <img
+                          sizes="{{ picture_sizes }}"
+                          srcset="
+                            {%- if image.width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}
+                            {%- if image.width >= 857 -%}{{ image | image_url: width: 857 }} 857w,{%- endif -%}
+                            {%- if image.width >= 1069 -%}{{ image | image_url: width: 1069 }} 1069w,{%- endif -%}
+                            {%- if image.width >= 1244 -%}{{ image | image_url: width: 1244 }} 1244w,{%- endif -%}
+                            {%- if image.width >= 1494 -%}{{ image | image_url: width: 1494 }} 1494w,{%- endif -%}
+                            {%- if image.width >= 1560 -%}{{ image | image_url: width: 1560 }} 1560w,{%- endif -%}
+                            {%- if image.width >= 1660 -%}{{ image | image_url: width: 1660 }} 1660w,{%- endif -%}
+                            {%- if image.width >= 1901 -%}{{ image | image_url: width: 1901 }} 1901w,{%- endif -%}
+                            {%- if image.width >= 2040 -%}{{ image | image_url: width: 2040 }} 2040w,{%- endif -%}
+                            {%- if image.width >= 2160 -%}{{ image | image_url: width: 2160 }} 2160w,{%- endif -%}
+                            {%- if image.width >= 3840 -%}{{ image | image_url: width: 3840 }} 3840w,{%- endif -%}"
+                          src="{{ image | image_url: width: 1230 }}"
+                          alt="{{ image.alt | escape }}"
+                          class="w-100 h-100 object-fit-cover"
+                          loading="lazy"
+                          width="{{ image.width }}"
+                          height="{{ image.height }}"
+                        >
+                      </picture>
+                    </figure>
+                    <a class="stretched-link as-product-url" 
+                      data-variants='{% render 'product-variants', product: product %}'
+                      data-variant-id="{{ current_variant.id }}" 
+                      href="{{ current_variant.url }}"></a>
+                  </div>
+                {%- endif -%}
+
+                {%- comment -%}PC端一行4个产品，产品名称和价格、按钮换行两行展示{%- endcomment -%}
+                {%- liquid 
+                  assign column_class = ''
+                  assign row_class = ''
+                  if section.settings.products_per_row == '3'
+                    assign row_class = 'flex-lg-row'
+                    assign column_class = 'col-lg-6'
+                  endif
+                -%}
+                <div class="overflow-hidden">
+                  <div class="row {{ row_class }} gy-1">
+                    <div class="col-12 {{ column_class }}">
+                      <div class="position-relative"><a class="link-dark as-product-url" data-variants='{% render 'product-variants', product: product %}' data-variant-id="{{ current_variant.id }}" href="{{ current_variant.url }}">{{ product.title }}</a>{% if block.settings.show_price %} {% render 'price', price_class: 'd-inline-block', product: product, use_variant: true %}{% endif %}</div>
+                    </div>
+
+                    {% if block.settings.discount_info != blank %}
+                      <div class="col-12 richtext with-underline-link">
+                        {{ block.settings.discount_info | replace: '<p', '<p class="mb-0"' }}
+                      </div>
+                    {% endif %}
+
+                    <div class="col-12 {{ column_class }} overflow-hidden">
+                      <div class="mt-n1 ms-n2">
+                        {%- if block.settings.enable_purchase_function -%}
+                          {%- if product.available -%}
+                            {%- if product.has_only_default_variant or product.variants.size <= 1 -%}
+                              <product-form class="d-inline-block mt-1 ms-2">
+                                {% liquid
+                                  assign productFormClass = 'form'
+                                  assign productFormClass = productFormClass | append: ' as-async-add-form'
+                                  assign product_form_id = 'as-product-form-' | append: section.id
+                                %}
+                                {% form 'product', product, id: product_form_id, class: productFormClass %}
+                                  <input name="id" value="{{ current_variant.id }}" type="hidden">
+                                  <button class="add-to-cart px-0 border-0 bg-transparent fw-normal link-primary" 
+                                    type="submit" 
+                                    data-bs-toggle="offcanvas" 
+                                    data-bs-target="#offcanvas-cart"><span>(&nbsp;</span>{{ 'sections.accessories.add_to_cart_button' | t }}<span>&nbsp;)</span></button>
+                                {% endform %}
+                              </product-form>
+                            {%- else -%}
+                              <div class="d-inline-block mt-1 ms-2">
+                                <a class="link-primary as-product-url" 
+                                  data-variants='{% render 'product-variants', product: product %}'
+                                  data-variant-id="{{ current_variant.id }}" 
+                                  {% render 'link', link: current_variant.url %} 
+                                  href="{{ current_variant.url }}"><span>(&nbsp;</span>{% if product.metafields.custom.buy_now_button_label.value %}{{ product.metafields.custom.buy_now_button_label.value }}{% else %}{{ 'sections.accessories.buy_now_button' | t }}{% endif %}<span>&nbsp;)</span></a>
+                              </div>
+                            {%- endif -%}
+                          {%- else -%}
+                            <div class="d-inline-block mt-1 ms-2 text-danger">{{ 'sections.accessories.out_of_stock' | t }}</div>
+                          {%- endif -%}
+                        {%- endif -%}
+          
+                        {%- if block.settings.learn_more_link != blank -%}
+                          <div class="d-inline-block mt-1 ms-2">
+                            <a class="link-primary" 
+                              {% render 'link', link: block.settings.learn_more_link %} 
+                              href="{{ block.settings.learn_more_link }}"><span>(&nbsp;</span>{{ 'sections.accessories.learn_more_button' | t }}<span>&nbsp;)</span></a>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}

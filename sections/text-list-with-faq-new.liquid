@@ -1,0 +1,161 @@
+{%- liquid
+  assign show_text_list = false
+  assign show_faq = false
+  assign text_list_blocks = section.blocks | where: 'type', 'text_list'
+  assign faq_blocks = section.blocks | where: 'type', 'faq'
+  if text_list_blocks.size > 0
+    assign show_text_list = true
+  endif
+  if faq_blocks.size > 0
+    assign show_faq = true
+  endif
+-%}
+<div class="w-100" style="height:1px;"></div>
+<div class="text-list-with-faq-new" id="{{ section.settings.hash_id }}">
+  <div class="container-topic px-3 px-sm-6 pt-1 pt-lg-4 pb-8 pb-lg-9">
+    <div class="row row-cols-lg-4">
+      {% if section.settings.left_title != blank %}
+        <div class="col">{{ section.settings.left_title }}</div>
+      {% endif %}
+      {% if section.settings.right_title != blank %}
+        <div class="col">{{ section.settings.right_title }}</div>
+      {% endif %}
+    </div>
+    {%- if show_text_list -%}
+    <div class="mt-6 mt-lg-9">
+      <div class="row row-cols-1 row-cols-lg-4 gy-6 gy-lg-9">
+        {%- for text_list in text_list_blocks -%}
+          <div class="col">
+            <h2 class="mb-5 fs-h2">{{ text_list.settings.heading }}</h2>
+            <div>
+              {{ text_list.settings.text | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="link-white text-decoration-underline"' }}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+    {%- endif -%}
+    
+    {% if section.settings.faq_heading or show_faq %}
+      <div class="row row-cols-lg-2 mt-7 mt-lg-9">
+        <div class="col">
+          {%- if section.settings.faq_heading -%}
+            <div class="fs-h2 mb-4">{{ section.settings.faq_heading }}</div>
+          {%- endif -%}
+          {%- if show_faq -%}
+            {% assign key = 'faq' %}
+            <div class="accordion border-bottom dot-border-white" id="accordion-faq">
+              {%- for faq in faq_blocks -%}
+              <div class="accordion-item {% if forloop.last %}border-bottom{% endif %}">
+                <h6 class="accordion-header" id="{{ key }}-heading-{{ forloop.index }}">
+                  <button class="text-start border-top dot-border-white pe-1 accordion-button accordion-button-faq fs-base collapsed py-4 py-md-5
+                  bg-dark text-white justify-content-between" 
+                    type="button" data-bs-toggle="collapse" 
+                    data-bs-target="#{{ key }}-collapse-{{ forloop.index }}" 
+                    aria-expanded="false" 
+                    aria-controls="{{ key }}-collapse-{{ forloop.index }}">
+                    <span class="pe-4 fw-bold">{{ faq.settings.question }}</span>
+                    <span>
+                      <span class="read-more">{{ section.settings.read_more }}</span>
+                      <span class="read-less">{{ section.settings.read_less }}</span>
+                    </span>
+                  </button>
+                </h6>
+                <div id="{{ key }}-collapse-{{ forloop.index }}" 
+                  class="accordion-collapse collapse" 
+                  aria-labelledby="{{ key }}-heading-{{ forloop.index }}" 
+                  data-bs-parent="#accordion-{{ key }}">
+                  <div class="accordion-body pb-5 pt-0">
+                    {{ faq.settings.answer | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="link-white text-decoration-underline"' }} 
+                  </div>
+                </div>
+              </div>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Text list with FAQ - New",
+    "tag": "section",
+    "class": "text-list-with-faq-new bg-dark text-white",
+    "settings": [
+      {
+        "type": "text",
+        "id": "hash_id",
+        "label": "ID for hash"
+      },
+      {
+        "type": "text",
+        "id": "left_title",
+        "label": "Left title"
+      },
+      {
+        "type": "text",
+        "id": "right_title",
+        "label": "Right title"
+      },
+      {
+        "type": "text",
+        "id": "faq_heading",
+        "label": "FAQ Heading",
+        "default": "Frequently Asked Questions"
+      },
+      {
+        "type": "text",
+        "id": "read_more",
+        "label": "Read more"
+      },
+      {
+        "type": "text",
+        "id": "read_less",
+        "label": "Read less"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Text list",
+        "type": "text_list",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text"
+          }
+        ]
+      },
+      {
+        "name": "FAQ",
+        "type": "faq",
+        "settings": [
+          {
+            "type": "text",
+            "id": "question",
+            "label": "Question"
+          },
+          {
+            "type": "richtext",
+            "id": "answer",
+            "label": "Answer"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Text list with FAQ - New",
+        "category": "Content"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,78 @@
+
+{% liquid
+
+  assign is_faq = false
+  assign links = linklists.faq.links
+
+  for link in links
+    if link.levels == 1
+      for sub_menu_item in link.links
+        if sub_menu_item.handle == blog.handle
+          assign is_faq = true
+          break
+        endif
+      endfor
+    endif
+  endfor
+
+%}
+{%- unless template == 'index' or template == 'cart' or template == 'list-collections' or template == '404' -%}
+{%- assign t = template | split: '.' | first -%}
+<div class="container">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb small">
+      {% if template.suffix == 'blogs' or is_faq %}
+        <li class="breadcrumb-item {{template.suffix}} {{current_blog}}"><a href="{{ routes.root_url }}pages/faq">FAQ</a></li>
+      {% else %}
+        <li class="breadcrumb-item"><a href="{{ routes.root_url }}">Home</a></li>
+      {% endif %}
+      {%- case t -%}
+        {%- when 'page' -%}
+          <li class="breadcrumb-item active" aria-current="page">{{ page.title }}</li>
+        {%- when 'product' -%}
+          {%- if collection.url -%}
+            <li class="breadcrumb-item">
+              {{ collection.title | link_to: collection.url }}
+            </li>
+          {%- endif -%}
+          <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+        {%- when 'collection' and collection.handle -%}
+          {%- if current_tags -%}
+            <li class="breadcrumb-item">
+              {{ collection.title | link_to: collection.url }}
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: "+"}}{%- endcapture -%}{{ current_tags | join: " + "}}
+            </li>
+          {%- else -%}
+            <li class="breadcrumb-item active" aria-current="page">{{ collection.title }}</li>
+          {%- endif -%}
+        {%- when 'blog' -%}
+          {%- if current_tags -%}
+            <li class="breadcrumb-item">
+              {{ blog.title | link_to: blog.url }}
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {%- capture tag_url -%}{{blog.url}}/tagged/{{ current_tags | join: "+" }}{%- endcapture -%}{{ current_tags | join: " + " }}
+            </li>
+          {%- else -%}
+            <li class="breadcrumb-item active" aria-current="page">{{ blog.title }}</li>
+          {%- endif -%}
+        {%- when 'article' -%}
+          {% if is_faq %}
+            <li class="breadcrumb-item">
+              {{ blog.title | link_to: blog.url }}
+            </li>
+          {% else %}
+            <li class="breadcrumb-item">
+              <a href="/pages/{{ current_blog }}#{{ blog.handle | handleize }}">{{ blog.title }}</a>
+            </li>
+          {% endif %}
+          <li class="breadcrumb-item active" aria-current="page">{{ article.title }}</li>
+        {%- else -%}
+          <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+      {%- endcase -%}
+    </ol>
+  </nav>
+</div>
+{%- endunless -%}

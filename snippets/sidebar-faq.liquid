@@ -1,0 +1,42 @@
+
+<div class="accordion bg-white px-3 px-sm-6 d-sm-none" id="header-faq-accordion">
+  <div class="accordion-item px-1 px-sm-0">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="as-accordion-button accordion-button navbar-height py-0 text-uppercase collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        {{ 'faq.title' | t }}
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#header-faq-accordion">
+
+      <ul class="accordion-fits-viewport w-100 list-unstyled my-0" role="tablist">
+        <li class="nav-item pt-1 pb-sm-1 pb-2">
+          <a class="{% if handle == 'contact-support' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+            href="{{ link.url }}">{{ 'contact.support.title' | t }}</a>
+        </li>
+        <li class="nav-item pt-1 pb-sm-1 pb-2">
+          {%- for link in linklists.faq.links -%}
+            {% if link.levels == 1 %}
+              <a class="as-faq-tab-target-mobile d-flex nav-before-arrow border-0 pb-sm-1 pb-2" 
+                href="{{ canonical_url }}#"
+                type="button">{{ link.title }}</a>
+              {% assign sub_links = link.links %}
+              {% if sub_links.size > 0 %}
+                <ul class="list-unstyled mb-0 ps-2">
+                  {% for sub_link in link.links %}
+                    <li class="nav-item pt-1 pb-sm-1 pb-2" role="presentation">
+                      <a 
+                        href="{{ canonical_url }}#{{ sub_link.title | handleize }}"
+                        class="d-flex nav-before-arrow p-0 border-0 bg-transparent as-faq-tab-target-mobile" 
+                        type="button">{{ sub_link.title }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            {% endif %}
+          {%- endfor -%}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+

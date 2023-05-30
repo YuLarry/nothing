@@ -1,0 +1,78 @@
+<div class="container-core">
+  {% if section.settings.title != blank %}
+  <h3 class="fs-h2">{{ section.settings.title }}</h3>
+  {% endif %}
+  <div class="{% if section.settings.title != blank %}mt-5 mt-sm-6{% endif %}">
+    <div class="accordion dot-border-dark border-bottom" id="faq-{{ section.id }}">
+      {%- for block in section.blocks -%}
+        <div class="accordion-item">
+          <div class="accordion-header dot-border-dark border-top" id="heading-{{ section.id }}-{{ forloop.index }}">
+            <button class="accordion-button align-items-start collapsed flex-column flex-md-row fs-base justify-content-between py-4" type="button" data-bs-toggle="collapse" 
+              data-bs-target="#faq-{{ section.id }}-{{ forloop.index }}" aria-expanded="false" 
+              aria-controls="faq-{{ section.id }}-{{ forloop.index }}">
+              {{ block.settings.title }}
+              <span class="ms-md-2 mt-1 mt-md-0 text-nowrap text-primary show-all">{{ 'service_portal.general.read_more' | t }}</span>
+              <span class="ms-md-2 mt-1 mt-md-0 text-nowrap text-primary show-less">{{ 'service_portal.general.read_less' | t }}</span>
+            </button>
+          </div>
+          <div id="faq-{{ section.id }}-{{ forloop.index }}" class="accordion-collapse collapse gx-0 row row-cols-md-2" aria-labelledby="heading-{{ section.id }}-{{ forloop.index }}" 
+            data-bs-parent="#faq-{{ section.id }}">
+            <div class="accordion-body px-0 pt-0 pb-4 fs-base">
+              {% render 'richtext', richtext: block.settings.answer %}
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Support List of Faq",
+  "tag": "section",
+  "class": "bg-light mb-7 mb-sm-9",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Popular Questions"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "list",
+      "type": "list",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Faq list",
+      "blocks": [
+        {
+          "type": "list"
+        },
+        {
+          "type": "list"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

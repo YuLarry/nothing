@@ -1,0 +1,52 @@
+
+<ul class="d-flex flex-wrap list-unstyled mb-0 mt-2 mt-lg-n2" role="list">
+  {%- for block in section.blocks -%}
+    {% if block.type == 'bitcoin' %}
+      <li class="me-2 ms-0 me-lg-0 ms-lg-2 mt-2 opacity-30">
+        {%- assign img = block.settings.image -%}
+        {%- assign img_mobile = block.settings.image_mobile -%}
+        {% if img %}
+          <picture class="w-100 h-100 d-block">
+            {% if img_mobile %}
+              <source media="(max-width: 992px)" 
+                sizes="(max-width: 992px) 100vw, 992px" 
+                srcset="{{ img_mobile | img_url: 'master' }}" >
+            {% endif %}
+            <img loading="lazy" class="img-fluid"
+              sizes="(max-width: 2160px) 100vw, 2160px"
+              srcset="{{ img | img_url: 'master' }}" 
+              src="{{ img | img_url: 'master' }}"
+              width="{{ img.width | divided_by: 2 }}"
+              height="{{ img.height | divided_by: 2 }}"
+              alt="{{ img.alt }}">
+          </picture>
+        {% endif %}
+      </li>
+    {% endif %}
+  {%- endfor -%}
+</ul>
+<ul class="d-flex flex-wrap list-unstyled mb-0 mt-2 mt-lg-n2 ms-lg-4" role="list">
+  {%- for block in section.blocks -%}
+    {% if block.type == 'payment_image' %}
+      <li class="me-1 me-lg-0 ms-0 ms-lg-1 mt-2">
+        {%- assign img = block.settings.image -%}
+        {%- assign img_mobile = block.settings.image_mobile -%}
+        {% if img %}
+          <picture class="w-100 h-100 d-block">
+            {% if img_mobile %}
+              <source media="(max-width: 992px)" 
+                sizes="(max-width: 992px) 100vw, 992px" 
+                srcset="{{ img_mobile | img_url: 'master' }}" >
+            {% endif %}
+            <img loading="lazy" class="img-fluid"
+              srcset="{{ img | img_url: 'master' }}" 
+              src="{{ img | img_url: 'master' }}"
+              width="{{ img.width | divided_by: 2 }}"
+              height="{{ img.height | divided_by: 2 }}"
+              alt="{{ img.alt }}">
+          </picture>
+        {% endif %}
+      </li>
+    {% endif %}
+  {%- endfor -%}
+</ul>

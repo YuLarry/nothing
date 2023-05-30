@@ -1,0 +1,29 @@
+
+<div class="template-hero w-100">
+  <div class="container-topic gx-2 gx-sm-3">
+    <div class="d-flex justify-content-sm-end justify-content-between flex-column flex-sm-row mt-3 mt-sm-7">
+      <div class="mw-text">{{ section.settings.lead_graph | replace: '<a', '<a class="dark-link text-decoration-underline"' }}</div>
+      <h2 class="big-headline overflow-hidden bottom-0 fw-normal ms-2 ms-sm-3">{{ section.settings.title }}</h2>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Banner",
+  "class": "bg-dark container-fits-viewport text-white position-relative",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Hero title"
+    },
+    {
+      "type": "richtext",
+      "id": "lead_graph",
+      "label": "Lead paragraph"
+    }
+  ]
+}
+{% endschema %}

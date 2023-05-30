@@ -1,0 +1,68 @@
+
+<ul class="list-unstyled mb-0 mt-n6 mt-sm-n9">
+  {% for block in section.blocks %}
+    <li class="mt-6 mt-sm-9">
+      {% render 'article-block', block: block %}
+      {% unless forloop.last %}
+      <div class="dot-border-dark border-top pb-3 my-6"></div>
+      {% endunless %}
+      
+    </li>
+  {% endfor %}
+</ul>
+
+{% schema %}
+{
+  "name": "Brand Assets",
+  "blocks": [
+    {
+      "name": "Brand assets",
+      "type": "Assets",
+      "settings": [
+        {
+          "label": "Image",
+          "type": "image_picker",
+          "info": "860px x auto .jpg recommended",
+          "id": "img"
+        },
+        {
+          "label": "Heading",
+          "type": "text",
+          "id": "heading",
+          "default": "COMING SOON"
+        },
+        {
+          "label": "subtext",
+          "type": "text",
+          "id": "subtext",
+          "default": "Imagery"
+        },
+        {
+          "label": "text",
+          "type": "text",
+          "id": "text",
+          "default": "Assets and imagery"
+        },
+        {
+          "label": "Button label",
+          "type": "text",
+          "id": "btn_text",
+          "default": "( Download )"
+        },
+        {
+          "label": "Download Link",
+          "type": "url",
+          "id": "btn_url"
+        },
+        {
+          "label": "Disabled",
+          "type": "checkbox",
+          "id": "is_disabled"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+

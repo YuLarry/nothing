@@ -1,0 +1,253 @@
+<style>
+  .store-product-banner-{{ section.id }} .z-index-1 {
+    z-index: 1;
+  }
+  .store-product-banner-{{ section.id }} .form-check-label {
+    cursor: auto;
+  }
+  .store-product-banner-{{ section.id }} .form-check-label::before {
+    position: relative;
+    left: 0;
+    margin-right: 5px;
+  }
+</style>
+{%- assign product = section.settings.product -%}
+{%- assign selected_or_first_available_variant = product.selected_or_first_available_variant -%}
+
+<div class="store-product-banner-{{ section.id }} {% unless section.settings.disable_container_fits_viewport %}container-fits-viewport {% endunless %}row g-0 as-location-target" data-color='{{ section.settings.text_color }}'>
+  <div class="col-lg position-relative overflow-hidden">
+    {% if section.settings.title != blank %}
+    <div class="position-absolute z-index-1 font-size-calc  {% unless section.settings.show_dotted_font_on_mobile %}d-none d-lg-block{% endunless %}">
+      {% render 'product-special-title', title: section.settings.title, color: section.settings.left_text_color %}
+    </div>
+    {% endif %}
+    <figure class="mb-0">
+      <picture>
+        {%- assign image = section.settings.imageMob -%}
+        <source media="(max-width: 576px)" 
+          sizes="(max-width: 576px) 100vw, 576px" 
+          srcset="
+            {%- if image.width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}
+            {%- if image.width >= 857 -%}{{ image | image_url: width: 857 }} 857w,{%- endif -%}
+            {%- if image.width >= 1069 -%}{{ image | image_url: width: 1069 }} 1069w,{%- endif -%}
+            {%- if image.width >= 1244 -%}{{ image | image_url: width: 1244 }} 1244w,{%- endif -%}
+            {%- if image.width >= 1494 -%}{{ image | image_url: width: 1494 }} 1494w,{%- endif -%}
+            {%- if image.width >= 1560 -%}{{ image | image_url: width: 1560 }} 1560w,{%- endif -%}
+            {%- if image.width >= 1660 -%}{{ image | image_url: width: 1660 }} 1660w,{%- endif -%}
+            {%- if image.width >= 1901 -%}{{ image | image_url: width: 1901 }} 1901w,{%- endif -%}
+            {%- if image.width >= 2040 -%}{{ image | image_url: width: 2040 }} 2040w,{%- endif -%}
+            {%- if image.width >= 2160 -%}{{ image | image_url: width: 2160 }} 2160w,{%- endif -%}
+            {%- if image.width >= 3840 -%}{{ image | image_url: width: 3840 }} 3840w,{%- endif -%}"
+        >
+        {%- assign image = section.settings.image -%}
+        <img 
+          class="{% unless section.settings.disable_container_fits_viewport %}position-lg-absolute {% endunless %}w-100 h-100 object-fit-cover"
+          sizes="(max-width: 768px) 100vw, 75vw"
+          srcset="
+            {%- if image.width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}
+            {%- if image.width >= 857 -%}{{ image | image_url: width: 857 }} 857w,{%- endif -%}
+            {%- if image.width >= 1069 -%}{{ image | image_url: width: 1069 }} 1069w,{%- endif -%}
+            {%- if image.width >= 1244 -%}{{ image | image_url: width: 1244 }} 1244w,{%- endif -%}
+            {%- if image.width >= 1494 -%}{{ image | image_url: width: 1494 }} 1494w,{%- endif -%}
+            {%- if image.width >= 1560 -%}{{ image | image_url: width: 1560 }} 1560w,{%- endif -%}
+            {%- if image.width >= 1660 -%}{{ image | image_url: width: 1660 }} 1660w,{%- endif -%}
+            {%- if image.width >= 1901 -%}{{ image | image_url: width: 1901 }} 1901w,{%- endif -%}
+            {%- if image.width >= 2040 -%}{{ image | image_url: width: 2040 }} 2040w,{%- endif -%}
+            {%- if image.width >= 2160 -%}{{ image | image_url: width: 2160 }} 2160w,{%- endif -%}
+            {%- if image.width >= 3840 -%}{{ image | image_url: width: 3840 }} 3840w,{%- endif -%}" 
+          src="{{ image | img_url: '2160x' }}"
+          alt="{{ image.alt }}"
+          width="{{ image.width }}"
+          height="{{ image.height }}">
+      </picture>
+    </figure>
+  </div>
+  <div class="col-lg-auto w-lg-fixed px-4 pt-1 pb-6 py-lg-0 text-{{ section.settings.text_color }} position-relative">
+    <div class="{% if section.settings.disable_container_fits_viewport %}position-sticky top-0 {% endif %}container-fits-viewport row">
+      <div class="col align-self-end">
+        <div class="row">
+          <div class="col-4">{{ section.settings.pages }}</div>
+          <div class="col-8">{{ section.settings.subline }}</div>
+        </div>
+        {%- if product and product != empty -%}
+          <h2 class="mt-5 mt-md-6 pt-1 mb-0 fs-h1"><a class="link-dark as-product-url"
+            data-variants='{% render 'product-variants', product: product %}'
+            data-variant-id="{{ selected_or_first_available_variant.id }}" 
+            href="{{ product.url }}">{{ product.title }}</a></h2>
+  
+          {%- if product.description -%}
+            <div class="mt-4 pt-2 mt-md-5 pt-md-1 fs-base richtext">{{ product.description | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}</div>
+          {%- endif -%}
+  
+          <div class="d-flex flex-column">
+            {%- unless product.has_only_default_variant -%}
+              {%- assign variant = product.selected_or_first_available_variant -%}
+              {%- if product.available -%}
+                <div class="mt-md-3 mt-6 pt-md-1">
+                  {%- for option in product.options_with_values -%}
+                    <dl class="{% if forloop.last %}mb-0{% else %}mb-3 pb-1{% endif %}">
+                      <dt>{{ 'products.product.available' | t }} {{ option.name }}: </dt>
+                      {%- assign tmp_option_name = option.name | downcase -%}
+                      <dd class="d-flex flex-wrap mt-1 mb-0">
+                        {%- for value in option.values -%}
+                          {%- liquid
+                            assign first_related_variant = blank
+                            if option.name == product.metafields.my_fields.colorful_option
+                              for variant_item in product.variants
+                                  if option.position == 1
+                                    if variant_item.option1 == value
+                                      assign first_related_variant = variant_item
+                                      break
+                                    endif
+                                  endif
+                                  if option.position == 2
+                                    if variant_item.option2 == value
+                                      assign first_related_variant = variant_item
+                                      break
+                                    endif
+                                  endif
+                                  if option.position == 3
+                                    if variant_item.option3 == value
+                                      assign first_related_variant = variant_item
+                                      break
+                                    endif
+                                  endif
+                              endfor
+                            endif
+                          -%}
+                          <label class="position-relative radio-btn-label form-check-label w-auto border-0 {% if option.name == product.metafields.my_fields.colorful_option and first_related_variant != blank and first_related_variant.metafields.my_fields.option != blank %}{{ first_related_variant.metafields.my_fields.option | downcase }}{% else %}none{% endif %}">
+                            {{ value }}
+                          </label>{% unless forloop.last %}&nbsp;/&nbsp;{% endunless %}
+                        {%- endfor -%}
+                      </dd>
+                    </dl>
+                  {%- endfor -%}  
+                </div>
+              {%- endif -%}
+            {%- endunless -%}
+  
+            {%- if section.settings.show_price -%}
+              <div class="order-md-first mt-md-3 mt-6 pt-md-1">
+                <div class="d-flex justify-content-between">
+                  <div class="fs-base d-md-none">{{ 'products.product.price.price' | t }}:</div>
+                  {% render 'price', product: product %}
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
+          
+          <div class="mt-6 mt-md-5">
+            {%- if product.available -%}
+              <a class="as-product-url btn btn-primary text-nowrap" 
+                data-variants='{% render 'product-variants', product: product %}'
+                data-variant-id="{{ selected_or_first_available_variant.id }}"
+                href="{{ product.url }}">{{ 'products.product.buy_now' | t }}</a>
+            {%- else -%}
+              <span class="text-danger">{{ 'products.product.out_of_stock' | t }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Store Product Banner",
+  "class": "pdp store-product-banner position-relative overflow-hidden",
+  "tag": "section",
+  "settings": [
+    {
+      "label": "Disable container fits viewport",
+      "type": "checkbox",
+      "id": "disable_container_fits_viewport",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "options": [
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "white",
+          "label": "Light"
+        }
+      ],
+      "default": "dark"
+    },
+    {
+      "type": "select",
+      "id": "left_text_color",
+      "label": "Text color on left",
+      "options": [
+        {
+          "value": "dark",
+          "label": "Dark"
+        },
+        {
+          "value": "white",
+          "label": "Light"
+        }
+      ],
+      "default":   "dark"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "label": "Show dotted font on mobile",
+      "type": "checkbox",
+      "id": "show_dotted_font_on_mobile",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "pages",
+      "label": "pages",
+      "default": "00."
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "subline",
+      "default": "subline"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show Price",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop image",
+      "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+    },
+    {
+      "type": "image_picker",
+      "id": "imageMob",
+      "label": "Mobile image",
+      "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store Product Banner",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

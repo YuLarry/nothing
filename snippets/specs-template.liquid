@@ -1,0 +1,37 @@
+
+{% if title != empty %}
+<h6 class="accordion-header dot-border-dark border-top" id="heading-{{ title | handleize }}">
+  {% comment %}{% if cache contains faq %} collapsed{% endif %}{% endcomment %}
+  <button class="text-start pe-1 accordion-button collapsed text-uppercase font-base font-weight-bold" 
+    type="button" 
+    data-bs-toggle="collapse" 
+    data-bs-target="#collapse-{{ title | handleize }}" 
+    {% comment %}{% unless cache contains faq %}true{% else %}false{% endunless %}{% endcomment %}
+    aria-expanded="false" 
+    aria-controls="collapse-{{ title | handleize }}">
+    {{ title }}
+  </button>
+</h6>
+{% comment %}{% unless cache contains faq %} show{% endunless %}{% endcomment %}
+<div id="collapse-{{ title | handleize }}" 
+  class="accordion-collapse collapse" 
+  aria-labelledby="heading-{{ title | handleize }}">
+  <div class="accordion-body pt-0">
+    <div class="row pb-3">
+      <div class="col-12">
+        <ul class="list-unstyled mb-0 mt-sm-n1">
+        {% for block in blocks %}
+          <li class="row g-0 mt-sm-1">
+            <p class="mb-0 {% if block.settings.answer != empty %}col-4 {% endif %}pe-2 font-weight-bold">{{ block.settings.title }}</p>
+            <div class="col-8 text-end">
+              {{ block.settings.answer | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+            </div>
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+

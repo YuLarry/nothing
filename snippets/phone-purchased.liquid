@@ -1,0 +1,670 @@
+{% capture estimated_delivery_time %}{%- render 'delivery-time' -%}{% endcapture %}
+{% capture current_delivery_time %}{%- render 'current-delivery-time' -%}{% endcapture %}
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign selected_variant = product.selected_variant
+
+  assign current_available = current_variant.available
+  	
+  if product.has_only_default_variant	
+    assign hide_purchase_and_notify = product.metafields.my_fields.hide_purchase_and_notify	
+  else	
+    assign hide_purchase_and_notify = current_variant.metafields.my_fields.hide_purchase_and_notify	
+  endif
+
+  assign current_shipping_info = null	
+
+  assign delivery_text = null
+  assign delivery_data = selected_variant.metafields.my_fields.delivery_time.value
+  unless hide_purchase_and_notify
+    if current_available
+      if delivery_data != blank
+        if selected_variant.inventory_quantity <= delivery_data.last.quantity
+          assign current_available = false
+        endif
+      endif
+      for delivery_policy in delivery_data
+          if selected_variant.inventory_quantity > delivery_policy.quantity
+            assign delivery_text = delivery_policy.text
+            break
+          endif
+      endfor
+    endif
+  endunless
+
+  unless hide_purchase_and_notify	
+    if current_available	
+      assign current_shipping_info = current_variant.metafields.my_fields.shipping_info	
+      unless current_shipping_info
+        if product.handle contains 'phone'
+          assign current_shipping_info = 'products.phone1.shipping_info_html' | t: delivery_time: estimated_delivery_time
+        endif
+      endunless
+    endif
+  endunless
+-%}
+
+<div>
+    <input type="hidden" class="as-money-format" name="money_format" form="as-product-form-{{ section.id }}" value="{{ shop.money_format }}">
+    <variant-lists data-url="{{ product.url }}" data-section="{{ section.id }}" class="d-none as-all-variants">
+      <label for="product-{{ product.id }}-variant" class="form-label visually-hidden">Variant</label>
+      <select id="product-{{ product.id }}-variant" class="as-product-variant" name="id">
+        {%- for variant in product.variants -%}
+          {%- liquid
+            assign option_variant_available = variant.available
+            assign option_delivery_data = variant.metafields.my_fields.delivery_time.value
+            if option_delivery_data != blank
+              if variant.inventory_quantity < option_delivery_data.last.quantity
+                assign option_variant_available = false
+              endif
+            endif  
+          -%}
+          <option 
+            data-available="{{ option_variant_available }}"
+            data-hide-purchase="{{ variant.metafields.my_fields.hide_purchase_and_notify }}"
+            data-product-color="{{ variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' | replace: 'white', 'light' }}" data-price="{{ variant.price }}" 
+          {% if variant.compare_at_price > variant.price %}
+            data-compare-price="{{ variant.compare_at_price }}"
+          {% else %}
+            data-compare-price="{{ variant.price }}"
+          {% endif %}
+          class="as-product-variant-option" value="{{ variant.id }}"
+          {% if variant.option1 %}data-option1="{{ variant.option1 }}" {% endif %}
+          {% if variant.option2 %}data-option2="{{ variant.option2 }}" {% endif %}
+          {% if variant.option3 %}data-option3="{{ variant.option3 }}" {% endif %}
+            {%- if variant == current_variant %} selected="selected" {%- endif -%}>
+            {{ variant.title }}
+          </option>
+        {%- endfor -%}
+      </select>
+    </variant-lists>
+    {%- assign product_form_id = 'as-product-form-' | append: section.id -%}
+    <div class="purchase-main">
+      <div data-step="0" class="as-step step as-main-step pb-6 pb-md-7">
+        {% assign step_1_index = "products.phone1.step_001" | t %}
+        {% assign step_1_title = "products.phone1.step_configuration" | t %}
+        {% render 'product-step-title', step_index: step_1_index , step_title: step_1_title %}
+        <div class="row g-0">
+          <div class="col-12 col-md-6 col-lg-12">
+            <h1 class="fs-h1 mb-3 mb-md-5">{{ product.title }}</h1>
+          </div>
+          <div class="col-12 col-md-6 col-lg-12">
+            {% if section.settings.lead_paragraph != blank %}
+              <div class="fs-base mb-4 richtext">
+                {{ section.settings.lead_paragraph | replace: '<p', '<p class="mb-0"' }}
+              </div>
+            {% endif %}
+            {%- if section.settings.logo_image != blank or section.settings.logo_link != blank -%}
+              <div class="mb-4 logo-img position-relative">
+                {% if section.settings.logo_link != blank %}
+                  <a href="{{ section.settings.logo_link }}" {% render 'link', link: section.settings.logo_link %} class="stretched-link"></a>
+                {% endif %}
+                <img loading="lazy" class="w-100" src="{{ section.settings.logo_image | img_url: 'master' }}" alt="{{ section.settings.logo_image.alt }}">
+              </div>
+            {%- endif -%}
+            <div class="as-target-anchor">
+              {%- unless product.has_only_default_variant -%}
+                <variant-options data-levels="{{ product.options_with_values.size }}" data-section="{{ section.id }}" data-url="{{ product.url }}">
+                  {%- for option in product.options_with_values -%}
+                      <fieldset class="as-option-wrap mb-4">
+                        <legend class="fs-base mb-2">{{ "products.general.select_option" | t: option_name: option.name }}</legend>
+                        <div class="row gx-4 gy-3">
+                          {% liquid
+                            if option.name == product.metafields.my_fields.colorful_option
+                              assign option_array = option.values
+                            else
+                              assign option_array = option.values
+                            endif
+                          %}
+                          {%- for value in option_array -%}
+                            {%- liquid
+                              assign first_related_variant = blank
+                              if option.name == product.metafields.my_fields.colorful_option
+                                for variant_item in product.variants
+                                    if option.position == 1
+                                      if variant_item.option1 == value
+                                        assign first_related_variant = variant_item
+                                        break
+                                      endif
+                                    endif
+                                    if option.position == 2
+                                      if variant_item.option2 == value
+                                        assign first_related_variant = variant_item
+                                        break
+                                      endif
+                                    endif
+                                    if option.position == 3
+                                      if variant_item.option3 == value
+                                        assign first_related_variant = variant_item
+                                        break
+                                      endif
+                                    endif
+                                endfor
+                              endif
+                            -%}
+                            {%- capture is_not_exist -%}
+                              {%- render 'filter-options', product: product, option: option, value: value, current_variant: current_variant -%}
+                            {%- endcapture -%}
+                            {% assign is_not_exist = is_not_exist | strip %}
+
+                            <div class="col-4 radio-btn position-relative {% if is_not_exist == 'true' %}d-none{% endif %}">
+                              <input {% if option.name == product.metafields.my_fields.colorful_option and first_related_variant != blank and first_related_variant.metafields.my_fields.option != blank %}data-media-color="{{ first_related_variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' | replace: 'white', 'light' }}"{% endif %}
+                                data-position="{{ option.position }}" type="radio" id="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}"
+                                class="as-step-option as-make-select radio-btn-input form-check-input visually-hidden {% if option.name == product.metafields.my_fields.colorful_option %}as-colorful-option{% endif %}"
+                                name="{{ option.name }}"
+                                value="{{ value | escape }}"
+                                form="as-product-form-{{ section.id }}"
+                                index="{{selected_variant.optionName}}"
+                                {% if option.position == 1 and selected_variant.option1 == value %}checked{% endif %}
+                                {% if option.position == 2 and selected_variant.option2 == value %}checked{% endif %}
+                                {% if option.position == 3 and selected_variant.option3 == value %}checked{% endif %}
+                              >
+                              <label class="radio-btn-label form-check-label {% if option.name == product.metafields.my_fields.colorful_option and first_related_variant != blank and first_related_variant.metafields.my_fields.option != blank %}{{ first_related_variant.metafields.my_fields.option | downcase }}{% else %}none{% endif %}" for="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}">
+                                {{ value }}
+                              </label>
+                            </div>
+                          {%- endfor -%}
+                        </div>
+                      </fieldset>
+                  {%- endfor -%}
+                  <script class="as-variants-data" type="application/json">
+                    {{ product.variants | json }}
+                  </script>
+                </variant-options>
+              {%- endunless -%}
+            </div>
+            <div class="{% if section.settings.show_price %}d-flex{% else %}d-none{% endif %} justify-content-between as-price-{{ section.id }}">
+              <div class="fs-base">{{ "products.general.price" | t }}</div>
+              <div class="as-price-data-{{ section.id }}">
+                {% if selected_variant %}
+                  {% render 'price', product: product, use_variant: true %}
+                {% else %}
+                  {% render 'price', product: product, use_variant: false %}
+                {% endif %}
+              </div>
+            </div>
+            <div id="as-sold-out-message-{{ section.id }}" class="mt-5 mt-md-6 {% if selected_variant == null or current_available or hide_purchase_and_notify %}d-none{% endif %}">
+              <p class="mb-0">{{ 'products.form_notify_me.notify_me_text' | t: product_title: product.title }}</p>
+              <form method="post" class="as-notify-me-form mt-3 mt-md-4" data-event="subscribe" data-type="notify_me" action="{{ settings.subscribe_api }}" autocomplete="true" novalidate="true">
+                {% comment %} <!-- 使用google-recaptcha后，生成包含<textarea name="g-recaptcha-response"></textarea>的结构（内含token值） --> {% endcomment %}
+                <google-recaptcha data-sitekey="{{ settings.google_recaptcha_sitekey }}" data-container-class="as-verify-code-recaptcha"></google-recaptcha>  
+                {% if settings.store_tag != blank or settings.notify_me_tag != blank or current_variant.metafields.my_fields.notify_me_tag != blank %}
+                  <input type="hidden" name="tags" id="as-variant-tag-{{ section.id }}" value="{{settings.store_tag}},{{settings.notify_me_tag}},{{ current_variant.metafields.my_fields.notify_me_tag }}">
+                {% endif %}
+                <div>
+                  <div class="input-group input-group-overlay fs-base text-primary">
+                    <span class="d-flex align-items-center">(&nbsp;</span>
+                    <input class="as-form-input bg-transparent form-control p-0 border-0 fs-base placeholder-primary text-primary"
+                      type="email" name="email" id="email" 
+                      placeholder="{{ 'products.form_notify_me.enter_your_email' | t }}" 
+                      pattern='^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+                      style="height: auto;" required>
+                    <button type="submit" class="as-btn fw-normal p-0 border-0 px-0 bg-transparent fs-base link-primary">{{ 'products.form_notify_me.notify_me' | t }}</button>
+                    <span class="d-flex align-items-center">&nbsp;)</span>
+                  </div>
+                  <div class="mt-1 text-danger invalid-feedback as-input-error-tips">
+                    {{ 'products.form_notify_me.error' | t }}
+                  </div>
+                </div>
+                <div>
+                  <div class="mt-7 d-flex align-items-center position-relative">
+                    <input id="notify-me-policy" class="as-form-input form-check-input m-0 me-2 position-relative flex-center rounded-0" type="checkbox" required />
+                    <label for="notify-me-policy">{{ 'products.form_notify_me.terms_html' | t }}</label>
+                  </div>
+                  <div class="mt-1 text-danger invalid-feedback as-input-error-tips">
+                    {{ 'products.form_notify_me.terms_error' | t }}
+                  </div>
+                </div>
+                <div class="as-tips-success invalid-feedback text-success fs-base">{{ 'products.form_notify_me.success' | t }}</div>
+                <div data-error406="{{ 'general.newsletter_form.distributor_error' | t }}" data-default="{{ 'products.form_notify_me.error' | t }}" class="as-form-error-tips invalid-feedback text-danger fs-base">{{ 'products.form_notify_me.error' | t }}</div>
+              </form>
+            </div>
+            <div class="as-delivery-message-{{ section.id }}">
+              {% if section.settings.store_locator_text != blank or current_shipping_info != blank or delivery_text != blank %}
+                <div class="mt-5 mt-md-6">
+                    <div class="dot-border-dark border-top py-1 fs-small font-mono" style="text-transform: uppercase !important;">
+                      {%- unless hide_purchase_and_notify  -%}
+                        {% if delivery_text != blank %}
+                          <div>{{ delivery_text }}</div>
+                        {% endif %}
+                        {% if current_shipping_info != blank %}
+                          <div>{{ current_shipping_info |  newline_to_br }}</div>
+                        {% endif %}
+                      {%- endunless -%}
+                      {% if section.settings.store_locator_text != blank %}
+                        <div class="richtext">{{ section.settings.store_locator_text | replace: '<p', '<p class="mb-0"' }}</div>
+                      {% endif %}
+                    </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+        {%- liquid
+          assign show_accessory = false
+          for accessory in section.settings.accessories_collection
+            if accessory.available
+              assign show_accessory = true
+            endif
+          endfor
+        -%}
+      {% if show_accessory %}
+      <div data-step="1" data-section="{{ section.id }}"  class="as-step as-accessories-list step dot-border-dark border-top pt-1 {% unless selected_variant %}disabled{% endunless %} {% if hide_purchase_and_notify %}d-none{% endif %} {% unless current_available %}d-none{% endunless %}">
+        {% assign step_2_index = "products.phone1.step_002" | t %}
+        {% assign step_2_title = "products.phone1.step_add_accessories" | t %}
+        {% render 'product-step-title', step_index: step_2_index, step_title: step_2_title %}
+        <div class="row g-0">
+          <div class="col-12 col-md-6 col-lg-12">
+            <h2 class="fs-h1 mb-3 mb-md-5">{{ "products.phone1.accessories" | t }}</h2>
+          </div>
+          <div class="col-12 col-md-6 col-lg-12">
+            <div class="mb-4">{{ "products.phone1.add_accessories" | t }}</div>
+          </div>
+        </div>
+        {% for accessory in section.settings.accessories_collection %}
+          {%- if accessory.available -%}
+          {%- assign accessory_index = forloop.index0 -%}
+
+          {% liquid
+            assign currentStore = request.host
+            assign diff_variant = false
+            if accessory.metafields.my_fields.display_different_variant != blank
+              assign diff_variant = true
+              assign diff_variant_data = accessory.metafields.my_fields.display_different_variant.value
+              assign current_store_variant_id = null
+              for data in diff_variant_data
+                for store in data.stores
+                  if store == currentStore
+                    assign current_store_variant_id = data.variant | plus: 0
+                    break
+                  endif
+                endfor
+              endfor
+            endif
+            
+            assign current_accessory_variant = accessory.selected_or_first_available_variant
+            if diff_variant
+              for variant in accessory.variants
+                if variant.id  == current_store_variant_id
+                  assign current_accessory_variant = variant
+                endif
+              endfor
+            endif
+          %}
+          {% if diff_variant == false or diff_variant and current_accessory_variant.available  %}
+          
+          {% liquid
+            assign cart_count = 0
+            assign flag = null
+            for item in cart.items
+              if flag == 'ear-1'
+                if item.product == product
+                  assign cart_count = cart_count | plus: 1
+                  break
+                endif
+              elsif flag == product.handle
+                if item.product == all_products['ear-1']
+                  assign cart_count = cart_count | plus: 1
+                  break
+                endif
+              else
+                if item.product == product or item.product == all_products['ear-1']
+                  assign cart_count = cart_count | plus: 1
+                  assign flag = item.product.handle
+                endif
+              endif
+            endfor
+
+            if section.settings.enable_ear1_promotion and accessory.handle == 'ear-1' and cart_count < 2
+              assign enable_promotion = true
+              assign enable_promotion_product = true
+            elsif section.settings.enable_ear1_promotion and accessory.handle == 'ear-1'
+              assign enable_promotion = false
+              assign enable_promotion_product = true
+            else
+              assign enable_promotion = false
+              assign enable_promotion_product = false
+            endif
+          %}
+
+          <accessory-form>
+          <div class="mb-6 as-accessories-form {% if enable_promotion_product %}as-promotion-product{% endif %}" data-section="{{ section.id }}">
+            <accessory-variant-lists data-url="{{ accessory.url }}" data-section="{{ section.id }}" class="d-none as-all-variants">
+              <label for="accessory-{{ accessory.id }}-variant" class="form-label visually-hidden">Variant</label>
+              <select id="accessory-{{ accessory.id }}-variant" class="as-accessory-variant {% if enable_promotion_product %}as-promotion-accessory-list-{{section.id}}{% endif %}" name="id">
+                {%- for variant in accessory.variants -%}
+                  
+                  {% liquid
+                    if enable_promotion
+                      assign variant_compare_at_price = variant.price
+                      assign variant_price = variant.price | times: 80 | divided_by: 100
+                    else
+                      assign variant_price = variant.price
+                      assign variant_compare_at_price  = variant.compare_at_price
+                    endif
+                  %}
+
+                  <option
+                    data-handle="{{ accessory.handle }}"
+                    data-show-promotion-text="{{enable_promotion}}"
+                    data-price="{{ variant_price }}"
+                  {% if variant_compare_at_price > variant_price %}
+                    data-compare-price="{{ variant_compare_at_price }}"
+                  {% else %}
+                    data-compare-price="{{ variant_price }}"
+                  {% endif %}
+                  data-name="{{ accessory.title }}"
+                  class="as-accessory-variant-option" value="{{ variant.id }}"
+                  {% if variant.option1 %}data-option1="{{ variant.option1 }}"{% endif %}>
+                    {{ variant.title }}
+                  </option>
+                {%- endfor -%}
+
+                {% liquid
+                  assign current_variant_price = current_accessory_variant.price
+                  assign current_variant_compare_at_price = current_accessory_variant.compare_at_price
+                  if enable_promotion
+                    assign current_variant_compare_at_price = current_accessory_variant.price
+                    assign current_variant_price = current_accessory_variant.price | times: 80 | divided_by: 100
+                  endif
+                %}
+
+                <option data-show-promotion-text="{{enable_promotion}}"
+                 data-price="{{ current_variant_price }}"
+                {% if current_variant_compare_at_price > current_variant_price %}
+                  data-compare-price="{{ current_variant_compare_at_price }}"
+                {% else %}
+                  data-compare-price="{{ current_variant_price }}"
+                {% endif %} class="as-accessory-variant-option" value="skip" selected>
+                  skip
+                </option>
+              </select>
+            </accessory-variant-lists>
+            
+            {% comment %} 在购买页中以变体图片为节点，将产品图分组，形如 A1 $$ B1;;B2;;B3 $$ C1;;C2 {% endcomment %}
+            {%- capture image_list -%}
+            {%- for product_image in accessory.images -%}
+              {%- if product_image.variants.first.id != blank -%}
+                {%- comment -%} If product image is attached to a variant, image.attached_to_variant not working! {%- endcomment -%}
+                {%- unless forloop.first -%}$${%- endunless -%}
+                {{ product_image.id }}::{{ product_image.position }}||{{ product_image.alt }}
+              {%- else -%}
+                {%- unless forloop.first -%};;{%- endunless -%}{{ product_image.position }}||{{ product_image.alt }}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- endcapture -%}
+
+            {% if accessory.has_only_default_variant %}
+            <figure class="ratio accessory-figure mb-1 md-md-2">
+              {%- assign image = accessory.images[1] | default: accessory.images[0] -%}
+              <img loading="lazy" class="w-100 h-100 object-fit-cover" src="{{ image | img_url: '800x' }}" alt="{{ image.alt }}">
+            </figure>
+            {% else %}
+              {% for variant in accessory.variants %}
+                {% capture variant_image_strs %}{%- render 'get-product-images-by-variant-id', image_list: image_list, target_variant: variant, all_images: product.images -%}{% endcapture %}
+                {% assign variant_image_strs = variant_image_strs | split: ';;' %}
+                <div data-variant-id="{{ variant.id }}" class="as-accessory-gallery-wrapper {% if current_accessory_variant.id != variant.id %}d-none{% else %}as-default{% endif %}">
+                    {%- liquid 
+                      assign variant_image_str = variant_image_strs[1] | default: variant_image_strs[0]
+                      assign variant_image = variant_image_str | split: '||'
+                      assign variant_image_pos = variant_image[0] | plus: 0 | minus: 1
+                      assign variant_image_alt = variant_image[1]
+                    -%}
+                    {%- assign image = accessory.images[variant_image_pos] -%}
+                    <figure class="ratio accessory-figure mb-1 md-md-2">
+                      <img loading="lazy" class="w-100 h-100 object-fit-cover" src="{{ image | img_url: '800x' }}" alt="{{ image.alt }}">
+                    </figure>
+                </div>
+              {% endfor %}
+            {% endif %}
+            <div class="row g-0">
+              <div class="col-12 col-md-6 offset-md-6 col-lg-12 offset-lg-0">
+                <div class="d-flex flex-wrap mx-n1">
+                  <span class="mx-1">{{ accessory.title }}</span>
+                  <div class="d-inline-block as-accessories-price mx-1 {% if enable_promotion_product %}as-promotion-accessory-price-{{section.id}}{% endif %}">
+                    {% render 'price', product: accessory, enable_customize_promotion: enable_promotion, use_variant: true, custom_variant: current_accessory_variant, show_discount_rate: true, discount_rate: section.settings.ear1_promotion_text, price_class: 'accessory-price' %}
+                  </div>
+                </div>
+                {% if section.settings.ear_stick_discount_info != blank and accessory.handle == 'ear-stick' %}
+                  <div class="richtext mt-2">
+                    {{ section.settings.ear_stick_discount_info | replace: '<p', '<p class="mb-0"' }}
+                  </div>
+                {% endif %}
+                <div class="mt-3">
+                <div class="row gx-4 gy-3">
+                  {%- if accessory.has_only_default_variant or diff_variant -%}
+                      <div class="col-4 radio-btn position-relative">
+                        <input type="radio" id="accessory-{{ accessory_index }}-{{ section.id }}-{{ forloop.index0 }}"
+                          class="as-variant-wrap as-step-option as-make-select radio-btn-input form-check-input visually-hidden"
+                          value="{{ current_accessory_variant.id }}"
+                          name="{{ accessory.title | escape }}"
+                          form="as-accessory-product-form-{{ section.id }}-{{ accessory_index }}"
+                        >
+                        <label class="radio-btn-label form-check-label none" for="accessory-{{ accessory_index }}-{{ section.id }}-{{ forloop.index0 }}">
+                          {% if accessory.metafields.my_fields.show_buy_extra %}{{ 'products.phone1.buy_extra' | t }}{% else %}{{ 'products.phone1.buy' | t }}{% endif %}
+                        </label>
+                      </div>
+
+                      <div class="col-4 radio-btn position-relative">
+                        <input type="radio" id="accessory-{{ accessory_index }}-{{ section.id }}-{{ forloop.index0 }}-skip"
+                          class="as-variant-wrap as-step-option radio-btn-input form-check-input visually-hidden"
+                          value="skip"
+                          name="{{ accessory.title | escape }}"
+                          form="as-accessory-product-form-{{ section.id }}-{{ accessory_index }}"
+                          checked="true"
+                        >
+                        <label class="radio-btn-label form-check-label none" for="accessory-{{ accessory_index }}-{{ section.id }}-{{ forloop.index0 }}-skip">
+                          {{ 'products.phone1.skip' | t }}
+                        </label>
+                      </div>
+                  {%- else -%}
+                    {%- for variant in accessory.variants -%}
+  
+                      <div class="col-4 as-variant-wrap radio-btn position-relative">
+                        <input type="radio" id="accessory-{{ accessory_index }}-{{ section.id }}-{{ variant.id }}-{{ forloop.index0 }}"
+                          class="as-step-option radio-btn-input form-check-input visually-hidden" {% unless variant.available %}disabled{% endunless %}
+                          name="{{ accessory.title | escape }}"
+                          value="{{ variant.id }}"
+                          form="as-accessory-product-form-{{ section.id }}-{{ accessory_index }}"
+                        >
+                        <label class="radio-btn-label form-check-label {% unless variant.available %}disabled{% endunless %} {% if variant.metafields.my_fields.option != blank %}{{ variant.metafields.my_fields.option | downcase }}{% else %}none{% endif %}" for="accessory-{{ accessory_index }}-{{ section.id }}-{{ variant.id }}-{{ forloop.index0 }}">
+                          {{ variant.option1 }}
+                        </label>
+                      </div>
+                    {%- endfor -%}
+
+                      <div class="col-4 as-variant-wrap radio-btn position-relative">
+                        <input type="radio" id="accessory-{{ accessory_index }}-{{ section.id }}-{{ forloop.index0 }}-skip"
+                          class="as-step-option radio-btn-input form-check-input visually-hidden"
+                          value="skip"
+                          name="{{ accessory.title | escape }}"
+                          form="as-accessory-product-form-{{ section.id }}-{{ accessory_index }}"
+                          checked="true"
+                        >
+                        <label class="radio-btn-label form-check-label none" for="accessory-{{ accessory_index }}-{{ section.id }}-{{ forloop.index0 }}-skip">
+                          {{ 'products.phone1.skip' | t }}
+                        </label>
+                      </div>
+                  {%- endif -%}
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </accessory-form>
+          {% endif %}
+          {%- endif -%}
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div data-step="2" class="as-step step dot-border-dark border-top pt-1 {% unless selected_variant %}disabled{% endunless %} {% if hide_purchase_and_notify %}d-none{% endif %} {% unless current_available %}d-none{% endunless %}">
+        {% assign step_3_index = "products.phone1.step_003" | t %}
+        {% assign step_3_title = "products.phone1.step_summary" | t %}
+        {% render 'product-step-title', step_index: step_3_index, step_title: step_3_title %}
+        <div class="row g-0">
+          <div class="col-12 col-md-6 col-lg-12">
+            <h2 class="fs-h1 mb-5">{{ 'products.phone1.summary' | t }}</h2>
+          </div>
+          <div class="col-12 col-md-6 col-lg-12">
+            <div class="d-flex justify-content-between as-price-{{ section.id }}-total">
+              <div class="fs-base">{{ product.title }}</div>
+              <div class="as-price-data-{{ section.id }}">
+                {% if selected_variant %}
+                  {% render 'price', product: product, use_variant: true %}
+                {% else %}
+                  {% render 'price', product: product, use_variant: false %}
+                {% endif %}
+              </div>
+            </div>
+            <div class="as-accessory-price-list">
+            </div>
+            <div class="mt-4 d-flex ">
+              <span>{{ 'products.phone1.total' | t }}</span>
+              <s class="d-inline-block as-total-compare-price mx-1"></s>
+              <div class="d-inline-block as-total-price mx-1">
+                <div class="as-price-data-{{ section.id }}">
+                  {% if selected_variant %}
+                    {% render 'price', product: product, use_variant: true %}
+                  {% else %}
+                    {% render 'price', product: product, use_variant: false %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="as-delivery-message-{{ section.id }}-total" style="text-transform: uppercase !important;">
+              {%- unless hide_purchase_and_notify -%}
+                {% if delivery_text != blank %}
+                  <div>{{ delivery_text }}</div>
+                {% endif %}
+                {% if current_shipping_info != blank %}
+                  <div class="as-without-ear-stick mt-4">{{ current_shipping_info |  newline_to_br }}</div>
+                {% endif %}
+                <div class="as-with-ear-stick mt-4 d-none">{{ 'products.phone1.shipping_info_with_ear_stick_html' | t: delivery_time: estimated_delivery_time, current_delivery_time: current_delivery_time }}</div>
+              {%- endunless -%}
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 mt-md-5">
+          <product-form class="product-form" data-show-offcanvas="false">
+            {% liquid
+              assign productFormClass = 'form'
+              assign productFormClass = productFormClass | append: ' as-async-add-form'
+            %}
+            {%- form 'product', product, id: product_form_id, class: productFormClass, novalidate: 'novalidate', data-type: 'add-to-cart-form', data-tag: 'phone' -%}
+              <input class="as-form-quantity" type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <input type="hidden" name="quantity" value="1">
+              <input type="hidden" name="accessories" value="">
+              <div class="d-grid as-form-button-wrap">
+                {% render 'add-error-message' %} 
+                <button name="add" type="submit" class="btn btn-primary" >
+                  {{ "products.general.add_to_cart" | t }}
+                </button> 
+              </div>
+            {%- endform -%}
+          </product-form>
+        </div>
+      </div>
+      <div data-step="3" class="as-step step d-none as-view-cart-summary {% if hide_purchase_and_notify %}d-none{% endif %}">
+        {% assign step_4_index = "products.phone1.step_004" | t %}
+        {% assign step_4_title = "products.phone1.step_ready_to_checkout" | t %}
+        {% render 'product-step-title', step_index: step_4_index, step_title: step_4_title %}
+        <div class="row g-0">
+          <div class="col-12 col-md-6 col-lg-12">
+            <h2 class="fs-h1 mb-5">{{ "products.phone1.step_4_summary" | t }}</h2>
+            <div class="d-flex justify-content-between as-price-{{ section.id }}-total">
+              <div class="fs-base">{{ product.title }}</div>
+              <div class="as-price-data-{{ section.id }}">
+                {% if selected_variant %}
+                  {% render 'price', product: product, use_variant: true %}
+                {% else %}
+                  {% render 'price', product: product, use_variant: false %}
+                {% endif %}
+              </div>
+            </div>
+            <div class="as-accessory-price-list">
+    
+            </div>
+            <div class="mt-4 d-flex">
+              <span>{{ "products.phone1.total" | t }}</span>
+              <s class="d-inline-block as-total-compare-price mx-1"></s>
+              <div class="d-inline-block as-total-price mx-1">
+                <div class="as-price-data-{{ section.id }}">
+                  {% if selected_variant %}
+                    {% render 'price', product: product, use_variant: true %}
+                  {% else %}
+                    {% render 'price', product: product, use_variant: false %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="as-delivery-message-{{ section.id }}-total" style="text-transform: uppercase !important;">
+              {% if delivery_text != blank %}
+                <div>{{ delivery_text }}</div>
+              {% endif %}
+              {%- unless hide_purchase_and_notify -%}
+                {% if current_shipping_info != blank %}
+                  <div class="as-without-ear-stick mt-4">{{ current_shipping_info |  newline_to_br }}</div>
+                {% endif %}
+                <div class="as-with-ear-stick d-none">{{ 'products.phone1.shipping_info_with_ear_stick_html' | t: delivery_time: estimated_delivery_time, current_delivery_time: current_delivery_time }}</div>
+              {%- endunless -%}
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 mt-md-5">
+          <button class="btn as-view-cart w-100 btn-warning">
+            {{ "products.phone1.review_cart" | t }}
+          </button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script type="text/hogan" class="as-variant-price-template">
+  @{#data}@
+    {% assign target_price = '@{price}@' %}
+    <div class="d-inline">{{ 'products.product.price.from_price_html' | t: price: target_price }}</div>
+  @{/data}@
+</script>
+
+<script type="text/hogan" class="as-item-price-template">
+  @{#data}@
+    <div> 
+      @{#show_compare}@
+        <s class="d-inline">@{format_compared_price}@</s>
+      @{/show_compare}@
+        <div class="d-inline @{#show_compare}@ text-danger @{/show_compare}@">@{format_price}@</div>
+      @{#show_compare}@
+        <div class="d-inline text-danger">
+          @{#show_promotion_text}@
+            {{ section.settings.ear1_promotion_text }}
+          @{/show_promotion_text}@
+          @{^show_promotion_text}@
+            (-@{discount}@)
+          @{/show_promotion_text}@
+        </div>
+      @{/show_compare}@ 
+    </div>
+  @{/data}@
+</script>
+
+<script type="text/hogan" class="as-line-item-template">
+  @{#data}@
+    <div class="d-flex justify-content-between">
+      <div class="fs-base">@{name}@</div>
+      <div class="d-flex flex-wrap price @{#show_compare}@ price--on-sale @{/show_compare}@">
+        <div class="@{#show_compare}@ price__sale @{/show_compare}@">
+          @{#show_compare}@
+          <dd>
+            <s class="d-inline">@{format_compared_price}@</s>
+          </dd>
+        @{/show_compare}@
+          <dd>
+            <div class="d-inline">@{format_price}@</div>
+          </dd>
+        </div>
+      </div>
+    </div>
+  @{/data}@
+</script>

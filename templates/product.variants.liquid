@@ -1,0 +1,160 @@
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/ScrollMagic.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/plugins/animation.gsap.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/plugins/debug.addIndicators.min.js"></script>
+
+<main class="main snap-wrapss as-product-page product-tpl as-snap as-product-scrollmagic" role="main" id="root">
+  {% section 'section-hero-product' %}
+  <!-- sticky范围 -->
+  <div class="position-relative">
+    {% if product.selected_variant %}
+    {%- assign current_variant = product.selected_variant -%}
+    {% else %}
+    {%- assign current_variant = product.variants.first -%}
+    {% endif %}
+    <section class="as-snap-list hero-text-white bg-dark as-scrollmagic-item z-index-2">
+      <div class="row g-0 container-fits-viewport">
+        <div class="col-10 offset-1 col-sm-8 offset-sm-0 col-xl-3 offset-xl-3 align-self-center">
+          <div class="d-none as-c01">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-001.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-002.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-003.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-004.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-005.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-006.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-007.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-008.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-009.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-010.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-011.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-012.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-013.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-014.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-015.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-016.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-017.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-018.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-019.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-020.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-021.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-022.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-023.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-024.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-025.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-026.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-027.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-028.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-029.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-030.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-031.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-032.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-033.png?v=1642413153">
+            <img src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-034.png?v=1642413153">
+          </div>
+          
+          <img class="img-fluid lazyload as-case-img"
+            src="https://cdn.shopify.com/s/files/1/0514/8554/0505/files/ezgif-frame-001.png?v=1642413153"
+            alt="">
+        </div>
+      </div>
+    </section>
+    <!-- sticky内容 -->
+    <div class="sticky-buy-now as-sticky-buy-now container-topic pb-2 pb-sm-5 px-3 px-sm-6 position-sticky" style="z-index: 3;">
+      {% for variant in product.variants %}
+      {% assign option = variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' %}
+      <div class="as-{{ option }} pb-2 px-1 px-sm-0 {% if variant.id == current_variant.id %}d-block{% else %}d-none{% endif %}">
+        {% unless variant.metafields.my_fields.hide_purchase_and_notify %}
+        <div class="row g-0 justify-content-end">
+          <div class="col-12 col-sm-4 col-xl-3">
+            {% if variant.metafields.my_fields.third_party_purchase_link != blank %}
+            <a class="w-100 font-55 btn btn-primary text-uppercase as-gtm-product-checkout" target="_blank"
+              rel="noopener noreferrer" href="{{variant.metafields.my_fields.third_party_purchase_link}}">{{
+              'products.product.buy_now' | t }}</a>
+            {% elsif variant.available %}
+              {% if variant.metafields.my_fields.invitation_code %}
+              <!-- {% render 'product-voucher-code', color: 'white', current_variant: variant %} -->
+              {% else %}
+              <button class="w-100 {% unless variant.available %}invisible{% endunless %} as-empty-add-to-cart font-55 btn btn-primary text-uppercase as-gtm-product-checkout" 
+                data-id="{{ variant.id }}"
+                data-option="{{ option }}"
+                data-bs-toggle="offcanvas" 
+                data-bs-target="#offcanvas-cart" 
+                aria-controls="offcanvas-cart"
+                >{{ 'products.product.add_to_cart' | t }}</button>
+              {% endif %}
+            {% else %}
+              <!-- {% render 'product-sign-up', color: 'white' %} -->
+            {% endif %}
+          </div>
+        </div>
+        {% endunless %}
+      </div>
+      {% endfor %}
+    </div> 
+    {% section 'section-hero' %}
+    <div class="bg-light position-relative z-index-2">
+      <div class="container-topic py-9 px-3 px-sm-6">
+        <div class="px-1 px-sm-0 py-sm-9">
+          <div class="row">
+            <div class="col-12 col-sm-6 offset-sm-3">
+              <h2 class="mb-0 fs-h1 font-ndot55">{{ 'products.specs.title' | t }}</h5>
+              <div class="accordion mt-3 break-word" id="accordion-specs">
+                {%- liquid
+                  section 'specs-dimensions'
+                  section 'specs-sound'
+                  section 'specs-clear-voice'
+                  section 'specs-noise-cancellation'
+                  section 'specs-battery'
+                  section 'specs-customisations'
+                  section 'specs-features'
+                  section 'specs-contents-of-box'
+                  section 'specs-last'
+                -%}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</main>
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "url": {{ shop.url | append: product.url | json }},
+  {%- if product.featured_media -%}
+    {%- assign media_size = product.featured_media.preview_image.width | append: 'x' -%}
+    "image": [
+      {{ product.featured_media | img_url: media_size | prepend: "https:" | json }}
+    ],
+  {%- endif -%}
+  "description": {{ product.description | strip_html | json }},
+  {%- if current_variant.sku != blank -%}
+    "sku": {{ current_variant.sku | json }},
+  {%- endif -%}
+  "brand": {
+    "@type": "Thing",
+    "name": {{ product.vendor | json }}
+  },
+  "offers": [
+    {%- for variant in product.variants -%}
+      {
+        "@type" : "Offer",
+        {%- if variant.sku != blank -%}
+          "sku": {{ variant.sku | json }},
+        {%- endif -%}
+        "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+        "price" : {{ variant.price | divided_by: 100.00 | json }},
+        "priceCurrency" : {{ cart.currency.iso_code | json }},
+        "url" : {{ shop.url | append: variant.url | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>

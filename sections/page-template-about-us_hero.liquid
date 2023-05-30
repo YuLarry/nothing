@@ -1,0 +1,63 @@
+  {% if section.settings.title %}
+  {% render 'aboutus-title', title: section.settings.title %}
+  {% endif %}
+  <figure class="mb-3 mb-sm-4">
+    <picture>
+      <source media="(max-width: 576px)" 
+        sizes="(max-width: 576px) 100vw, 576px" 
+        srcset="
+          {{ section.settings.imageMob | img_url: 'master' }}" >
+      <img loading="lazy" class="w-100"
+        sizes="(max-width: 2160px) 100vw, 2160px"
+        srcset="
+          {{ section.settings.image | img_url: '600x' }} 600w,
+          {{ section.settings.image | img_url: '857x' }} 857w,
+          {{ section.settings.image | img_url: '1069x' }} 1069w,
+          {{ section.settings.image | img_url: '1244x' }} 1244w,
+          {{ section.settings.image | img_url: '1494x' }} 1494w,
+          {{ section.settings.image | img_url: '1560x' }} 1560w,
+          {{ section.settings.image | img_url: '1660x' }} 1660w,
+          {{ section.settings.image | img_url: '1901x' }} 1901w,
+          {{ section.settings.image | img_url: '2040x' }} 2040w,
+          {{ section.settings.image | img_url: '2155x' }} 2155w,
+          {{ section.settings.image | img_url: '2160x' }} 2160w,
+          {{ section.settings.image | img_url: '3840x' }} 3840w" 
+        src="{{ section.settings.image | img_url: '2160x' }}"
+        alt="{{ section.settings.image.alt }}">
+    </picture>
+  </figure>
+  <div class="row">
+    <div class="col-md-7">
+    {% render 'richtext', richtext: section.settings.description  %}
+    </div>
+  </div>
+{% schema %}
+{
+  "name": "Rich text with image",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop image",
+      "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+    },
+    {
+      "type": "image_picker",
+      "id": "imageMob",
+      "label": "Mobile image",
+      "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "label": "Description",
+      "id": "description"
+    }
+  ]
+}
+{% endschema %}
+

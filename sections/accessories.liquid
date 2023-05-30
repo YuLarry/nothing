@@ -1,0 +1,122 @@
+<div class="container-fluid">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="fs-h2 mb-0">{{ section.settings.heading }}</h2>
+  {%- endif -%}
+</div>
+
+{%- assign product_blocks = section.blocks | where: 'type', 'product' -%}
+<style>
+  .accessories-content-{{ section.id }} .price .price__sale {
+    align-items: baseline;
+  }
+  .accessories-content-{{ section.id }} .add-to-cart:focus {
+    outline: none;
+  }
+  {%- if section.settings.products_per_row == '4' -%}
+    .accessories-content-{{ section.id }} .picture {
+      --bs-aspect-ratio: calc(492 / 407 * 100%);
+    }
+    .accessories-content-{{ section.id }} .swiper-slide {
+      --nothing-swiper-slide-width: 25%;
+    }
+  {%- elsif section.settings.products_per_row == '3' -%}
+    .accessories-content-{{ section.id }} .picture {
+      --bs-aspect-ratio: calc(686 / 550 * 100%);
+    }
+    .accessories-content-{{ section.id }} .swiper-slide {
+      --nothing-swiper-slide-width: 33.3333%;
+    }
+  {%- endif -%}
+  @media (max-width: 1023px) {
+    .accessories-content-{{ section.id }} .picture {
+      --bs-aspect-ratio: calc(335 / 280 * 100%);
+    } 
+  }
+</style>
+<div class="accessories-content-{{ section.id }}">
+  {% render 'accessories', 
+    section: section, 
+    product_blocks: product_blocks,
+    picture_sizes: '(min-width: 767px) 100vw, 25vw'
+  %}
+</div>
+
+<script src="{{ 'cards-swiper-index.min.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Accessories",
+  "tag": "section",
+  "class": "my-6 my-lg-8 accessories cards-swiper as-cards-swiper-wrapper as-purchase-recommendation",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Accessories."
+    },
+    {
+      "type": "select",
+      "id": "products_per_row",
+      "label": "Products per row",
+      "options": [
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ],
+      "default": "4"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Product",
+      "type": "product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_price",
+          "label": "Show Price",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_purchase_function",
+          "label": "Enable purchase function",
+          "default": true
+        },
+        {
+          "type": "url",
+          "id": "learn_more_link",
+          "label": "Learn more link"
+        },
+        {
+          "type": "richtext",
+          "id": "discount_info",
+          "label": "Discount info"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accessories",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

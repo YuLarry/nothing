@@ -1,0 +1,268 @@
+{% capture estimated_delivery_time %}{%- render 'delivery-time' -%}{% endcapture %}
+{%- liquid
+
+  if product.has_only_default_variant
+    assign hide_purchase_and_notify = product.metafields.my_fields.hide_purchase_and_notify
+  else
+    assign hide_purchase_and_notify = current_variant.metafields.my_fields.hide_purchase_and_notify
+  endif
+
+  assign current_available = current_variant.available
+
+  assign current_shipping_info = null	
+
+  assign delivery_text = null
+  if product.has_only_default_variant
+    assign delivery_data = product.metafields.my_fields.delivery_time.value
+  else 
+    assign delivery_data = current_variant.metafields.my_fields.delivery_time.value
+  endif
+  unless current_available
+    if delivery_data != blank
+      if current_variant.inventory_quantity <= delivery_data.last.quantity
+        assign current_available = false
+      endif
+    endif
+    for delivery_policy in delivery_data
+      if current_variant.inventory_quantity > delivery_policy.quantity
+        assign delivery_text = delivery_policy.text
+        break
+      endif
+    endfor
+  endunless
+
+  unless hide_purchase_and_notify	
+    if product.has_only_default_variant and current_available
+      assign current_shipping_info = product.metafields.my_fields.shipping_info
+      unless current_shipping_info
+        if product.handle contains 'phone'
+          assign current_shipping_info = 'products.phone1.shipping_info_html' | t: delivery_time: estimated_delivery_time
+        endif
+      endunless	
+    elsif current_available
+      assign current_shipping_info = current_variant.metafields.my_fields.shipping_info
+      unless current_shipping_info
+        if product.handle contains 'phone'
+          assign current_shipping_info = 'products.phone1.shipping_info_html' | t: delivery_time: estimated_delivery_time
+        endif
+      endunless	
+    endif	
+  endunless
+
+-%}
+
+<div>
+    <variant-lists data-url="{{ product.url }}" data-section="{{ section.id }}" class="d-none as-all-variants">
+      <label for="product-{{ product.id }}-variant" class="form-label visually-hidden">Variant</label>
+      <select id="product-{{ product.id }}-variant" class="as-product-variant" name="id">
+        {%- for variant in product.variants -%}
+          {%- liquid
+            assign option_variant_available = variant.available
+            if product.has_only_default_variant
+              assign option_delivery_data = product.metafields.my_fields.delivery_time.value
+            else 
+              assign option_delivery_data = variant.metafields.my_fields.delivery_time.value
+            endif
+            if option_delivery_data != blank
+              if variant.inventory_quantity < option_delivery_data.last.quantity
+                assign option_variant_available = false
+              endif
+            endif  
+          -%}
+          <option 
+            data-available="{{ option_variant_available }}"
+            {% if product.has_only_default_variant %}data-hide-purchase="{{ product.metafields.my_fields.hide_purchase_and_notify }}"{% else %}data-hide-purchase="{{ variant.metafields.my_fields.hide_purchase_and_notify }}"{% endif %}
+            data-product-color="{{ variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' | replace: 'white', 'light' }}" data-price="{{ variant.price }}" 
+          {% if variant.compare_at_price > variant.price %}
+            data-compare-price="{{ variant.compare_at_price }}"
+          {% else %}
+            data-compare-price="{{ variant.price }}"
+          {% endif %}
+          class="as-product-variant-option" value="{{ variant.id }}"
+          {% if variant.option1 %}data-option1="{{ variant.option1 }}" {% endif %}
+          {% if variant.option2 %}data-option2="{{ variant.option2 }}" {% endif %}
+          {% if variant.option3 %}data-option3="{{ variant.option3 }}" {% endif %}
+            {%- if variant == current_variant %} selected="selected" {%- endif -%}>
+            {{ variant.title }}
+          </option>
+        {%- endfor -%}
+      </select>
+    </variant-lists>
+    {%- assign product_form_id = 'as-product-form-' | append: section.id -%}
+    <div class="purchase-main">
+      <div class="">
+        {% assign step_1_index = section.settings.overline %}
+        {% assign step_1_title = section.settings.accessory %}
+        {% render 'product-step-title', step_index: step_1_index , step_title: step_1_title %}
+        <div class="row g-0">
+          <div class="col-12 col-md-6 col-lg-12">
+            <h1 class="fs-h1 mb-3 mb-md-5">{{ product.title }}</h1>
+          </div>
+          <div class="col-12 col-md-6 col-lg-12">
+            {% if section.settings.lead_paragraph != blank %}
+              <div class="fs-base mb-4 richtext">
+                {{ section.settings.lead_paragraph | replace: '<p', '<p class="mb-0"' }}
+              </div>
+            {% endif %}
+            {%- unless product.has_only_default_variant -%}
+              {%- unless diff_variant -%}
+              <variant-options data-levels="{{ product.options_with_values.size }}" data-section="{{ section.id }}" data-url="{{ product.url }}">
+                {%- for option in product.options_with_values -%}
+                    <fieldset class="as-option-wrap mb-4">
+                      <legend class="fs-base mb-2">{{ "products.general.select_option" | t: option_name: option.name }}</legend>
+                      <div class="row gx-4 gy-3">
+                        {%- for value in option.values -%}   
+                          {%- liquid
+                            assign first_related_variant = blank
+                            if option.name == product.metafields.my_fields.colorful_option
+                              for variant_item in product.variants
+                                  if option.position == 1
+                                    if variant_item.option1 == value
+                                      assign first_related_variant = variant_item
+                                      break
+                                    endif
+                                  endif
+                                  if option.position == 2
+                                    if variant_item.option2 == value
+                                      assign first_related_variant = variant_item
+                                      break
+                                    endif
+                                  endif
+                                  if option.position == 3
+                                    if variant_item.option3 == value
+                                      assign first_related_variant = variant_item
+                                      break
+                                    endif
+                                  endif
+                              endfor
+                            endif
+                          -%}
+                        
+                          <div class="col-4 radio-btn position-relative">
+                            <input data-position="{{ option.position }}" type="radio" id="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}"
+                              class="as-step-option as-make-select radio-btn-input form-check-input visually-hidden"
+                              name="{{ option.name }}"
+                              value="{{ value | escape }}"
+                              form="as-product-form-{{ section.id }}"
+                              {% if option.selected_value == value %}checked{% endif %}
+                            >
+                            <label class="radio-btn-label form-check-label {% if option.name == product.metafields.my_fields.colorful_option and first_related_variant != blank and first_related_variant.metafields.my_fields.option != blank %}{{ first_related_variant.metafields.my_fields.option | downcase }}{% else %}none{% endif %}" for="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}">
+                              {{ value }}
+                            </label>
+                          </div>
+                        
+                        {%- endfor -%}
+                      </div>
+                    </fieldset>
+                {%- endfor -%}
+                <script class="as-variants-data" type="application/json">
+                  {{ product.variants | json }}
+                </script>
+              </variant-options>
+              {%- endunless -%}
+            {%- endunless -%}
+            <div class="{% if section.settings.show_price %}d-flex{% else %}d-none{% endif %} justify-content-between as-price-{{ section.id }}">
+              <div class="fs-base">{{ "products.general.price" | t }}</div>
+              {% if current_variant %}
+                {% render 'price', product: product, use_variant: true, custom_variant: current_variant %}
+              {% else %}
+                {% render 'price', product: product, use_variant: false %}
+              {% endif %}
+            </div>
+
+          {% for block in dot_holder_blocks %}
+            <div class="d-flex justify-content-between align-items-center p-3 mt-4" style="background-color: #D9D9D9;">
+              <div>
+                <img style="height: 50px;" src="{{ block.settings.dot_image | img_url: 'master' }}" alt="{{ block.settings.dot_image.alt }}" loading="lazy" width="auto" height="auto" />
+              </div>
+              <div class="fs-base richtext ps-5">
+                {{ block.settings.dot_text | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="link-primary border-bottom dot-border-primary"' }}
+              </div>
+            </div>
+            {% endfor %}
+            <div id="as-sold-out-message-{{ section.id }}" class="mt-5 mt-md-6 {% if current_available or hide_purchase_and_notify %}d-none{% endif %}">
+              <p class="mb-0">{{ 'products.form_notify_me.notify_me_text' | t: product_title: product.title }}</p>
+              <form method="post" class="as-notify-me-form mt-3 mt-md-4" data-event="subscribe" data-type="notify_me" action="{{ settings.subscribe_api }}" autocomplete="true" novalidate="true">
+                {% comment %} <!-- 使用google-recaptcha后，生成包含<textarea name="g-recaptcha-response"></textarea>的结构（内含token值） --> {% endcomment %}
+                <google-recaptcha data-sitekey="{{ settings.google_recaptcha_sitekey }}" data-container-class="as-verify-code-recaptcha"></google-recaptcha>
+                {% if settings.store_tag != blank or settings.notify_me_tag != blank or current_variant.metafields.my_fields.notify_me_tag != blank %}
+                  <input type="hidden" name="tags" id="as-variant-tag-{{ section.id }}" value="{{settings.store_tag}},{{settings.notify_me_tag}},{{ current_variant.metafields.my_fields.notify_me_tag }}">
+                {% endif %}
+                <div>
+                  <div class="input-group input-group-overlay fs-base text-primary">
+                    <span class="d-flex align-items-center">(&nbsp;</span>
+                    <input class="as-form-input bg-transparent form-control p-0 border-0 fs-base placeholder-primary text-primary"
+                      type="email" name="email" id="email" 
+                      placeholder="{{ 'products.form_notify_me.enter_your_email' | t }}" 
+                      pattern='^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+                      style="height: auto;" required>
+                    <button type="submit" class="as-btn p-0 border-0 px-0 fw-normal bg-transparent fs-base link-primary">{{ 'products.form_notify_me.notify_me' | t }}</button>
+                    <span class="d-flex align-items-center">&nbsp;)</span>
+                  </div>
+                  <div class="mt-1 text-danger invalid-feedback as-input-error-tips">
+                    {{ 'products.form_notify_me.error' | t }}
+                  </div>
+                </div>
+                <div>
+                  <div class="mt-7 d-flex align-items-center position-relative">
+                    <input id="notify-me-policy-{{ section.id }}" class="as-form-input form-check-input m-0 me-2 position-relative flex-center rounded-0" type="checkbox" required />
+                    <label class="checkbox-label" for="notify-me-policy-{{ section.id }}">{{ 'products.form_notify_me.terms_html' | t }}</label>
+                  </div>
+                  <div class="mt-1 text-danger invalid-feedback as-input-error-tips">
+                    {{ 'products.form_notify_me.terms_error' | t }}
+                  </div>
+                </div>
+                <div class="as-tips-success invalid-feedback text-success fs-base">{{ 'products.form_notify_me.success' | t }}</div>
+                <div data-error406="{{ 'general.newsletter_form.distributor_error' | t }}" data-default="{{ 'products.form_notify_me.error' | t }}" class="as-form-error-tips invalid-feedback text-danger fs-base">{{ 'products.form_notify_me.error' | t }}</div>
+              </form>
+            </div>
+            {% for block in resellers_blocks %}
+            <div class="mt-4">
+              <a class="btn btn-primary" href="{{ block.settings.button_link }}">{{ block.settings.button_label }}</a>
+            </div>
+            {% endfor %}
+            <div class="{% if hide_purchase_and_notify %} d-none{% endif %}{% unless current_available %} d-none{% endunless %}">
+              <div class="mt-4">
+                <product-form class="product-form">
+                  {% liquid
+                    assign productFormClass = 'form'
+                    assign productFormClass = productFormClass | append: ' as-async-add-form'
+                  %}
+                  {%- form 'product', product, id: product_form_id, class: productFormClass, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+                    <input class="as-form-quantity" type="hidden" name="id" value="{{ current_variant.id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <input type="hidden" name="accessories" value="">
+                    <div class="d-grid as-form-button-wrap">
+                      {% render 'add-error-message' %} 
+                      <button name="add" type="submit" class="btn btn-primary">
+                        {{ "products.general.add_to_cart" | t }}
+                      </button>   
+                    </div>
+                  {%- endform -%}
+                </product-form>
+              </div>
+            </div>
+            <div class="as-delivery-message-{{ section.id }}">
+              {% if section.settings.store_locator_text != blank or current_shipping_info != blank or delivery_text != blank %}
+                <div class="mt-5 mt-md-6">
+                    <div class="dot-border-dark border-top py-1 fs-small" style="text-transform: uppercase !important;">
+                      {%- unless hide_purchase_and_notify -%}
+                        {% if delivery_text != blank %}
+                          <div>{{ delivery_text }}</div>
+                        {% endif %}
+                        {% if current_shipping_info != blank %}
+                          <div>{{ current_shipping_info | newline_to_br }}</div>
+                        {% endif %}
+                      {%- endunless -%}
+                      {% if section.settings.store_locator_text != blank %}
+                        <div class="richtext">{{ section.settings.store_locator_text | replace: '<p', '<p class="mb-0"' }}</div>
+                      {% endif %}
+                    </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+
+<style>
+  .sidebar-faq {
+    min-width: 260px;  
+  }
+  @media screen and (max-width: 1200px) {
+    .sidebar-faq {
+      min-width: 200px;
+    }
+  }
+  @media screen and (max-width: 900px) {
+    .sidebar-faq {
+      min-width: 140px;  
+    }
+  }
+ 
+</style>
+<div class="container-topic px-3 px-sm-6 pt-header mt-3 mt-sm-1">
+  <div class="position-relative">
+    <h2 class="mb-4 text-uppercase display-1 font-ndot55 d-none d-sm-block">{{ 'faq.title' | t }}</h2>
+    <ul class="d-none d-sm-block list-unstyled my-0 position-absolute pe-2 sidebar-faq" id="faq-tab" role="tablist">
+      <li class="nav-item pt-1 pb-sm-1 pb-2">
+        <a class="d-flex nav-before-arrow text-uppercase"
+          href="{{ routes.root_url }}pages/contact-support">{{ 'contact.support.title' | t }}</a>
+      </li>
+      <li class="nav-item pt-1 pb-sm-1 pb-2">
+        {%- for link in linklists.faq.links -%}
+          {% if link.levels == 1 %}
+            <a class="as-faq-tab-target as-faq-tab-target-first d-flex nav-before-arrow border-0" 
+              href="{{ canonical_url }}#"
+              type="button">{{ link.title }}</a>
+            {% assign sub_links = link.links %}
+            {% if sub_links.size > 0 %}
+              <ul class="list-unstyled mb-0 ps-2">
+                {% for sub_link in link.links %}
+                  <li class="nav-item pt-1 pb-sm-1 pb-2" role="presentation">
+                    <a 
+                      class="d-flex nav-before-arrow p-0 border-0 bg-transparent as-faq-tab-target" 
+                      href="{{ canonical_url }}#{{ sub_link.title | handleize }}"
+                      type="button">{{ sub_link.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          {% endif %}
+        {%- endfor -%}
+      </li>
+    </ul>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Faq Sidebar",
+  "tag": "section",
+  "class": "section-top section-bottom px-0 d-none d-sm-block position-absolute z-index-1"
+}
+{% endschema %}
+

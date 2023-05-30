@@ -1,0 +1,96 @@
+<style>
+  {%- if settings.mobile_image != blank -%}
+    .store-product-{{ id }} .picture {
+      --bs-aspect-ratio: {{ 1 | divided_by: settings.mobile_image.aspect_ratio | times: 100 }}%;
+    }
+  {%- endif -%}
+  {%- if settings.desktop_image != blank -%}
+    @media (min-width: 767px) {
+      .store-product-{{ id }} .picture {
+        --bs-aspect-ratio: {{ 1 | divided_by: settings.desktop_image.aspect_ratio | times: 100 }}%;
+      }
+    }
+  {%- endif -%}
+</style>
+
+
+{%- assign product = settings.product -%}
+{%- assign selected_or_first_available_variant = product.selected_or_first_available_variant -%}
+{%- if product and product != empty -%}
+  <div class="mt-4 mt-lg-5 store-product-{{ id }}">
+    {%- if settings.desktop_image != blank or settings.mobile_image -%}
+      <figure class="position-relative mb-1 mb-lg-2">
+        <picture class="d-block picture ratio">
+          {%- if settings.mobile_image != blank -%}
+            {%- assign image = settings.mobile_image -%}
+            <source media="(max-width: 767px)" 
+              sizes="(max-width: 767px) 100vw, 767px" 
+              srcset="
+                {%- if image.width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}
+                {%- if image.width >= 857 -%}{{ image | image_url: width: 857 }} 857w,{%- endif -%}
+                {%- if image.width >= 1069 -%}{{ image | image_url: width: 1069 }} 1069w,{%- endif -%}
+                {%- if image.width >= 1244 -%}{{ image | image_url: width: 1244 }} 1244w,{%- endif -%}
+                {%- if image.width >= 1494 -%}{{ image | image_url: width: 1494 }} 1494w,{%- endif -%}
+                {%- if image.width >= 1560 -%}{{ image | image_url: width: 1560 }} 1560w,{%- endif -%}
+                {%- if image.width >= 1660 -%}{{ image | image_url: width: 1660 }} 1660w,{%- endif -%}
+                {%- if image.width >= 1901 -%}{{ image | image_url: width: 1901 }} 1901w,{%- endif -%}"
+            >
+          {%- endif -%}
+
+          {%- if settings.desktop_image -%}
+            {%- assign image = settings.desktop_image -%}
+            <img loading="lazy" class="w-100 h-100 object-fit-cover"
+              sizes="(max-width: 768px) 100vw, 2160px"
+              srcset="
+                {%- if image.width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}
+                {%- if image.width >= 857 -%}{{ image | image_url: width: 857 }} 857w,{%- endif -%}
+                {%- if image.width >= 1069 -%}{{ image | image_url: width: 1069 }} 1069w,{%- endif -%}
+                {%- if image.width >= 1244 -%}{{ image | image_url: width: 1244 }} 1244w,{%- endif -%}
+                {%- if image.width >= 1494 -%}{{ image | image_url: width: 1494 }} 1494w,{%- endif -%}
+                {%- if image.width >= 1560 -%}{{ image | image_url: width: 1560 }} 1560w,{%- endif -%}
+                {%- if image.width >= 1660 -%}{{ image | image_url: width: 1660 }} 1660w,{%- endif -%}
+                {%- if image.width >= 1901 -%}{{ image | image_url: width: 1901 }} 1901w,{%- endif -%}
+                {%- if image.width >= 2040 -%}{{ image | image_url: width: 2040 }} 2040w,{%- endif -%}
+                {%- if image.width >= 2160 -%}{{ image | image_url: width: 2160 }} 2160w,{%- endif -%}
+                {%- if image.width >= 3840 -%}{{ image | image_url: width: 3840 }} 3840w,{%- endif -%}"
+              src="{{ image | img_url: '2160x' }}"
+              alt="{{ image.alt }}"
+            >
+          {%- endif -%}
+        </picture>
+        <a class="stretched-link as-product-url" 
+          data-variants='{% render 'product-variants', product: product %}'
+          data-variant-id="{{ selected_or_first_available_variant.id }}" 
+          href="{{ product.url }}"></a>
+      </figure>
+    {%- endif -%}
+    
+    <div class="row gy-1">
+      <div class="col-lg-4">
+          <div class="d-inline-block">
+            <a class="link-dark as-product-url"
+              data-variants='{% render 'product-variants', product: product %}'
+              data-variant-id="{{ selected_or_first_available_variant.id }}"
+              href="{{ product.url }}">{{ product.title }}</a>
+          </div>
+          {% if settings.show_price %}
+            <div class="d-inline-block h-100 align-bottom">
+              {% render 'price', product: product %}
+            </div>
+          {% endif %}
+      </div>
+      <div class="col-lg-8">
+        {%- if product.available -%}
+          {% if product.metafields.custom.buy_now_button_label.value != blank or settings.buy_now_text != blank %}
+            <a class="as-product-url link-primary" 
+              data-variants='{% render 'product-variants', product: product %}'
+              data-variant-id="{{ selected_or_first_available_variant.id }}" 
+              href="{{ product.url }}"><span>(&nbsp;</span>{% if product.metafields.custom.buy_now_button_label.value %}{{ product.metafields.custom.buy_now_button_label.value }}{% else %}{{ settings.buy_now_text }}{% endif %}<span>&nbsp;)</span></a>
+          {% endif %}
+        {%- else -%}
+          <span class="text-danger">{{ 'sections.store_product.out_of_stock' | t }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}

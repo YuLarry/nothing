@@ -1,0 +1,71 @@
+<div id="as-country-popup" class="country-popup fade modal font-base" 
+  tabindex="-1" 
+  role="dialog"
+  data-keyboard="false"
+  aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content bg-dark text-white gx-4">
+      <div class="container-topic">
+        <div class="modal-header px-0 py-4 align-items-center border-bottom dot-border-white">
+          <a class="modal-title font-ndot55 fs-h2 text-uppercase text-white" href="{{ routes.root_url }}">{{ 'general.country.popup.title' | t }}</a>
+          <div class="d-flex justify-content-end announcement-close">
+            <button class="btn-close btn-close-white d-flex" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex modal-body p-0">
+        <div class="container-topic">
+          <div class="row row-cols-1 row-cols-lg-2">
+            <div>
+              <h5 class="fs-h2 mt-5 mt-sm-7 pt-1 mb-0" for="country-choose">{{ 'general.country.popup.select' | t }}</h5>
+              <p class="mt-5 mt-sm-3 pt-1 mb-0">{{ 'general.country.popup.product_text' | t }}</p>
+            </div>
+          </div>
+          {%- assign areas = "Europe&North America&Asia Pacific&Latin America&Middle East&Other Countries and Regions" | split: '&' -%}
+          <div class="mt-5 pt-1">
+            {% for area in areas %}
+              <div class="d-flex flex-column row gx-0">
+                <div class="mt-sm-7 border-bottom dot-border-white border-sm-none footer-site">
+                  <p class="d-flex d-sm-none justify-content-between align-items-center nav-title my-3 py-1"
+                    data-bs-toggle="collapse" 
+                    href="#country-{{ area | handleize }}" role="button" aria-expanded="false" aria-controls="country-{{ area | handleize }}">
+                    <span class="fs-h2">{{ area }}</span>
+                    <span class="nav-chevron-down">{% render 'icon-chevron-down' %}</span>
+                  </p>
+                  <div class="d-none d-sm-block fs-h2">{{ area }}</div>
+                  <ul class="as-area-list row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-6 list-unstyled mb-0 pb-4 pb-sm-0 mt-n4 mt-sm-0 collapse d-sm-flex" 
+                    data-area="{{ area | handleize }}"
+                    id="country-{{ area | handleize }}">
+                    
+                  </ul>
+                </div>
+              </div>
+              {% if forloop.last %}
+                <div class="pt-7"></div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% raw %}
+<script type="text/template" id="country-list">
+  {{#data}}
+  <li class="d-flex flex-column mt-4 mt-sm-3 pt-sm-1 position-relative">
+    <p class="mb-0 d-flex align-items-center">
+      <span class="me-1">{{ name }}</span>
+      {{#dtc}}
+      {% endraw %}
+      {% render 'icon-dtc' %}
+      {% raw %}
+      {{/dtc}}
+    </p>
+    <p class="mb-0">{{ language }}</p>
+    <a data-code="{{ code }}" class="stretched-link as-country-link cursor-pointer"></a>
+  </li>
+  {{/data}}
+</script>
+{% endraw %}

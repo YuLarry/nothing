@@ -1,0 +1,28 @@
+<iframe
+  class="container-fits-viewport w-100 as-youtube-video" 
+  src="https://www.youtube-nocookie.com/embed/{{ section.settings.youtube_link }}" 
+  title="YouTube video player" frameborder="0" align="top" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% schema %}
+  {
+    "name": "Video",
+    "tag": "section",
+    "class": "as-youtube-video-wrap w-100 snap-child as-snap-list",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Video"
+      },
+      {
+        "type": "text",
+        "id": "youtube_link",
+        "label": "Youtube link"
+      }
+    ],
+    "presets": [
+    {
+      "name": "Video - Keynote",
+      "category": "Content"
+    }
+  ]
+  }
+{% endschema %}

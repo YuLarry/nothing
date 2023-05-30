@@ -1,0 +1,147 @@
+{% if product.selected_variant %}
+  {%- assign current_variant = product.selected_variant -%}
+{% else %}
+  {%- assign current_variant = product.variants.first -%}
+{% endif %}
+<script>
+  window.p_img = new Array()
+  window.RESELLERS = new Array()
+  {% for variant in product.variants %}
+    {% assign option = variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' %}
+    {% if option == 'dark' %}window.p_img['{{ option }}'] = ["{{ variant.image.src | img_url: 'master' }}"]
+    {% elsif option == 'white' %}window.p_img['{{ option }}'] = ["{{ variant.image.src | img_url: 'master' }}"]{% endif %}
+    {% if variant.metafields.my_fields.resellers %}window.RESELLERS['{{ option }}'] = {{ variant.metafields.my_fields.resellers }}{% endif %}
+  {% endfor %}
+</script>
+<main class="main" role="main" id="root">
+  <section class="product-wrap bg-dark px-1 px-sm-0 as-product-sparepart as-location-target is-{{ current_variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' }}"
+    data-color="{{ current_variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' }}">
+    
+    <div class="container-topic px-3 px-sm-6">
+      <div class="container-fits-viewport row g-0 z-index-1 position-relative">
+        <div class="position-relative col-12 col-sm-8 col-xl-9 align-self-center text-center">
+          <img loading="lazy" class="img-fluid as-img" src="{{ current_variant.image.src | img_url: 'master' }}" alt="">
+        </div>
+        <div class="position-absolute end-0 col-12 col-sm-4 col-xl-3">
+          <div class="mx-n3 mx-sm-0">
+            <div class="mx-n1 mx-sm-0">
+              <div class="section-with-mask container-fits-viewport w-100 pb-2 px-3 p-sm-0 d-flex align-items-end align-items-sm-center">
+                <div class="text-white w-100 px-1 pb-2 p-sm-0">
+                  <h1 class="mb-0 display-2 font-ndot55">{{ product.title }}</h1>
+
+                  <div class="mt-5 icon-carbonneutral w-100"></div>
+
+                  {% for variant in product.variants %}
+                  {% assign option = variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' %}
+                  <div class="as-info-{{ option }} {% if variant.id == current_variant.id %}d-block{% else %}d-none{% endif %}">
+                    {% unless variant.metafields.my_fields.hide_purchase_and_notify %}
+                    <div class="mt-5 text-uppercase as-gtm-product-checkout">{{ variant.price | money }}</div>
+                    {% if variant.metafields.my_fields.shipping_info != blank %}
+                    <p class="font-size-sm mb-0 mt-1 text-uppercase text-white-50">{{ variant.metafields.my_fields.shipping_info | newline_to_br }}</p>
+                    {% endif %}
+                    {% endunless %}
+                  </div>
+                  {% endfor %}
+
+                  <div class="mt-5 mb-1 pb-1 d-none">
+                    {% for variant in product.variants %}
+                    {% assign option = variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' %}
+                    <p class="font-size-sm mb-0 text-uppercase text-white-50 as-color-{{ option }}{% if variant.id == current_variant.id %}{% else %} d-none{% endif %}">
+                      {{ variant.option1 }}
+                    </p>
+                    {% endfor %}
+                  </div>
+                  
+                  <div class="mt-5 row g-0 mx-n1 mx-sm-n2">
+                    {% for variant in product.variants %}
+                    {% assign option = variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' %}
+                    <div class="col-6 px-1 px-sm-2">
+                      <input class="step-option as-step-option d-none" type="radio" name="option-{{ product.id }}"
+                        id="option-{{ product.id }}-{{ forloop.index0 }}" value="{{ option }}" {% if
+                        variant.id==current_variant.id %}checked{% else %}{% endif %}>
+                      <label class="btn btn-flex btn-white w-100 rounded-circle text-uppercase" for="option-{{ product.id }}-{{ forloop.index0 }}"
+                        style="background-color: {% if option == 'dark' %}black{% else %}white{% endif %};color:{% if option == 'dark' %}white{% else %}black{% endif %};">
+                        {{ variant.option1 }}
+                        <span class="visually-hidden">{{ option }}</span>
+                      </label>
+                    </div>
+                    {% endfor %}
+                  </div>
+
+                  {% for variant in product.variants %}
+                  {% assign option = variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' %}
+                  <div class="as-{{ option }} {% if variant.id == current_variant.id %}d-block{% else %}d-none{% endif %}">
+                    {% unless variant.metafields.my_fields.hide_purchase_and_notify %}
+                    <div class="mt-sm-2 pt-2">
+                      {% if variant.metafields.my_fields.third_party_purchase_link != blank %}
+                      <a class="as-static-buy-now w-100 font-55 btn btn-danger text-uppercase as-gtm-product-checkout" target="_blank"
+                        rel="noopener noreferrer" href="{{variant.metafields.my_fields.third_party_purchase_link}}">{{
+                        'products.product.buy_now' | t }}</a>
+                      {% else %}
+                      {% if variant.available %}
+                      {% if variant.metafields.my_fields.invitation_code %}
+                      {% render 'product-voucher-code', color: 'white', current_variant: variant %}
+                      {% else %}
+                      <button class="as-static-buy-now w-100 {% unless variant.available %}invisible{% endunless %} as-empty-add-to-cart font-55 btn btn-danger mt-n-small text-uppercase as-gtm-product-checkout" 
+                        data-id="{{ variant.id }}"
+                        data-option="{{ option }}"
+                        data-bs-toggle="offcanvas" 
+                        data-bs-target="#offcanvas-cart" 
+                        aria-controls="offcanvas-cart"
+                        >{{ 'products.product.add_to_cart' | t }}</button>
+                      {%- comment -%}
+                      <a class="{% unless variant.available %}invisible{% endunless %} font-55 btn btn-white text-uppercase as-gtm-product-checkout"
+                        href="{{ routes.cart_url }}/{{ variant.id }}:1">{{ 'products.product.buy_now' | t }}</a>
+                      {%- endcomment -%}
+                      {% endif %}
+                      {% else %}
+                      {% render 'product-sign-up', color: 'white' %}
+                      {% endif %}
+                      {% endif %}
+                    </div>
+                    {% endunless %}
+
+                    <div class="mt-5 as-resells d-none">
+                      <label class="text-uppercase mb-3">{{ 'products.resellers.title' | t }}</label>
+                      <div class="d-flex font-base">
+                        <div class="flex-grow-1">
+                          <div class="d-flex position-relative contact-dropdown-wrap as-category-wrap">
+                            <a class="h-35 contact-dropdown bg-transparent cursor-pointer d-flex text-white text-decoration-none w-100"
+                              data-bs-toggle="dropdown" aria-expanded="false">
+                              <span
+                                class="as-category-text form-control d-flex align-items-center">
+                                {{ 'products.resellers.select' | t }}
+                              </span>
+                              <span class="form-control w-auto border-start-0 flex-center px-1">
+                                {% render 'icon-chevron-down' %}
+                              </span>
+                            </a>
+                            <ul class="dropdown-menu py-0 as-resells-ul w-100 bg-white border-0"
+                              style="max-height: 18.75rem;overflow-y: scroll;">
+
+                            </ul>
+                            <script type="text/template" id="as-{{ option }}-resells-tpl">
+                            {% raw %}
+                              {{#data}}
+                              <li>
+                                <a class="px-1 dropdown-item text-uppercase nav-link cursor-pointer" href='{{link}}' target="_blank" rel="noopener">{{ name }}</a>
+                              </li>
+                              {{/data}}
+                            {% endraw %}
+                            </script>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>

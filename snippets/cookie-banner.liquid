@@ -1,0 +1,20 @@
+<script type="text/template" id="cookie-banner-template">
+<section id="cookie-banner" class="as-fixed-bar w-100 bg-dark fixed-bottom text-white cookie-banner as-cookie-banner py-2">
+    <div class="container-topic gx-2 gx-sm-5 py-2">
+      <div class="align-items-start align-items-md-center d-flex flex-column flex-md-row">
+        <div>
+          <button class="btn btn-light as-cookie-accept frame-btn">{{ 'general.cookie.accept' | t }}</button>
+        </div>
+        <div class="flex-grow-1 ms-md-2 ps-md-2 mt-2 mt-md-0">
+          {%- capture cookies_policy_link -%}
+            <a href="{{ routes.root_url }}pages/privacy-policy" class="text-decoration-underline text-white">{{ 'general.cookie.cookies_policy_link' | t }}</a>
+          {%- endcapture -%}
+          <p class="mb-0 font-size-13 lh-sm">{{ 'general.cookie.cookies_information_html' | t: cookies_policy_link: cookies_policy_link }}</p>
+        </div>
+        <div class="align-self-end">
+          <button class="as-cookie-cancel btn btn-close btn-close-white py-0"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+</script>

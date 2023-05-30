@@ -1,0 +1,63 @@
+
+
+<div class="accordion-item">
+  <h6 class="accordion-header" id="{{ key }}-heading-{{ index }}">
+    <button class="text-start border-top pe-1 accordion-button accordion-button-faq collapsed py-4 py-sm-5" 
+      type="button" data-bs-toggle="collapse" 
+      data-bs-target="#{{ key }}-collapse-{{ index }}" 
+      aria-expanded="false" 
+      aria-controls="{{ key }}-collapse-{{ index }}">
+      <span class="pe-4 font-base fw-bold">{{ block.settings.title }}</span>
+    </button>
+  </h6>
+  <div id="{{ key }}-collapse-{{ index }}" 
+    class="accordion-collapse collapse" 
+    aria-labelledby="{{ key }}-heading-{{ index }}" 
+    data-bs-parent="#accordion-{{ key }}">
+    <div class="accordion-body pb-5 pt-0 font-base">
+      {{ block.settings.answer | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+      {% if block.settings.image %}
+        <div class="row mt-sm-7 mt-5 mb-sm-3">
+          <div class="col-sm-8">
+            <img loading="lazy" class="w-100"
+              src="{{ block.settings.image | img_url: 'master' }}"
+              alt="{{ block.settings.image.alt }}">
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% assign index = index | plus: 1 %}
+
+{% if block.settings.title2 != blank %}
+  <div class="accordion-item">
+    <h6 class="accordion-header" id="{{ key }}-heading-{{ index }}">
+      <button class="text-start border-top pe-1 accordion-button accordion-button-faq collapsed py-4 py-sm-5" 
+        type="button" data-bs-toggle="collapse" 
+        data-bs-target="#{{ key }}-collapse-{{ index }}" 
+        aria-expanded="false" 
+        aria-controls="{{ key }}-collapse-{{ index }}">
+        <span class="pe-4 font-base fw-bold">{{ block.settings.title2 }}</span>
+      </button>
+    </h6>
+    <div id="{{ key }}-collapse-{{ index }}" 
+      class="accordion-collapse collapse" 
+      aria-labelledby="{{ key }}-heading-{{ index }}" 
+      data-bs-parent="#accordion-{{ key }}">
+      <div class="accordion-body pb-5 pt-0 font-base">
+        {{ block.settings.answer2 | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+        {% if block.settings.image2 %}
+          <div class="row mt-sm-7 mt-5 mb-sm-3">
+            <div class="col-sm-8">
+              <img loading="lazy" class="w-100"
+                src="{{ block.settings.image2 | img_url: 'master' }}"
+                alt="{{ block.settings.image2.alt }}">
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% assign index = index | plus: 1 %}
+{% endif %}

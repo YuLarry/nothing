@@ -1,0 +1,349 @@
+<div id="carouselExampleCaptions-{{ section.id }}" class="as-carousel carousel slide position-relative" data-bs-ride="carousel">
+  <div class="row w-100 g-0 justify-content-end position-absolute bottom-0 d-none d-lg-flex">
+    <div class="col-lg-auto w-lg-fixed align-self-end px-4 pt-1 pb-6 pt-lg-0 pb-lg-1">
+      <div class="as-carousel-indicators carousel-indicators d-block m-0 position-relative">
+        {% for block in section.blocks %}
+          <div data-bs-target="#carouselExampleCaptions-{{ section.id }}" data-bs-slide-to="{{ forloop.index0 }}" data-slide-to="{{ forloop.index0 }}" class="as-carousel-indicator{% if forloop.first %} active{% endif %}" aria-current="true" aria-label="Slide {{ forloop.index }}">
+            {{ forloop.index }}.{{ block.settings.heading }}&nbsp;
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="as-carousel-slides carousel-inner">
+    {% for block in section.blocks %}
+    <div class="as-carousel-slide carousel-item{% if forloop.first %} active{% endif %}">
+      <div class="row g-0">
+        <div class="col-lg container-fits-viewport position-relative">
+          <figure class="mb-0">
+            {% if block.settings.checkbox_img %}
+              <picture>
+                {% if block.settings.imageMob %}
+                <source media="(max-width: 576px)" 
+                  sizes="(max-width: 576px) 100vw, 576px" 
+                  srcset="
+                    {{ block.settings.imageMob | img_url: 'master' }}" >
+                {% endif %}
+                <img class="position-lg-absolute h-100 w-100 object-fit-cover"
+                  sizes="(max-width: 2160px) 100vw, 2160px"
+                  width="{{block.settings.image.width}}"
+                  height="{{block.settings.image.height}}"
+                  loading="lazy"
+                  srcset="
+                    {{ block.settings.image | img_url: '1494x' }} 1494w,
+                    {{ block.settings.image | img_url: '1560x' }} 1560w,
+                    {{ block.settings.image | img_url: '1660x' }} 1660w,
+                    {{ block.settings.image | img_url: '1901x' }} 1901w,
+                    {{ block.settings.image | img_url: '2040x' }} 2040w,
+                    {{ block.settings.image | img_url: '2155x' }} 2155w,
+                    {{ block.settings.image | img_url: '2160x' }} 2160w,
+                    {{ block.settings.image | img_url: '3840x' }} 3840w" 
+                  src="{{ block.settings.image | img_url: '2160x' }}"
+                  alt="{{ block.settings.image.alt }}">
+              </picture>
+            {% elsif block.settings.checkbox_video %}
+              <video class="position-lg-absolute h-100 w-100 object-fit-cover video as-video" webkit-playsinline playsinline autoplay muted loop>
+                <source 
+                  id="as-video-source" 
+                  data-src="{{ block.settings.video_pc }}" 
+                  data-src-sm="{{ block.settings.video_mob }}" 
+                  src="{{ block.settings.video_pc }}" type="video/mp4">
+              </video>
+            {% endif %}
+          </figure>
+          {% if block.settings.checkbox_video %}
+          <div class="carousel-caption text-start text-lg-center start-0 end-0 px-4">
+            <a class="icon-chevron-horizontal video-trigger as-video-popup fs-base text-{{ block.settings.video_text_color }} cursor-pointer d-block d-sm-none" data-id="video_button" data-sectionName="{{ block.settings.subline }}" data-tabName="{{ block.settings.heading }}" data-bs-toggle="modal" data-bs-target="#m{{ section.id }}{{ forloop.index }}">
+              {{ block.settings.video_btn_text }} {% render 'icon-chevron-header-right' %}
+            </a>
+            <a class="icon-chevron-horizontal video-trigger as-video-popup as-video-popup-pc fs-base text-{{ block.settings.video_text_color }} cursor-pointer d-none d-sm-inline-block" data-sectionName="{{ block.settings.subline }}" data-tabName="{{ block.settings.heading }}" data-id="video_button" data-bs-toggle="modal" data-bs-target="#{{ section.id }}{{ forloop.index }}">
+              {{ block.settings.video_btn_text }} {% render 'icon-chevron-header-right' %}
+            </a>
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-lg-auto w-lg-fixed align-self-end px-4 pt-1 pb-6 pt-lg-0 pb-lg-1 text-{{ block.settings.text_color }}">
+          <div class="row">
+            <div class="col-4">{{ block.settings.pages }}</div>
+            <div class="col-8 as-section-name">{{ block.settings.subline }}</div>
+          </div>
+          {% if block.settings.heading != blank %}
+          <h2 class="my-3 mb-lg-4 mt-lg-6 pb-1 fs-h1 break-word as-tab-name">{{ block.settings.heading }}</h2>
+          {% endif %}
+
+          {{ block.settings.lead_graph | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+          <!-- float-start float-lg-none -->
+          <div class="mt-3 mt-lg-4 opacity-0 d-none d-lg-block">
+            {% for block in section.blocks %}<div class="">{{ forloop.index }}.{{ block.settings.heading }}&nbsp;</div>{% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% for block in section.blocks %}
+{% if block.settings.checkbox_video %}
+<div class="as-video-wrap d-block d-sm-none">
+<div id="m{{ section.id }}{{ forloop.index }}" class="fade modal as-video-modal-wrap" data-sectionname="{{ block.settings.subline }}" 
+  tabindex="-1" 
+  role="dialog"
+  data-keyboard="false"
+  aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content bg-dark gx-0">
+      <div class="modal-body p-0">
+        <button class="bg-transparent border-0 np-4 position-absolute z-index-2 top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M29 1L1 29" stroke="white" stroke-miterlimit="10"/>
+            <path d="M1 1L29 29" stroke="white" stroke-miterlimit="10"/>
+          </svg>
+        </button>
+        <div class="as-location-target container-video container-fits-viewport h-100 d-flex gx-0 align-items-center justify-content-center m-auto position-relative z-index-1" data-color='{{ block.settings.text_color }}'>
+          <input type="hidden" id="as-is-lg-flag" class="d-block d-lg-none" />
+          <video preload="none" loading="lazy" class="object-fit-contain position-absolute w-100 h-100 as-video" data-id="pdp_video"  webkit-playsinline playsinline>
+            <source 
+              id="as-video-source" 
+              data-src="{{ block.settings.video_mob }}" 
+              data-src-sm="{{ block.settings.video_mob }}" 
+              src="{{ block.settings.video_mob }}" type="video/mp4">
+          </video>
+          <div class="media-btn as-backdrop container-fits-viewport cursor-pointer flex-center active overflow-hidden position-absolute">
+            <figure class="d-flex justify-content-center m-auto h-100 as-backdrop-image w-100">
+            </figure>
+            <!-- <button class="as-play-btn position-absolute zindex-1 px-0 flex-center bg-transparent border-0 media-voice-wrap text-dark">
+              {% render 'icon-play' %}
+            </button> -->
+            <button class="btn dot-btn py-3 px-4 text-{{ block.settings.video_text_color }} text-uppercase as-play-btn position-absolute zindex-1">
+              <span class="align-items-center d-flex position-relative">{{ 'homepage.video.title' | t }}</span>
+            </button>
+            
+          </div>
+          <div class="progress-wrap as-progress-wrap is-active px-4 px-xl-6">
+            <div class="px-1 px-sm-0">
+              <div class="progress as-progress">
+                <div class="as-current-progress current-progress">
+                  
+                </div>
+              </div>
+              <ul class="d-flex font-ndot55 font-base justify-content-between list-unstyled mb-0 text-{{ block.settings.video_text_color }} mt-3 mt-sm-4">
+                <li class="">
+                  <div>
+                    <span class="as-current-time current-time d-none d-md-inline-block">00:00</span>
+                    <span class="text-uppercase as-pasuse cursor-pointer d-none">{{ 'homepage.video.pause' | t }}</span>
+                    <span class="text-uppercase as-play cursor-pointer">{{ 'homepage.video.play' | t }}</span>
+                  </div>
+                </li>
+                <li class=""></li>
+                <li class="">
+                  <div>
+                    <span class="text-uppercase cursor-pointer as-muted">{{ 'homepage.video.mute' | t }}</span>
+                    <span class="as-ovre-time over-time text-end d-none d-md-inline-block">00:00</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="as-video-wrap d-none d-sm-block">
+<div id="{{ section.id }}{{ forloop.index }}" class="fade modal as-video-modal-wrap" data-sectionname="{{ block.settings.subline }}"
+  tabindex="-1" 
+  role="dialog"
+  data-keyboard="false"
+  aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content bg-dark gx-0">
+      <div class="modal-body p-0">
+        <button class="bg-transparent border-0 np-4 position-absolute z-index-2 top-0 end-0" data-bs-dismiss="modal" aria-label="Close">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M29 1L1 29" stroke="white" stroke-miterlimit="10"/>
+            <path d="M1 1L29 29" stroke="white" stroke-miterlimit="10"/>
+          </svg>
+        </button>
+        <div class="as-location-target container-video container-fits-viewport h-100 d-flex gx-0 align-items-center justify-content-center m-auto position-relative z-index-1" data-color='{{ block.settings.text_color }}'>
+          <input type="hidden" id="as-is-lg-flag" class="d-block d-lg-none" />
+          <video preload="none" loading="lazy" class="object-fit-contain position-absolute w-100 h-100 as-video" data-id="pdp_video" data-name="{{ block.settings.subline }}" webkit-playsinline playsinline>
+            <source 
+              id="as-video-source" 
+              data-src="{{ block.settings.video_pc }}" 
+              data-src-sm="{{ block.settings.video_pc }}" 
+              src="{{ block.settings.video_pc }}" type="video/mp4">
+          </video>
+          <div class="media-btn as-backdrop container-fits-viewport cursor-pointer flex-center active overflow-hidden position-absolute">
+            <figure class="d-flex justify-content-center m-auto h-100 as-backdrop-image w-100">
+            </figure>
+            <!-- <button class="as-play-btn position-absolute zindex-1 px-0 flex-center bg-transparent border-0 media-voice-wrap text-dark">
+              {% render 'icon-play' %}
+            </button> -->
+            <button class="btn dot-btn py-3 px-4 text-{{ block.settings.video_text_color }} text-uppercase as-play-btn position-absolute zindex-1">
+              <span class="align-items-center d-flex position-relative">{{ 'homepage.video.title' | t }}</span>
+            </button>
+            
+          </div>
+          <div class="progress-wrap as-progress-wrap is-active px-4 px-xl-6">
+            <div class="px-1 px-sm-0">
+              <div class="progress as-progress">
+                <div class="as-current-progress current-progress">
+                  
+                </div>
+              </div>
+              <ul class="d-flex font-ndot55 font-base justify-content-between list-unstyled mb-0 text-{{ block.settings.video_text_color }} mt-3 mt-sm-4">
+                <li class="">
+                  <div>
+                    <span class="as-current-time current-time d-none d-md-inline-block">00:00</span>
+                    <span class="text-uppercase as-pasuse cursor-pointer d-none">{{ 'homepage.video.pause' | t }}</span>
+                    <span class="text-uppercase as-play cursor-pointer">{{ 'homepage.video.play' | t }}</span>
+                  </div>
+                </li>
+                <li class=""></li>
+                <li class="">
+                  <div>
+                    <span class="text-uppercase cursor-pointer as-muted">{{ 'homepage.video.mute' | t }}</span>
+                    <span class="as-ovre-time over-time text-end d-none d-md-inline-block">00:00</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endif %}
+{% endfor %}
+{% schema %}
+{
+  "name": "pdp carousel",
+  "class": "pdp position-relative overflow-hidden snap-child as-snap-list",
+  "tag": "section",
+  "blocks": [
+    {
+      "name": "carousel",
+      "type": "carousel",
+      "settings": [
+        {
+          "type":      "select",
+          "id":        "text_color",
+          "label":     "Text color",
+          "options": [
+            {
+              "value": "dark",
+              "label": "Dark"
+            },
+            {
+              "value": "white",
+              "label": "Light"
+            }
+          ],
+          "default":   "dark"
+        },
+        {
+          "type": "text",
+          "id": "pages",
+          "label": "pages",
+          "default": "00."
+        },
+        {
+          "type": "text",
+          "id": "subline",
+          "label": "subline",
+          "default": "subline"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "lead_graph",
+          "label": "Lead paragraph",
+          "default": "<p>Lead paragraph</p>"
+        },
+        {
+          "type": "checkbox",
+          "label": "Enable Image",
+          "default": false,
+          "id": "checkbox_img",
+          "info": "Check when the background is picture"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop image",
+          "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+        },
+        {
+          "type": "image_picker",
+          "id": "imageMob",
+          "label": "Mobile image",
+          "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+        },
+        {
+          "type": "header",
+          "content": "Video"
+        },
+        {
+          "type": "checkbox",
+          "label": "Enable Video",
+          "default": false,
+          "id": "checkbox_video",
+          "info": "Check when the background is video"
+        },
+        {
+          "type":      "select",
+          "id":        "video_text_color",
+          "label":     "Video text color",
+          "options": [
+            {
+              "value": "dark",
+              "label": "Dark"
+            },
+            {
+              "value": "white",
+              "label": "Light"
+            }
+          ],
+          "default":   "white"
+        },
+        {
+          "type": "text",
+          "id": "video_btn_text",
+          "label": "Video btn text",
+          "default": "Watch full video"
+        },
+        {
+          "type": "text",
+          "id": "video_pc",
+          "label": "Desktop video link"
+        },
+        {
+          "type": "text",
+          "id": "video_mob",
+          "label": "Mobile video link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "pdp carousel",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,23 @@
+{%- if settings.enabled_change_currency -%}
+  <div class="as-change-currency-wrap visually-hidden">
+    {% form 'currency' %}
+    {{ form | currency_selector }}
+    {% endform %}
+  </div>
+  <script>
+    (function() {
+      const $form = document.querySelector('.as-change-currency-wrap form')
+      const $option = $form.querySelectorAll('option')
+      let arrCurrency = []
+      $option.forEach(function($val) {
+        arrCurrency.push($val.value)
+      })
+      const $currentCurrency = $form.currency.value
+      const $targetCurrency = '{{ settings.target_currency }}'
+      if($currentCurrency != $targetCurrency && arrCurrency.includes($targetCurrency)) {
+        $form.currency.value = $targetCurrency
+        $form.submit()
+      }
+    })()
+  </script>
+{%- endif -%}

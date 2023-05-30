@@ -1,0 +1,622 @@
+<main role="main" id="root" class="bg-light">
+  <section class="container-fits-viewport-100 px-2 text-black section-top section-bottom">
+    <div class="container-topic px-2 pt-header mt-5 mt-sm-1 font-base section-bottom">
+          <div class="row mx-n2">
+            <div class="col-sm-3 col-xl-2 px-2">
+              {% render 'sidebar-account' %}
+            </div>
+        <div class="col-sm-6 px-2 as-address">
+          {% if customer.addresses.size > 0 %}
+          <div class="h-100 as-address-form as-address-list">
+            {% assign title = 'customer.addresses.title' | t %}
+            {% render 'page-title', title: title %}
+                {% for address in customer.addresses %}                  
+                  {% if address == customer.default_address %}
+                  <div class="pb-6">
+                    <div class="d-flex justify-content-between">
+                        {% if address == customer.default_address %}
+                          <div class="">
+                            <p class="mb-0 text-uppercase text-nowrap">## {{ 'customer.addresses.default' | t }} ##&nbsp;</p>
+                          </div>
+                        {% endif %}
+                        <div class=" {% unless address == customer.default_address %}offset-5 offset-md-4{% endunless %}">
+                          <p class="mb-0">{{ address.first_name | capitalize }} {{address.last_name | capitalize }}</p>
+                        </div>
+                      </div>
+                      <div class="border-bottom dot-border-dark py-3">
+                        {% if address.address1 != empty %}
+                          <div class="d-flex justify-content-between">
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.address1' | t }}&nbsp;</p>
+                            </div>
+                            <div class="text-end">
+                              <p class="mb-0">{{ address.address1 }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if address.address2 != empty %}
+                          <div class="d-flex justify-content-between">
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.address2' | t }}&nbsp;</p>
+                            </div>
+                            <div class="text-end">
+                              <p class="mb-0">{{ address.address2 }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if address.zip != empty %}
+                          <div class="d-flex justify-content-between">  
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.zip_code' | t }}&nbsp;</p>
+                            </div>
+                            <div class="text-end">
+                              <p class="mb-0">{{ address.zip }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if address.city != empty %}
+                          <div class="d-flex justify-content-between">
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.city' | t }}&nbsp;</p>
+                            </div>
+                            <div class="text-end">
+                              <p class="mb-0">{{ address.city }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if address.country != empty %}
+                          <div class="d-flex justify-content-between">  
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.country' | t }}&nbsp;</p>
+                            </div>
+                            <div class="text-end">
+                              <p class="mb-0">{{ address.country }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if address.phone != empty %}
+                          <div class="d-flex justify-content-between link-phone">  
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.phone' | t }}&nbsp;</p>
+                            </div>
+                            <div class="text-end">
+                              <span class="mb-0 text-dark">{{ address.phone }}</span>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if customer.email != empty %}
+                          <div class="d-flex justify-content-between">  
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.email' | t }}&nbsp;</p>
+                            </div>
+                            <div class="text-end">
+                              <p class="mb-0">{{ customer.email }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="pt-4">
+                        <div class="text-uppercase">
+                          {% if address != customer.default_address %}
+                          {% capture form_id %}list_address_form_{{address.id}}{% endcapture %}
+                            {% form 'customer_address', address, id: form_id, class: "d-inline-block pe-2 card-link" %}
+                              <input type="hidden" name="address[first_name]" value="{{form.first_name}}">
+                              <input type="hidden" name="address[last_name]" value="{{form.last_name}}">
+                              {% comment %} <input type="hidden" name="address[company]" value="{{form.company}}"> {% endcomment %}
+                              <input type="hidden" name="address[address1]" value="{{form.address1}}">
+                              <input type="hidden" name="address[address2]" value="{{form.address2}}">
+                              <input type="hidden" name="address[city]" value="{{form.city}}">
+                              <input type="hidden" name="address[country]" value="{{form.country}}">
+                              <input type="hidden" name="address[province]" value="{{form.province}}">
+                              <input type="hidden" name="address[zip]" value="{{form.zip}}">
+                              <input type="hidden" name="address[phone]" value="{{form.phone}}">
+                              <input class="d-none" type="checkbox" name="address[default]" value="1" checked>
+                              <button class="border-0 p-0 bg-transparent dark-link text-decoration-underline" type="submit">{{ 'customer.addresses.save_default' | t }}</button>
+                            {% endform %}
+                          {% else %}
+                            <a href="javascript:void(0);" class="text-muted text-decoration-underline d-none">{{ 'customer.addresses.save_default' | t }}</a>
+                          {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between">  
+                          <a href="javascript:void(0);" 
+                            class="as-btn-edit dark-link text-uppercase text-decoration-underline"
+                            data-addressid="{{address.id}}">{{ 'customer.addresses.edit' | t }}</a>
+                          <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#address-delete-{{address.id}}" 
+                            class="dark-link text-uppercase text-decoration-underline">{{ 'customer.addresses.delete' | t }}</a>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="modal fade" id="address-delete-{{address.id}}">
+                    <div class="modal-dialog modal-dialog-centered" style="max-width: 600px;">
+                      <div class="modal-content bg-dark pb-9 ps-9 pe-2">
+                        <button style="position: absolute; left: 4px; top: 4px;" type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close btn-close-white"></button>
+                        <div class="d-flex">
+                          <a data-addressid="{{address.id}}" href="javascript:void(0);" class="as-address-delete p-1 bg-white text-dark">{{ 'customer.addresses.confirm' | t }}</a>
+                        </div>
+                        <p class="text-white mt-4">{{ 'customer.addresses.delete_tips' | t }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}            
+                {% endfor %}
+                {% for address in customer.addresses %}                  
+                  {% unless address == customer.default_address %}
+                  <div class="dot-border-dark border-top pb-3"></div>
+                  <div class="py-6">
+                    <div class="d-flex justify-content-between">
+                        <div class="">
+                          {% if address == customer.default_address %}
+                          <p class="mb-0 text-uppercase text-nowrap">## {{ 'customer.addresses.default' | t }} ##&nbsp;</p>
+                          {% endif %}
+                        </div>
+                        <div class="">
+                          <p class="mb-0">{{ address.first_name | capitalize }} {{address.last_name | capitalize }}</p>
+                        </div>
+                      </div>
+                      <div class="border-bottom dot-border-dark py-3">
+                        {% if address.address1 != empty %}
+                          <div class="d-flex justify-content-between">
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.address1' | t }}&nbsp;</p>
+                            </div>
+                            <div class="">
+                              <p class="mb-0">{{ address.address1 }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if address.address2 != empty %}
+                          <div class="d-flex justify-content-between">
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.address2' | t }}&nbsp;</p>
+                            </div>
+                            <div class="">
+                              <p class="mb-0">{{ address.address2 }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if address.zip != empty %}
+                          <div class="d-flex justify-content-between">  
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.zip_code' | t }}&nbsp;</p>
+                            </div>
+                            <div class="">
+                              <p class="mb-0">{{ address.zip }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if address.city != empty %}
+                          <div class="d-flex justify-content-between">
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.city' | t }}&nbsp;</p>
+                            </div>
+                            <div class="">
+                              <p class="mb-0">{{ address.city }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if address.country != empty %}
+                          <div class="d-flex justify-content-between">  
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.country' | t }}&nbsp;</p>
+                            </div>
+                            <div class="">
+                              <p class="mb-0">{{ address.country }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if address.phone != empty %}
+                          <div class="d-flex justify-content-between link-phone">  
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.phone' | t }}&nbsp;</p>
+                            </div>
+                            <div class="">
+                              <span class="mb-0 text-dark ">{{ address.phone }}</span>
+                            </div>
+                          </div>
+                        {% endif %}
+                        {% if address.email != empty %}
+                          <div class="d-flex justify-content-between">  
+                            <div class="">
+                              <p class="mb-0 text-nowrap">{{ 'customer.addresses.address_card.email' | t }}&nbsp;</p>
+                            </div>
+                            <div class="">
+                              <p class="mb-0">{{ customer.email }}</p>
+                            </div>
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="pt-4">
+                        <div class="">
+                          {% if address != customer.default_address %}
+                          {% capture form_id %}list_address_form_{{address.id}}{% endcapture %}
+                            {% form 'customer_address', address, id: form_id, class: "d-inline-block pe-2 card-link" %}
+                              <input type="hidden" name="address[first_name]" value="{{form.first_name}}">
+                              <input type="hidden" name="address[last_name]" value="{{form.last_name}}">
+                              {% comment %} <input type="hidden" name="address[company]" value="{{form.company}}"> {% endcomment %}
+                              <input type="hidden" name="address[address1]" value="{{form.address1}}">
+                              <input type="hidden" name="address[address2]" value="{{form.address2}}">
+                              <input type="hidden" name="address[city]" value="{{form.city}}">
+                              <input type="hidden" name="address[country]" value="{{form.country}}">
+                              <input type="hidden" name="address[province]" value="{{form.province}}">
+                              <input type="hidden" name="address[zip]" value="{{form.zip}}">
+                              <input type="hidden" name="address[phone]" value="{{form.phone}}">
+                              <input class="d-none" type="checkbox" name="address[default]" value="1" checked>
+                              <button class="border-0 p-0 bg-transparent font-weight-normal text-dark text-uppercase text-decoration-underline" type="submit">{{ 'customer.addresses.save_default' | t }}</button>
+                            {% endform %}
+                          {% else %}
+                            <a href="javascript:void(0);" class="text-muted text-uppercase text-decoration-underline">{{ 'customer.addresses.save_default' | t }}</a>
+                          {% endif %}
+                        </div> 
+                        <div class="d-flex justify-content-between">  
+                          <a href="javascript:void(0);" 
+                            class="as-btn-edit dark-link text-uppercase text-decoration-underline"
+                            data-addressid="{{address.id}}">{{ 'customer.addresses.edit' | t }}</a>
+                          <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#address-delete-{{address.id}}" 
+                            class="dark-link text-uppercase text-decoration-underline">{{ 'customer.addresses.delete' | t }}</a>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="modal fade" id="address-delete-{{address.id}}">
+                    <div class="modal-dialog modal-dialog-centered" style="max-width: 600px;">
+                      <div class="modal-content bg-dark pb-9 ps-9 pe-2">
+                        <button style="position: absolute; left: 4px; top: 4px;" type="button" data-bs-dismiss="modal" aria-label="Close" class="btn-close btn-close-white"></button>
+                        <div class="d-flex">
+                          <a data-addressid="{{address.id}}" href="javascript:void(0);" class="as-address-delete p-1 bg-white text-dark">{{ 'customer.addresses.confirm' | t }}</a>
+                        </div>
+                        <p class="text-white mt-4">{{ 'customer.addresses.delete_tips' | t }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  {% endunless %}            
+                {% endfor %}
+                <div class="row">
+                  <div class="col-md-4">
+                    <button class="btn btn-primary as-btn-add text-uppercase">{{ 'customer.addresses.add_new' | t }}</button>  
+                  </div>
+                </div>
+          </div>
+          {% endif %}
+          {% if customer.addresses.size == 0 %}
+            <div class="as-no-address">
+              {% assign title = 'customer.addresses.title' | t %}
+              {% render 'page-title', title: title %}
+              <p class="mb-0">// {{ 'customer.addresses.no_address' | t }}</p>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <button class="btn btn-primary as-btn-add text-uppercase">{{ 'customer.addresses.add_new' | t }}</button>  
+                </div>
+              </div>
+            </div>    
+          {% endif %}
+          
+          {% if customer.addresses.size > 0 %}
+          {% for address in customer.addresses %}         
+            <div class="as-address-form as-edit-form_{{address.id}} d-none">
+              {% assign title = 'customer.addresses.edit_address' | t %}
+              {% render 'page-title', title: title %}
+              <div class="">
+                  {% form 'customer_address', address , class: 'as-validate-form', novalidate: 'novalidate', autocomplete: "off" %}
+                  <div class="row">
+                    <label for="address-first-name" class="d-none">{{ 'customer.addresses.address_form.first_name' | t }}</label>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <input type="text"
+                        name="address[first_name]"
+                        id="address-first-name"
+                        class="as-form-input rounded-pill form-control border-0"
+                        placeholder="{{ 'customer.addresses.address_form.first_name' | t }}"
+                        value="{{ form.first_name }}"
+                        required>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'customer.addresses.address_form.first_name' | t }}{{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                    <label for="address-last-name" class="d-none  ">{{ 'customer.addresses.address_form.last_name' | t }}</label>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <input type="text"
+                        name="address[last_name]"
+                        id="address-last-name"
+                        class="as-form-input rounded-pill form-control border-0"
+                        placeholder="{{ 'customer.addresses.address_form.last_name' | t }}"
+                        value="{{ form.last_name }}"
+                        required>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'customer.addresses.address_form.last_name' | t }}{{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                  </div>
+                  {% comment %} <div class="row">
+                    <label for="address-last-name" class="d-none  ">{{ 'customer.addresses.address_form.company' | t }}</label>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <input type="text"
+                        name="address[company]"
+                        id="address-company"
+                        class="as-form-input rounded-pill form-control border-0"
+                        placeholder="{{ 'customer.addresses.address_form.company' | t }}"
+                        value="{{ form.company }}"
+                        >
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'customer.addresses.address_form.company' | t }}{{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                  </div> {% endcomment %}
+                  <div class="row">
+                    <label for="address-address1" class="d-none  ">{{ 'customer.addresses.address_form.address1' | t }}</label>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <input type="text"
+                        name="address[address1]"
+                        id="address-address1"
+                        class="as-form-input rounded-pill form-control border-0"
+                        placeholder="{{ 'customer.addresses.address_form.address1' | t }}"
+                        value="{{ form.address1 }}"
+                        required>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'customer.addresses.address_form.address1' | t }}{{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                    <label for="address-address2" class="d-none  ">{{ 'customer.addresses.address_form.address2' | t }}</label>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <input type="text"
+                        name="address[address2]"
+                        id="address-address2"
+                        class="as-form-input rounded-pill form-control border-0"
+                        placeholder="{{ 'customer.addresses.address_form.address2' | t }}"
+                        value="{{ form.address2 }}">
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'customer.addresses.address_form.address2' | t }}{{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label for="address-city" class="d-none  ">{{ 'customer.addresses.address_form.city' | t }}</label>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <input type="text"
+                        name="address[city]"
+                        id="address-city"
+                        class="as-form-input rounded-pill form-control border-0"
+                        placeholder="{{ 'customer.addresses.address_form.city' | t }}"
+                        value="{{ form.city }}"
+                        required>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'customer.addresses.address_form.city' | t }}{{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                    <label for="address_country_{{address.id}}" class="d-none  ">{{ 'customer.addresses.address_form.country' | t }}</label>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <select id="address_country_{{address.id}}" class="form-select as-form-input rounded-pill border-0" name="address[country]" data-default="{{form.country}}" required>{{ country_option_tags }}</select>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'customer.addresses.address_form.country' | t }}{{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                  </div>
+                  <div id="address_province_container_{{address.id}}" class="">
+                    <div class="row">
+                      <label for="address_province_{{address.id}}" class="d-none  ">{{ 'customer.addresses.address_form.state' | t }}</label>
+                      <div class="col-12 col-lg-6 mt-3">
+                        <select id="address_province_{{address.id}}" class="form-select as-form-input rounded-pill border-0" name="address[province]"  required data-default="{{form.province}}"></select>
+                        <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                          {{ 'customer.addresses.address_form.state' | t }}{{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div> 
+                    </div>     
+                  </div>
+                  <div class="row">
+                    <label for="address-zip" class="d-none  ">{{ 'customer.addresses.address_form.zip' | t }}</label>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <input type="text"
+                        name="address[zip]"
+                        id="address-zip"
+                        class="as-form-input rounded-pill form-control border-0"
+                        placeholder="{{ 'customer.addresses.address_form.zip' | t }}"
+                        value="{{ form.zip }}"
+                        required>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'customer.addresses.address_form.zip' | t }}{{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                    <label for="address-phone" class="d-none  ">{{ 'customer.addresses.address_form.phone' | t }}</label>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <input type="text"
+                        name="address[phone]"
+                        id="address-phone"
+                        class="as-form-input rounded-pill form-control border-0"
+                        placeholder="{{ 'customer.addresses.address_form.phone' | t }}"
+                        pattern="^[0-9()#+-]*$"
+                        value="{{ form.phone }}"
+                        >
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'customer.addresses.address_form.phone' | t }}{{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div>
+                  </div>
+                  
+
+                  {% if address != customer.default_address %}
+                    <div class="mt-4 d-flex align-items-center">
+                      {{ form.set_as_default_checkbox }}   
+                      <label class="ms-1" for="address_default_address_{{address.id}}">
+                        {{ 'customer.addresses.save_default' | t }}
+                      </label>
+                    </div>
+                  {% else %}
+                    <input class="d-none" type="checkbox" name="address[default]" value="1">
+                  {% endif %}
+                  <div class="mt-4 row align-items-center">
+                    <div class="mb-4">
+                      <button type="submit" class="btn btn-primary">{{ 'customer.addresses.address_form.save' | t }}</button>
+                    </div>
+                    <a class="as-cancel text-primary text-center cursor-pointer">({{ 'customer.addresses.address_form.cancel' | t }})</a>   
+                  </div>
+              {% endform %}
+              </div>   
+            </div>
+          {% endfor %}
+          {% endif %}
+
+          <div class="as-address-form as-address-form-add d-none">
+            {% assign title = 'customer.addresses.new_address' | t %}
+            {% render 'page-title', title: title %}            
+            <div class="">
+              {% form 'customer_address', customer.new_address , class: 'as-validate-form', novalidate: 'novalidate', autocomplete: "off" %}
+                <div class="row">
+                  <label for="address-first-name" class="d-none">{{ 'customer.addresses.address_form.first_name' | t }}</label>
+                  <div class="col-12 col-lg-6 mt-3">
+                    <input type="text"
+                      name="address[first_name]"
+                      id="address-first-name"
+                      class="as-form-input rounded-pill form-control border-0"
+                      placeholder="{{ 'customer.addresses.address_form.first_name' | t }}"
+                      value=""
+                      required>
+                    <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                      {{ 'customer.addresses.address_form.first_name' | t }}{{ 'general.error_message.format_error' | t }}
+                    </div>
+                  </div>
+                  <label for="address-last-name" class="d-none  ">{{ 'customer.addresses.address_form.last_name' | t }}</label>
+                  <div class="col-12 col-lg-6 mt-3">
+                    <input type="text"
+                      name="address[last_name]"
+                      id="address-last-name"
+                      class="as-form-input rounded-pill form-control border-0"
+                      placeholder="{{ 'customer.addresses.address_form.last_name' | t }}"
+                      value=""
+                      required>
+                    <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                      {{ 'customer.addresses.address_form.last_name' | t }}{{ 'general.error_message.format_error' | t }}
+                    </div>
+                  </div>
+                </div>
+                {% comment %} <div class="row">
+                  <label for="address-last-name" class="d-none  ">{{ 'customer.addresses.address_form.company' | t }}</label>
+                  <div class="col-12 col-lg-6 mt-3">
+                    <input type="text"
+                      name="address[company]"
+                      id="address-company"
+                      class="as-form-input rounded-pill form-control border-0"
+                      placeholder="{{ 'customer.addresses.address_form.company' | t }}"
+                      value=""
+                      >
+                    <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                      {{ 'customer.addresses.address_form.company' | t }}{{ 'general.error_message.format_error' | t }}
+                    </div>
+                  </div>
+                </div> {% endcomment %}
+                <div class="row">
+                  <label for="address-address1" class="d-none  ">{{ 'customer.addresses.address_form.address1' | t }}</label>
+                  <div class="col-12 col-lg-6 mt-3">
+                    <input type="text"
+                      name="address[address1]"
+                      id="address-address1"
+                      class="as-form-input rounded-pill form-control border-0"
+                      placeholder="{{ 'customer.addresses.address_form.address1' | t }}"
+                      value=""
+                      required>
+                    <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                      {{ 'customer.addresses.address_form.address1' | t }}{{ 'general.error_message.format_error' | t }}
+                    </div>
+                  </div>
+                  <label for="address-address2" class="d-none  ">{{ 'customer.addresses.address_form.address2' | t }}</label>
+                  <div class="col-12 col-lg-6 mt-3">
+                    <input type="text"
+                      name="address[address2]"
+                      id="address-address2"
+                      class="as-form-input rounded-pill form-control border-0"
+                      placeholder="{{ 'customer.addresses.address_form.address2' | t }}"
+                      value="">
+                    <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                      {{ 'customer.addresses.address_form.address2' | t }}{{ 'general.error_message.format_error' | t }}
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label for="address-city" class="d-none  ">{{ 'customer.addresses.address_form.city' | t }}</label>
+                  <div class="col-12 col-lg-6 mt-3">
+                    <input type="text"
+                      name="address[city]"
+                      id="address-city"
+                      class="as-form-input rounded-pill form-control border-0"
+                      placeholder="{{ 'customer.addresses.address_form.city' | t }}"
+                      value=""
+                      required>
+                    <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                      {{ 'customer.addresses.address_form.city' | t }}{{ 'general.error_message.format_error' | t }}
+                    </div>
+                  </div>
+                  <label for="address_country_new" class="d-none  ">{{ 'customer.addresses.address_form.country' | t }}</label>
+                  <div class="col-12 col-lg-6 mt-3">
+                    <select id="address_country_new" class="form-select rounded-pill border-0" name="address[country]" required>{{ country_option_tags }}</select>
+                    <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                      {{ 'customer.addresses.address_form.country' | t }}{{ 'general.error_message.format_error' | t }}
+                    </div>
+                  </div>
+                </div>
+                <div id="address_province_container_new" class="">
+                  <div class="row">
+                    <label for="address_province_new" class="d-none  ">{{ 'customer.addresses.address_form.state' | t }}</label>
+                    <div class="col-12 col-lg-6 mt-3">
+                      <select id="address_province_new" class="form-select rounded-pill border-0" name="address[province]"  required ></select>
+                      <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                        {{ 'customer.addresses.address_form.state' | t }}{{ 'general.error_message.format_error' | t }}
+                      </div>
+                    </div> 
+                  </div>       
+                </div>
+                <div class="row">
+                  <label for="address-zip" class="d-none  ">{{ 'customer.addresses.address_form.zip' | t }}</label>
+                  <div class="col-12 col-lg-6 mt-3">
+                    <input type="text"
+                      name="address[zip]"
+                      id="address-zip"
+                      class="as-form-input rounded-pill form-control border-0"
+                      placeholder="{{ 'customer.addresses.address_form.zip' | t }}"
+                      value=""
+                      required>
+                    <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                      {{ 'customer.addresses.address_form.zip' | t }}{{ 'general.error_message.format_error' | t }}
+                    </div>
+                  </div>
+                  <label for="address-phone" class="d-none  ">{{ 'customer.addresses.address_form.phone' | t }}</label>
+                  <div class="col-12 col-lg-6 mt-3">
+                    <input type="text"
+                      name="address[phone]"
+                      id="address-phone"
+                      class="as-form-input rounded-pill form-control border-0"
+                      placeholder="{{ 'customer.addresses.address_form.phone' | t }}"
+                      pattern="^[0-9()#+-]*$"
+                      value=""
+                      >
+                    <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                      {{ 'customer.addresses.address_form.phone' | t }}{{ 'general.error_message.format_error' | t }}
+                    </div>
+                  </div>
+                </div>   
+                <div class="d-flex align-items-center mt-4">
+                  {{ form.set_as_default_checkbox }}
+                  <label class="ms-2" for="address_default_address_new">
+                    {{ 'customer.addresses.save_default' | t }}
+                  </label>
+                </div>
+                <div class="mt-4 row align-items-center">
+                  <div class="mb-4">
+                    <button type="submit" class="btn btn-primary">{{ 'customer.addresses.address_form.save' | t }}</button>
+                  </div>
+                  <a class="as-cancel text-primary text-center cursor-pointer">({{ 'customer.addresses.address_form.cancel' | t }})</a>   
+                </div>
+              {% endform %}
+            </div>
+          </div>
+
+        </div>
+          </div>
+    </div>
+  </section>
+</main>
+<div data-invite-page="{{ request.origin }}{{ settings.pre_order_page.url }}" {% if customer %}data-user-email="{{ customer.email }}"{% endif %} class="as-waiting-list-content d-none">
+
+</div>
+<script type="text/javascript" charset="utf-8">
+  // initialize observers on address selectors
+  new Shopify.CountryProvinceSelector('address_country_new', 'address_province_new', {hideElement: 'address_province_container_new'});  
+  {% for address in customer.addresses %}
+    new Shopify.CountryProvinceSelector('address_country_{{address.id}}', 'address_province_{{address.id}}', {hideElement: 'address_province_container_{{address.id}}'});
+  {% endfor %}
+</script>

@@ -1,0 +1,34 @@
+
+<div class="d-none d-sm-block">
+  {% assign title = 'general.legal.title' | t %}
+  {% render 'page-title', title: title  %}
+</div>
+<ul class="d-none d-sm-block position-relative list-unstyled mb-0">
+  {%- for link in linklists.policy.links -%}
+    <li class="nav-item {{ page.handle }}  {{link.handle}}">
+      <a class="{% if link.active %}active{% endif %} d-flex nav-before-arrow" 
+      {% if link.url contains 'https://' or link.url contains 'http://' %} target="_blank" rel="noopener"{% endif %}
+        href="{{ link.url }}">{{ link.title }}</a>
+    </li>
+  {%- endfor -%}
+</ul>
+
+<div class="position-relative customer-select as-customer-select d-sm-none d-block bg-light mb-5 z-index-2">
+  <div class="border border-dark flex-center customer-selected cursor-pointer customer-select-height">
+    <span class="as-customer-selected">{{ 'general.legal.title' | t }}</span>
+    <div class="end-0 pe-4 position-absolute">
+      <div class=" customer-select-arrow flex-center" >
+        {% render 'select-arrow' %}
+      </div>
+    </div>
+  </div>
+  <ol class="position-absolute list-unstyled w-100 border-top-0 border border-dark customer-select-lists overflow-hidden mb-0 bg-light">
+    {%- for link in linklists.policy.links -%}
+    <li class="{% unless forloop.last %}border-bottom border-dark {% endunless %}cursor-pointer flex-center">
+      <a class="as-customer-select-list customer-select-height w-100 text-center {% if link.active %}active{% endif %}" {% render 'link', link: link.url %}  href="{{ link.url }}">
+        {{ link.title }}
+      </a>
+    </li>
+    {%- endfor -%}
+  </ol>
+</div>

@@ -1,0 +1,32 @@
+<div class="container-core">
+  <div class="fst-italic mb-5 mb-md-6 mb-lg-7">{{ 'service_portal.general.support_centre' | t }}</div>
+  <h1 class="fs-h1 mb-0">{{ page.title }}</h1>
+  {% if section.settings.des != blank %}
+  <div class="mt-5 mt-md-6 mt-lg-8 dot-border-dark border-bottom">
+    <div class="row">
+      <div class="pb-1 pb-lg-3 col-md-8">
+        {% render 'richtext', richtext: section.settings.des %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% schema %}
+{
+  "name": "Page title",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9 mt-7 mt-sm-9 as-page-title",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "richtext",
+      "id": "des",
+      "label": "Description",
+      "default": "<p>page description</p>"
+    }
+  ]
+}
+{% endschema %}

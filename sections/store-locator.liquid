@@ -1,0 +1,68 @@
+{% render 'store-locator', section: section %}
+
+{% schema %}
+{
+  "name": "Store Locator",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_map",
+      "label": "Show map",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_store_type",
+      "label": "Show store type",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_category",
+      "label": "Show category",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_distance",
+      "label": "Show distance",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_display_maps_by_country",
+      "label": "Enable display maps by country",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "note",
+      "label": "Note"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "online store",
+      "type": "online_store",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo_image",
+          "label": "Logo image"
+        },
+        {
+          "type": "text",
+          "id": "asp_name",
+          "label": "ASP name"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

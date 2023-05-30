@@ -1,0 +1,68 @@
+<div class="container-fits-viewport section-top section-bottom d-flex">
+
+  <div class="position-absolute h-100 w-100 top-0 as-location-target" data-color='{{ section.settings.text_color }}'>
+    <figure class="h-100 mb-0 w-100">
+      <picture class="w-100 h-100 d-block">
+        <source media="(max-width: 576px)" 
+          sizes="(max-width: 576px) 100vw, 576px" 
+          srcset="
+            {{ section.settings.imageMob | img_url: 'master' }}" >
+        <img loading="lazy" class="img-fluid w-100 h-100 object-fit-cover"
+          sizes="(max-width: 2160px) 100vw, 2160px"
+          srcset="
+            {{ section.settings.image | img_url: '600x' }} 600w,
+            {{ section.settings.image | img_url: '857x' }} 857w,
+            {{ section.settings.image | img_url: '1069x' }} 1069w,
+            {{ section.settings.image | img_url: '1244x' }} 1244w,
+            {{ section.settings.image | img_url: '1494x' }} 1494w,
+            {{ section.settings.image | img_url: '1560x' }} 1560w,
+            {{ section.settings.image | img_url: '1660x' }} 1660w,
+            {{ section.settings.image | img_url: '1901x' }} 1901w,
+            {{ section.settings.image | img_url: '2040x' }} 2040w,
+            {{ section.settings.image | img_url: '2155x' }} 2155w,
+            {{ section.settings.image | img_url: '2160x' }} 2160w,
+            {{ section.settings.image | img_url: '3840x' }} 3840w" 
+          src="{{ section.settings.image | img_url: '2160x' }}"
+          alt="{{ section.settings.image.alt }}">
+      </picture>
+    </figure>
+  </div>
+  <div class="hero-text-{{ section.settings.text_color }} container-topic px-3 px-sm-6">
+    <div class="px-1 px-sm-0 h-100">
+      <div class="row h-100 justify-content-end align-items-sm-center{% if section.settings.block_alignment_in_mob == 'bottom' %} align-items-end{% endif %}">
+        <div class="col-12 col-sm-4 col-xl-3 py-6 position-relative">
+          {% if section.settings.heading != blank %}
+          <h2 class="mb-5 fs-h1">{{ section.settings.heading }}</h2>
+          <!-- <div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"><div class="d-inline-block mt-n-small"> -->
+          {% endif %}
+
+          {{ section.settings.lead_graph | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+
+          {% if section.settings.heading != blank %}
+          <!-- </div></div></div></div> -->
+          {% endif %}
+          
+          <div class="mt-3">
+            {% if section.settings.enable_this_newsletter_form %}
+            {% render 'product-sign-up', color: section.settings.text_color, place: 'homepage' %}
+            {% endif %}
+            {% if section.settings.link_text != blank %}
+            <div>
+              <a class="btn btn-{{ section.settings.text_color }} text-uppercase font-55 mt-2 me-2 text-nowrap" 
+              {% if section.settings.link contains 'https://' or section.settings.link contains 'http://' %}target="_blank" rel="noopener noreferrer"{% endif %}
+                href="{{ section.settings.link }}">{{ section.settings.link_text }}</a>
+            </div>
+            {% endif %}
+            {% if section.settings.secondary_btn != blank %}
+              <div>
+                <a class="btn btn-{{ section.settings.text_color }} text-uppercase font-55 mt-2 text-nowrap" 
+                {% if section.settings.secondary_btn_link contains 'https://' or section.settings.secondary_btn_link contains 'http://' %}target="_blank" rel="noopener noreferrer"{% endif %}
+                  href="{{ section.settings.secondary_btn_link }}">{{ section.settings.secondary_btn }}</a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

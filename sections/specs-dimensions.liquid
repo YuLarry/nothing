@@ -1,0 +1,147 @@
+{% assign title = section.settings.title %}
+{% if title != empty %}
+<h6 class="accordion-header" id="heading-{{ title | handleize }}">
+  {% comment %}{% if cache contains faq %} collapsed{% endif %}{% endcomment %}
+  <button class="text-start pe-1 accordion-button collapsed text-uppercase font-base font-weight-bold" 
+    type="button" 
+    data-bs-toggle="collapse" 
+    data-bs-target="#collapse-{{ title | handleize }}" 
+    {% comment %}{% unless cache contains faq %}true{% else %}false{% endunless %}{% endcomment %}
+    aria-expanded="false" 
+    aria-controls="collapse-{{ title | handleize }}">
+    {{ title }}
+  </button>
+</h6>
+{% comment %}{% unless cache contains faq %} show{% endunless %}{% endcomment %}
+<div id="collapse-{{ title | handleize }}" 
+  class="accordion-collapse collapse" 
+  aria-labelledby="heading-{{ title | handleize }}">
+  <div class="accordion-body pt-0">
+    {% if section.settings.desp != blank %}<p class="mb-3">{{ section.settings.desp }}</p>{% endif %}
+    <div class="row py-3">
+      <div class="col-12 col-xl-6">
+        <h6 class="mb-3 font-base text-uppercase font-weight-bold">{{ section.settings.earbud_title }}</h6>
+        <ul class="list-unstyled mb-0 mt-sm-n1">
+        {% for block in section.blocks %}
+          {% if block.type == 'earbud' %}
+            <li class="row g-0 mt-sm-1">
+              <p class="mb-0 {% if block.settings.answer != empty %}col-5{% endif %} pe-2 font-weight-bold">{{ block.settings.title }}</p>
+              <div class="col-7 text-end">
+                {{ block.settings.answer | replace: '<p', '<p class="mb-0"' }}
+              </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+        </ul>
+      </div>
+      <div class="col-12 col-xl-5 offset-xl-1 align-self-sm-center pt-5 pb-3 py-xl-0">
+        {% render 'single-and-small-picture', img: section.settings.earbud_image %}
+      </div>
+    </div>
+    <div class="row py-3">
+      <div class="col-12 col-xl-6">
+        <h6 class="mb-3 font-base text-uppercase font-weight-bold">{{ section.settings.case_title }}</h6>
+        <ul class="list-unstyled mb-0 mt-sm-n1">
+          {% for block in section.blocks %}
+            {% if block.type == 'case' %}
+              <li class="row g-0 mt-sm-1">
+                <p class="mb-0 {% if block.settings.answer != empty %}col-5{% endif %} pe-2 font-weight-bold">{{ block.settings.title }}</p>
+                <div class="col-7 text-end">
+                  {{ block.settings.answer | replace: '<p', '<p class="mb-0"' }}
+                </div>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-12 col-xl-5 offset-xl-1 align-self-sm-center pt-5 pb-3 py-xl-0">
+        {% render 'single-and-small-picture', img: section.settings.case_image %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% schema %}
+{
+  "name": "Dimensions",
+  "tag": "div",
+  "class": "accordion-item",
+  "settings": [
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "title"
+    },
+    {
+      "type": "text",
+      "label": "Description",
+      "id": "desp"
+    },
+    {
+      "type": "header",
+      "content": "Each Earbud"
+    },
+    {
+      "type": "text",
+      "label": "Earbud Heading",
+      "id": "earbud_title"
+    },
+    {
+      "type": "image_picker",
+      "id": "earbud_image",
+      "label": "Earbud Image",
+      "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+    },
+    {
+      "type": "header",
+      "content": "Case"
+    },
+    {
+      "type": "text",
+      "label": "Case Heading",
+      "id": "case_title"
+    },
+    {
+      "type": "image_picker",
+      "id": "case_image",
+      "label": "Case Image",
+      "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "earbud",
+      "type": "earbud",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "specs key"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "specs value"
+        }
+      ]
+    },
+    {
+      "name": "case",
+      "type": "case",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "specs key"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "specs value"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

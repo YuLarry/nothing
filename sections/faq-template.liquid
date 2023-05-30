@@ -1,0 +1,213 @@
+
+
+<script class="as-faq-data" type="text/hogan">
+  {%- assign index = 0 -%}
+  [
+    {%- for block in section.blocks -%}
+      {%- unless block.type == 'subtitle' -%} 
+      {%- if block.settings.title != blank -%}
+      {
+        "q": {{- block.settings.title | json -}},
+        "a": {{- block.settings.answer | replace: '<p', '<p class=mb-0' | replace: '<a', '<a class=dark-link text-decoration-underline' | json -}},
+        "hash": {{- section.settings.title | handleize | json -}},
+        "i": {{ index }}
+        {%- assign index = index | plus: 1 -%}
+      },
+      {%- endif -%}
+      {%- if block.settings.title2 != blank -%}
+      {
+        "q": {{- block.settings.title2 | json -}},
+        "a": {{- block.settings.answer2 | replace: '<p', '<p class=mb-0' | replace: '<a', '<a class=dark-link text-decoration-underline' | json -}},
+        "hash": {{- section.settings.title | handleize | json -}},
+        "i": {{ index }}
+        {%- assign index = index | plus: 1 -%}
+      },
+      {%- endif -%}
+      {%- endunless -%}
+    {%- endfor -%} 
+    {
+      "empty": ""
+    }
+  ]
+</script>
+{% comment %} 添加一个空的数据，避免麻烦的去判断逗号是否存在, 数据检索时也不会查看到 empty {% endcomment %}
+
+<div class="row pt-header mt-5 mt-sm-1">
+  <div class="col-lg-7 col-sm-9 col-xl-6 col-xxl-5 offset-sm-3">
+    <h2 class="mb-0 mb-xl-4 text-uppercase display-1 font-ndot55">{{ section.settings.title }}</h2>
+    {% assign subtitle_index = 0 %}
+    {% assign subtitle_handleize = section.settings.title | handleize %}
+    {% assign index = 0 %}
+    {% for block in section.blocks %}
+      
+      {% if block.type == 'subtitle' %}
+        {% unless subtitle_index == 0 %}
+          </div>
+          <div class="position-relative dot-border pb-3 my-3"></div>
+        {% endunless %}
+        {% assign subtitle_index = subtitle_index | plus: 1 %}
+        
+        <h5 class="display-3 font-ndot55 mb-0 pt-5">{{ block.settings.title }}</h5>
+        <div class="accordion mt-5 mt-sm-6" id="accordion-{{ subtitle_handleize }}">
+      {% endif %}
+
+      {% if forloop.first and block.type != 'subtitle' %}
+        <div class="accordion mt-5 mt-sm-6" id="accordion-{{ subtitle_handleize }}">
+      {% endif %}
+
+      {% if block.type == 'faq_text' %}
+
+        {% assign key = subtitle_handleize %}
+        {% if block.settings.title != blank %}
+          <div class="accordion-item">
+            <h6 class="accordion-header" id="{{ key }}-heading-{{ index }}">
+              <button class="text-start border-top pe-1 accordion-button accordion-button-faq collapsed py-4 py-sm-5" 
+                type="button" data-bs-toggle="collapse" 
+                data-bs-target="#{{ key }}-collapse-{{ index }}" 
+                aria-expanded="false" 
+                aria-controls="{{ key }}-collapse-{{ index }}">
+                <span class="pe-4 font-base fw-bold">{{ block.settings.title }}</span>
+              </button>
+            </h6>
+            <div id="{{ key }}-collapse-{{ index }}" 
+              class="accordion-collapse collapse" 
+              aria-labelledby="{{ key }}-heading-{{ index }}" 
+              data-bs-parent="#accordion-{{ key }}">
+              <div class="accordion-body pb-5 pt-0 font-base">
+                {{ block.settings.answer | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+                {% if block.settings.image %}
+                  <div class="row mt-sm-7 mt-5 mb-sm-3">
+                    <div class="col-sm-8">
+                      <img loading="lazy" class="w-100"
+                        src="{{ block.settings.image | img_url: 'master' }}"
+                        alt="{{ block.settings.image.alt }}">
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% assign index = index | plus: 1 %}
+        {% endif %}
+
+        {% if block.settings.title2 != blank %}
+          <div class="accordion-item">
+            <h6 class="accordion-header" id="{{ key }}-heading-{{ index }}">
+              <button class="text-start border-top pe-1 accordion-button accordion-button-faq collapsed py-4 py-sm-5" 
+                type="button" data-bs-toggle="collapse" 
+                data-bs-target="#{{ key }}-collapse-{{ index }}" 
+                aria-expanded="false" 
+                aria-controls="{{ key }}-collapse-{{ index }}">
+                <span class="pe-4 font-base fw-bold">{{ block.settings.title2 }}</span>
+              </button>
+            </h6>
+            <div id="{{ key }}-collapse-{{ index }}" 
+              class="accordion-collapse collapse" 
+              aria-labelledby="{{ key }}-heading-{{ index }}" 
+              data-bs-parent="#accordion-{{ key }}">
+              <div class="accordion-body pb-5 pt-0 font-base">
+                {{ block.settings.answer2 | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+                {% if block.settings.image2 %}
+                  <div class="row mt-sm-7 mt-5 mb-sm-3">
+                    <div class="col-sm-8">
+                      <img loading="lazy" class="w-100"
+                        src="{{ block.settings.image2 | img_url: 'master' }}"
+                        alt="{{ block.settings.image2.alt }}">
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% assign index = index | plus: 1 %}
+        {% endif %}
+
+      {% endif %}
+      {% if forloop.last %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Faq section",
+  "tag": "section",
+  "class": "container-fits-viewport bg-light tab-pane fade as-faq-tab section-bottom section-top px-3 px-sm-6",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Accordions"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "subtitle",
+      "type": "subtitle",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Subtitle"
+        }
+      ]
+    },
+    {
+      "name": "Faq for text",
+      "type": "faq_text",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Faq 1"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "header",
+          "content": "Faq 2"
+        },
+        {
+          "type": "paragraph",
+          "content": "In order to exceed the limit of 16, set two FAQs for each block, and the second one can be left blank"
+        },
+        {
+          "type": "text",
+          "id": "title2",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer2",
+          "label": "Answer"
+        },
+        {
+          "type": "image_picker",
+          "id": "image2",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Faq section",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

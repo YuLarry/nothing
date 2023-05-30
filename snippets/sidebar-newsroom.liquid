@@ -1,0 +1,168 @@
+{% liquid
+  if request.page_type == 'index' or page.handle contains 'event' or page.handle contains 'invest'
+    assign text_color = 'is-white'
+  else 
+    assign text_color = 'is-dark'
+  endif 
+
+  if request.page_type == 'index'
+    assign top_text_color = 'is-top-color'
+  endif 
+
+  assign blog = blogs[settings.blog]
+  if request.page_type == 'page'
+    if page.handle == 'about'
+      assign newsroom_type = page.handle
+      assign title = page.title
+    elsif page.handle == 'career'
+      assign newsroom_type = page.handle
+      assign title = page.title
+    elsif page.handle == 'coverage'
+      assign newsroom_type = page.handle
+      assign title = blog.title
+    elsif page.handle == 'brand-assets'
+      assign newsroom_type = page.handle
+      assign title = blog.title
+    elsif page.handle == 'contact-us'
+      assign newsroom_type = page.handle
+      assign title = 'contact.us.title' | t
+    elsif page.handle == 'press-contact'
+      assign newsroom_type = page.handle
+      assign title = 'contact.press.title' | t
+    endif
+  elsif request.page_type == 'blog'
+    assign newsroom_type = request.page_type
+    assign title = blog.title
+  elsif request.page_type == 'article'
+    assign newsroom_type = request.page_type
+    assign title = blog.title
+  endif
+  %}
+
+  <div class="d-none d-sm-block">
+    {% assign title = 'customer.addresses.address_form.company' | t %}
+    {% render 'page-title', title: title  %}
+  </div>
+  <ul class="d-none d-sm-block list-unstyled my-0">
+    <li class="nav-item">
+      <a class="{% if handle == 'about' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+        href="{{ routes.root_url }}pages/about">{{ 'general.company.about_us' | t }}</a>
+    </li>
+    <li class="nav-item">
+      <a class="{% if handle == 'blog' or handle == 'brand-assets' or handle == 'coverage' or request.page_type == 'article' or current_tags %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+        href="{{ blog.url }}">{{ 'general.company.newsroom' | t }}</a>
+    
+      <ul class="list-unstyled mb-0 ps-2">
+        <li class="nav-item">
+          <a class="subnav-before-arrow {% if handle == 'blog' or request.page_type == 'article' %}{% unless current_tags %}active{% endunless %}{% endif %} d-flex nav-before-arrow text-uppercase" 
+            href="{{ blog.url }}">{{ 'blogs.all' | t }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="subnav-before-arrow {% if handle == 'coverage' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+            href="{{ routes.root_url }}pages/coverage">{{ 'blogs.coverage' | t }}</a>
+        </li>
+        {%- comment -%}
+        {%- for tag in blog.all_tags %}
+          <li class="nav-item">
+            <a class="subnav-before-arrow {% if current_tags contains tag %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+              href="{{ blog.url }}/tagged/{{ tag | handleize }}">{{ tag | capitalize }}</a>
+          </li>
+        {%- endfor -%}
+        {%- endcomment -%}
+        <li class="nav-item">
+          <a class="subnav-before-arrow {% if handle == 'brand-assets' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+            href="{{ routes.root_url }}pages/brand-assets">{{ 'blogs.brand_assets' | t }}</a>
+        </li>
+      </ul> 
+    </li>
+    <li class="nav-item">
+      {% comment %} <a class="d-flex nav-before-arrow text-uppercase" 
+        href="https://nothing.community/">{{ 'general.company.community' | t }}</a> {% endcomment %}
+        <a class="d-flex nav-before-arrow text-uppercase" 
+        href="{{ routes.root_url }}pages/nothing-community">{{ 'general.company.community' | t }}</a>
+    </li>
+    <li class="nav-item">
+      <a class="{% if handle == 'career' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+        href="{{ routes.root_url }}pages/career">{{ 'general.company.careers' | t }}</a>
+    </li>
+    <li class="nav-item">
+      <a class="{% if handle == 'business-enquiry' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+        href="{{ routes.root_url }}pages/business-enquiry">{{ 'general.company.contact' | t }}</a>
+    </li>
+    <li class="nav-item">
+      <a class="d-flex nav-before-arrow text-uppercase" 
+        href="{{ routes.root_url }}pages/privacy-policy">{{ 'general.legal.title' | t }}</a>
+    </li>
+  </ul>
+
+  <div class="position-relative customer-select as-customer-select d-sm-none d-block bg-light mb-5 z-index-2">
+    <div class="border border-dark flex-center customer-selected cursor-pointer customer-select-height">
+      <span class="as-customer-selected">{{ 'customer.addresses.address_form.company' | t }}</span>
+      <div class="end-0 pe-4 position-absolute">
+        <div class=" customer-select-arrow flex-center" >
+          {% render 'select-arrow' %}
+        </div>
+      </div>
+    </div>
+    <ol class="position-absolute list-unstyled w-100 border-top-0 border border-dark customer-select-lists overflow-hidden mb-0 bg-light">
+      <li class="border-bottom border-dark cursor-pointer flex-center">
+        <a class="as-customer-select-list customer-select-height w-100 text-center {% if handle == 'about' %}active{% endif %}" href="{{ routes.root_url }}pages/about">
+          {{ 'general.company.about_us' | t }}
+        </a>
+      </li>
+      <li class="flex-center flex-column">
+        <a class="d-flex nav-before-arrow customer-select-height border-bottom border-dark w-100 justify-content-center" 
+          href="{{ blog.url }}">{{ 'general.company.newsroom' | t }}</a>
+        <ul class="list-unstyled mb-0 w-100">
+          <li class="border-bottom border-dark cursor-pointer flex-center">
+            <a class="{% if handle == 'blog' or request.page_type == 'article' %}{% unless current_tags %}active{% endunless %}{% endif %} d-flex justify-content-center w-100 as-customer-select-list customer-select-height" 
+              href="{{ blog.url }}">{{ 'blogs.all' | t }}</a>
+          </li>
+          <li class="border-bottom border-dark cursor-pointer flex-center">
+            <a class="{% if handle == 'coverage' %}active{% endif %} d-flex nav-before-arrow  w-100 justify-content-center as-customer-select-list customer-select-height" 
+              href="{{ routes.root_url }}pages/coverage">{{ 'blogs.coverage' | t }}</a>
+          </li>
+          {%- comment -%}
+          {%- for tag in blog.all_tags %}
+            <li class="border-bottom border-dark cursor-pointer flex-center">
+              <a class="{% if current_tags contains tag %}active{% endif %} d-flex nav-before-arrow  w-100 justify-content-center as-customer-select-list customer-select-height" 
+                href="{{ blog.url }}/tagged/{{ tag | handleize }}">{{ tag | capitalize }}</a>
+            </li>
+          {%- endfor -%}
+          {%- endcomment -%}
+          <li class="border-bottom border-dark cursor-pointer flex-center">
+            <a class="{% if handle == 'brand-assets' %}active{% endif %} d-flex nav-before-arrow  w-100 justify-content-center as-customer-select-list customer-select-height" 
+              href="{{ routes.root_url }}pages/brand-assets">{{ 'blogs.brand_assets' | t }}</a>
+          </li>
+        </ul> 
+      </li>
+      <li class="border-bottom border-dark cursor-pointer flex-center">
+        {% comment %} <a class="as-customer-select-list customer-select-height w-100 text-center" href="https://nothing.community/">
+          {{ 'general.company.community' | t }}
+        </a> {% endcomment %}
+        <a class="as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.root_url }}pages/nothing-community">
+          {{ 'general.company.community' | t }}
+        </a>
+      </li>
+      <li class="border-bottom border-dark cursor-pointer flex-center">
+        <a class="as-customer-select-list customer-select-height w-100 text-center {% if handle == 'career' %}active{% endif %}" href="{{ routes.root_url }}pages/career">
+          {{ 'general.company.careers' | t }}
+        </a>
+      </li>
+      <li class="border-bottom border-dark cursor-pointer flex-center">
+        <a class="as-customer-select-list customer-select-height w-100 text-center {% if handle == 'business-enquiry' %}active{% endif %}" href="{{ routes.root_url }}pages/business-enquiry">
+          {{ 'general.company.contact' | t }}
+        </a>
+      </li>
+      <li class="border-bottom border-dark cursor-pointer flex-center">
+        <a class="as-customer-select-list customer-select-height w-100 text-center {% if handle == 'press-contact' %}active{% endif %}" href="{{ routes.root_url }}pages/press-contact">
+          {{ 'contact.press.title' | t }}
+        </a>
+      </li>
+      <li class="border-dark cursor-pointer flex-center">
+        <a class="as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.root_url }}pages/privacy-policy">
+          {{ 'general.legal.title' | t }}
+        </a>
+      </li>
+    </ol>
+  </div>

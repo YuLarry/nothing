@@ -1,0 +1,118 @@
+<form action="/search" method="get" role="search" target="store_locator_iframe" class="as-search-form search-form flex-shrink-0 w-100 pb-5">
+  <div class="position-relative z-index-2 d-flex justify-content-center flex-wrap w-100">
+    <div class="input-text bg-white rounded-3">
+      <button class="as-search-btn search-icon btn" type="submit">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.3335 10.3333L15.0002 15" stroke="black" stroke-miterlimit="10"/>
+          <path d="M11.889 6.44465C11.889 3.43773 9.45143 1.00014 6.44451 1.00014C3.43759 1.00014 1 3.43773 1 6.44465C1 9.45157 3.43759 11.8892 6.44451 11.8892C9.45143 11.8892 11.889 9.45157 11.889 6.44465Z" stroke="black" stroke-miterlimit="10"/>
+        </svg>
+      </button>
+      <input type="text" name="q" autocomplete="off" value="" class="form-control as-search-input pe-6" placeholder="{{ 'sections.store_locator.search_placeholder' | t }}" aria-label="{{ 'sections.store_locator.search_placeholder' | t }}">
+    </div>
+    
+    <div class="position-relative customer-select w-100 bg-light z-index-2">
+      <ol class="as-predict-list predict-list position-absolute list-unstyled w-100 customer-select-lists overflow-hidden mb-0 bg-white"></ol>
+      {% raw %}
+      <script type="text/hogan" id="tpl-predict-item">
+        {{#data}}
+        <li class="predict-item border-bottom cursor-pointer flex-center">
+          <a class="as-predict-item customer-select-height w-100 filter-item px-4 py-2 ellipsis" data-place-id="{{place_id}}">{{description}}</a>
+        </li>
+        {{/data}}
+      </script>
+      {% endraw %}
+    </div>
+  </div>
+
+  {%- assign enable_to_render_wrapper = false -%}
+  {%- if section.settings.show_store_type and store_type_list.size > 0 -%}
+    {%- assign enable_to_render_wrapper = true -%}
+  {%- elsif section.settings.show_category and category_list.size > 0 -%}
+    {%- assign enable_to_render_wrapper = true -%}
+  {%- endif -%}
+  
+  {%- if enable_to_render_wrapper -%}
+  <div class="position-relative z-index-1 row pt-1 mt-5">
+    {%- if section.settings.show_store_type and store_type_list.size > 0 -%}
+      <div class="col">
+        <div class="as-select-wrapper">
+          <div class="position-relative customer-select as-store-customer-select bg-light z-index-2">
+            <div class="border border-dark flex-center customer-selected cursor-pointer customer-select-height">
+              <span class="as-customer-selected customer-selected-option" style="margin-bottom: 1px;">{{ 'sections.store_locator.store_type' | t }}</span>
+              <div class="end-0 pe-3 position-absolute">
+                <div class=" customer-select-arrow flex-center">
+                  {% render 'select-arrow' %}
+                </div>
+              </div>
+            </div>
+            <ol class="position-absolute list-unstyled w-100 border-top-0 border border-dark customer-select-lists overflow-hidden mb-0 bg-light">
+              <li class="border-bottom border-dark cursor-pointer flex-center">
+                <a class="as-customer-select-list customer-select-height w-100 text-center filter-item">
+                  {{ 'sections.store_locator.filter_all' | t }}
+                </a>
+              </li>
+              {%- for store_type in store_type_list -%}
+                <li class="{% unless forloop.last %}border-bottom {% endunless %}border-dark cursor-pointer flex-center">
+                  <a class="as-customer-select-list customer-select-height w-100 text-center filter-item">
+                    {{ store_type }}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ol>
+
+            <select class="as-select d-none" name="store_type">
+              <option value=""></option>
+              {%- for store_type in store_type_list -%}
+                <option value="{{ store_type }}"></option>
+              {%- endfor -%}
+            </select>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_category and category_list.size > 0 -%}
+      <div class="col">
+        <div class="as-select-wrapper">
+          <div class="position-relative customer-select as-store-customer-select bg-light z-index-2">
+            <div class="border border-dark flex-center customer-selected cursor-pointer customer-select-height">
+              <span class="as-customer-selected customer-selected-option" style="margin-bottom: 1px;">{{ 'sections.store_locator.category' | t }}</span>
+              <div class="end-0 pe-3 position-absolute">
+                <div class=" customer-select-arrow flex-center" >
+                  {% render 'select-arrow' %}
+                </div>
+              </div>
+            </div>
+            <ol class="position-absolute list-unstyled w-100 border-top-0 border border-dark customer-select-lists overflow-hidden mb-0 bg-light">
+              <li class="border-bottom border-dark cursor-pointer flex-center">
+                <a class="as-customer-select-list customer-select-height w-100 text-center filter-item">
+                  {{ 'sections.store_locator.filter_all' | t }}
+                </a>
+              </li>
+              {%- for category in category_list -%}
+                <li class="{% unless forloop.last %}border-bottom {% endunless %}border-dark cursor-pointer flex-center">
+                  <a class="as-customer-select-list customer-select-height w-100 text-center filter-item">
+                    {{ category }}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ol>
+            <select class="as-select d-none" name="category">
+              <option value=""></option>
+              {%- for category in category_list -%}
+                <option value="{{ category }}"></option>
+              {%- endfor -%}
+            </select>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+
+  <div class="form-check custom-form-switch pt-1 mt-5 mb-0 text-end as-use-current-location-switch">
+    <label class="custom-form-check-label text-nowrap btn-outline-primary" for="store-locator-use-current-location">( {{ 'sections.store_locator.use_my_current_location' | t }} )</label>
+    <input class="custom-form-check-input as-use-current-location-switch-input" name="use_current_location" type="checkbox" id="store-locator-use-current-location" hidden>
+  </div>
+</form>
+<iframe class="d-none" id="storeLocatorIframe" name="store_locator_iframe"></iframe>

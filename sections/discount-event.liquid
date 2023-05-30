@@ -1,0 +1,318 @@
+{% liquid
+  assign mobile_first_ratio = section.settings.mobile_image.aspect_ratio
+  assign desktop_first_ratio = section.settings.desktop_image.aspect_ratio
+%}
+{% style %}
+  @media screen and (max-width: 576px) {
+    .image-placeholder-{{ section.id }} {
+      --bs-aspect-ratio: {{ 1 | divided_by: mobile_first_ratio | times: 100 }}%;
+    }
+  }
+  @media screen and (min-width: 578px ) and (max-width: 1023px) {
+    .image-placeholder-{{ section.id }} {
+      --bs-aspect-ratio: {{ 1 | divided_by: desktop_first_ratio | times: 100 }}%;
+    }
+  }
+  @media screen and (min-width: 1024px) {
+    .image-placeholder-{{ section.id }} figure {
+      position: relative;
+    }
+  }
+{% endstyle %}
+
+<div class="container-fits-viewport responsive row g-0 as-location-target" data-color='light'>
+  <div class="col-lg position-relative overflow-hidden">
+    {% if section.settings.title != blank %}
+      <div class="position-absolute font-size-calc d-none d-lg-block" style="z-index: 2;">
+        {% render 'product-special-title', title: section.settings.title, color: dark%}
+      </div>
+    {% endif %}
+    {% if section.settings.mobile_image != blank or section.settings.desktop_image != blank %}
+      <div class="ratio image-placeholder-{{section.id}} w-100 h-100">
+        <figure class="mb-0">
+          <picture>
+            <source 
+              media="(max-width: 576px)"
+              sizes="100vw"
+              srcset="{{ section.settings.mobile_image | img_url: '1242x' }} 1242w,
+                      {{ section.settings.mobile_image | img_url: '828x' }} 828w,
+                      {{ section.settings.mobile_image | img_url: '414x' }} 414w"
+            >
+            </source>
+            <img 
+              class="position-lg-absolute w-100 h-100 object-fit-cover"
+              sizes="(max-width: 1023px) 100vw, calc(100vw - 28rem)"
+              srcset="{{ section.settings.desktop_image | img_url: '576' }} 576w,
+                      {{ section.settings.desktop_image | img_url: '892x' }} 892w,
+                      {{ section.settings.desktop_image | img_url: '1292x' }} 1292w,
+                      {{ section.settings.desktop_image | img_url: '1592x' }} 1592w,
+                      {{ section.settings.desktop_image | img_url: '1892x' }} 1892w,
+                      {{ section.settings.desktop_image | img_url: '2192x' }} 2192w,
+                      {{ section.settings.desktop_image | img_url: '2492x' }} 2492w,
+                      {{ section.settings.desktop_image | img_url: '2792x' }} 2792w,
+                      {{ section.settings.desktop_image | img_url: '3092x' }} 3092w,
+                      {{ section.settings.desktop_image | img_url: '3392x' }} 3392w"
+              src="{{ section.settings.desktop_image | img_url: '1472x' }}"
+              alt="{{ section.settings.desktop_image.alt }}"
+            />
+          </picture>
+        </figure>
+      </div>
+    {% endif %}
+  </div>
+  <discount-event data-login-url="{{ routes.account_login_url }}" {% if customer %}data-login="1"{% endif %} class="col-lg-auto w-lg-fixed px-4 pt-1 pb-6 py-lg-0 position-relative">
+    <div class="container-fits-viewport responsive row">
+      <div class="col align-self-end py-lg-7">
+        {% if section.settings.pages or section.settings.subline %}
+          <div class="row gx-2">
+            <div class="col-4 col-md-6 col-lg-4">{{ section.settings.pages }}</div>
+            <div class="col-8 col-md-6 col-lg-8">{{ section.settings.subline }}</div>
+          </div>
+        {% endif %}
+        <div class="row gy-0 gx-0 gx-md-2 gx-lg-0 as-default-content {% if customer %}d-none{% endif %}">
+          {% if section.settings.heading != blank %}
+            <div class="col-12 col-md-6 col-lg-12">
+              <h2 class="mt-5 mt-lg-6 mb-0 fs-h1">{{ section.settings.heading }}</h2>
+            </div>
+          {% endif %}
+          {% if section.settings.lead_paragraph != blank or section.settings.login_button != blank %}
+            <div class="col-12 col-md-6 col-lg-12">
+              {% if section.settings.lead_paragraph != blank %}
+                <div class="mt-5">
+                  {{ section.settings.lead_paragraph | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="link-dark text-decoration-underline"' }}
+                </div>
+              {% endif %}
+              {% if section.settings.login_button != blank %}
+                <button class="btn btn-primary mt-6 mt-lg-5 as-login">{{ section.settings.login_button }}</button>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+        <div class="row gy-0 gx-0 gx-md-2 gx-lg-0 as-login-content {% unless customer %}d-none{% endunless %}">
+          {% if section.settings.submit_heading != blank %}
+            <div class="col-12 col-md-6 col-lg-12">
+              <h2 class="mt-5 mt-lg-6 mb-0 fs-h1">{{ section.settings.submit_heading }}</h2>
+            </div>
+          {% endif %}
+          {% if section.settings.submit_lead_paragraph != blank or section.settings.login_button != blank %}
+            <div class="col-12 col-md-6 col-lg-12">
+              {% if section.settings.submit_lead_paragraph != blank %}
+                <div class="mt-5">
+                  {{ section.settings.submit_lead_paragraph | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="link-dark text-decoration-underline"' }}
+                </div>
+              {% endif %}
+              {% if section.settings.enter_text != blank %}
+                <div class="mt-6 border-top dot-border-dark">
+                  {{ section.settings.enter_text | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="link-dark text-decoration-underline"' }}
+                </div>
+              {% endif %}
+              <form class="mt-5 as-verify-form " method="post" action="{{ section.settings.api }}" data-source="{{ shop.permanent_domain }}" data-subscribe-action="{{ settings.subscribe_api }}" data-subscribe-tags="{{settings.store_tag}},{{ section.settings.subscribe_tag}}" novalidate="true">
+                {% if customer %}
+                <input class="as-user-email" type="hidden" value="{{ customer.email }}">
+                {% endif %}
+                <google-recaptcha data-sitekey="{{ settings.google_recaptcha_sitekey }}" data-container-class="as-verify-code-recaptcha"></google-recaptcha>
+                <div>
+                  <div class="form-floating overflow-hidden rounded-pill">
+                    <input type="text" class="as-form-input form-control border-0 d-flex align-items-center justify-content-start" name="uniq_no" required placeholder="{{ section.settings.order_number }}">
+                    <label>{{ section.settings.order_number }}</label>
+                  </div>
+                  <div class="text-start mt-3 text-danger invalid-feedback as-input-error-tips" style="padding: 0 1rem">
+                    {{ section.settings.order_number }} {{ 'general.error_message.format_error' | t }}
+                  </div>
+                </div>
+                {% if section.settings.note != blank %}
+                  <div class="mt-3 fs-small font-mono" style="padding: 0 1rem">
+                    {{ section.settings.note | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="link-dark text-decoration-underline"' }}
+                  </div>
+                {% endif %}
+                {% if section.settings.login_button != blank %}
+                  <button type="submit" class="as-btn btn btn-primary mt-6">{{ section.settings.submit_button }}</button>
+                {% endif %}
+                <div style="padding: 0 1rem" class="as-form-error-tips fs-small mt-3 text-danger invalid-feedback">
+                  <span class="as-default-error">{{ section.settings.error_text | replace: '<p', '<p class="mb-0"' }}</span>
+                  <span class="as-used-error d-none">{{ section.settings.code_used_text | replace: '<p', '<p class="mb-0"' }}</span>
+                </div>
+              </form>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="row gy-0 gx-0 gx-md-2 gx-lg-0 as-success-content d-none">
+          {% if section.settings.success_text != blank %}
+            <div class="col-12 col-md-6 col-lg-12">
+              <h2 class="mt-5 mt-lg-6 mb-0 fs-h1">{{ section.settings.success_text }}</h2>
+            </div>
+          {% endif %}
+          <div class="col-12 col-md-6 col-lg-12">
+            {% if section.settings.show_code_text != blank %}
+              <div class="mt-6 border-top dot-border-dark">
+                {{ section.settings.show_code_text | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="link-dark text-decoration-underline"' }}
+              </div>
+            {% endif %}
+            
+            <div class="form-floating overflow-hidden rounded-pill mt-5 position-relative">
+              <input id="discount-code" type="text" value="12345" class="form-control bg-white border-0 d-flex align-items-center justify-content-start" readonly>
+              <button data-copy="{{ section.settings.copy_text }}" data-copied="{{ section.settings.copied }}" data-clipboard-target="#discount-code" class="as-copy-btn position-absolute top-0 bottom-0 copy-text p-0 border-0 bg-transparent text-primary" style="right: 1rem;">
+                {{ section.settings.copy_text }}
+              </button>
+            </div>
+            <div style="padding: 0 1rem" class="fs-small font-mono mt-3 as-shop-now-wrap" data-checkout-url="{{ routes.cart_url }}/{{ section.settings.product.selected_or_first_available_variant.id }}:1">
+              {{ section.settings.shop_now_text }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </discount-event>
+</div>
+
+{% schema %}
+{
+  "name": "Discount event",
+  "tag": "section",
+  "class": "discount-event position-relative overflow-hidden bg-light",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "pages",
+      "label": "Pages"
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Subline"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "lead_paragraph",
+      "label": "Lead paragraph"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image",
+      "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+    },
+    {
+      "type": "text",
+      "id": "login_button",
+      "label": "Login button",
+      "default": "Log in"
+    },
+    {
+      "type": "header",
+      "content": "SUBMIT SECTION"
+    },
+    {
+      "type": "text",
+      "id": "api",
+      "label": "Api",
+      "default": "https://cmpapi.bbxlk.cc/v1/nft/order/verify"
+    },
+    {
+      "type": "text",
+      "id": "submit_heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "submit_lead_paragraph",
+      "label": "Lead paragraph"
+    },
+    {
+      "type": "richtext",
+      "id": "enter_text",
+      "label": "Enter text"
+    },
+    {
+      "type": "text",
+      "id": "order_number",
+      "label": "Placeholder",
+      "default": "ORDER NUMBER"
+    },
+    {
+      "type": "richtext",
+      "id": "note",
+      "label": "Note"
+    },
+    {
+      "type": "text",
+      "id": "submit_button",
+      "label": "Submit button",
+      "default": "Submit"
+    },
+    {
+      "type": "richtext",
+      "id": "error_text",
+      "label": "Verify error text",
+      "default": "<p>INCORRECT INFORMATION.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "code_used_text",
+      "label": "Code used text",
+      "default": "<p>Your discount code has been used.</p>"
+    },
+    {
+      "type": "text",
+      "id": "success_text",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "show_code_text",
+      "label": "Show code text",
+      "default": "<p>Here is your code.</p>"
+    },
+    {
+      "type": "text",
+      "id": "copy_text",
+      "label": "Copy text",
+      "default": "COPY"
+    },
+    {
+      "type": "text",
+      "id": "copied",
+      "label": "Copied",
+      "default": "COPIED"
+    },
+    {
+      "type": "html",
+      "id": "shop_now_text",
+      "label": "SHOP NOW text",
+      "default": "<a href=\"\" class=\"as-shop-now border-bottom dot-border-dark\">SHOP NOW</a>"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_tag",
+      "label": "Subscribe tag",
+      "default": "ear stick promo"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    }
+  ]
+}
+{% endschema %}

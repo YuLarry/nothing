@@ -1,0 +1,36 @@
+<script>
+  {%- if customer -%}
+    window.userFirstName = '{{ customer.first_name }}';
+    window.userLastName = '{{ customer.last_name }}';
+    window.userEmail = '{{ customer.email }}';
+    window.userName = '{{ customer.name }}';
+    window.crm_id = {{ customer.id }}
+  {%- endif -%}
+</script>
+
+{%- if template.name == 'product' -%}
+<script>
+  window.variantsData = {% if product.variants.size > 0 %}{
+    "default_variant_id": {{ product.selected_or_first_available_variant.id | json }},
+    {% for variant in product.variants %}
+    {%- assign item_name = product.title -%}
+    {%- unless product.has_only_default_variant -%}
+      {%- assign item_name = item_name | append: ' - ' | append: variant.title -%}
+    {%- endunless -%}
+    "{{ variant.id }}": {
+      "item_id": {{ variant.sku | json }},
+      "item_name": {{ item_name | json }},
+      "currency": {{ shop.currency | json }},
+      "item_variant": {{ variant.title | json }},
+      "price": {{ variant.price | divided_by: 100 }},
+      "quantity": 1
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  }{% else %}{}{% endif %};
+</script>
+{%- endif -%}
+
+<script>
+  window.originalCartData = {{ cart | json }};
+  window.currency = {{ shop.currency | json }};
+</script>

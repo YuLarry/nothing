@@ -1,0 +1,83 @@
+
+<div class="d-none d-sm-block">
+  {% assign title = 'general.account.title' | t %}
+  {% render 'page-title', title: title  %}
+</div>
+
+<ul class="d-none d-sm-block position-relative list-unstyled mb-0">
+  <li class="nav-item">
+    <a class="{% if request.page_type contains 'customers/account' or request.page_type contains 'customers/order' %}active{% endif %} d-flex nav-before-arrow p-0 border-0 bg-transparent text-start as-account-tabs" 
+      href="{{ routes.account_url }}">{{ 'customer.sidebar.my_orders' | t }}</a>
+  </li>
+  <li class="nav-item">
+    <a class="d-flex nav-before-arrow p-0 border-0 bg-transparent text-start as-account-tabs" data-router="#edit-profile"
+      href="{{ routes.account_url }}{% if isheader %}/{% endif %}#edit-profile">{{ 'customer.sidebar.edit_profile' | t }}</a>
+  </li>
+  <li class="nav-item">
+    <a class="{% if request.page_type contains 'customers/addresses' %}active{% endif %} d-flex nav-before-arrow p-0 border-0 bg-transparent text-start as-account-tab" 
+      href="{{ routes.account_addresses_url }}">{{ 'customer.sidebar.addresses' | t }}</a>
+  </li>
+  {%- if settings.show_referral_page -%}
+  <li class="nav-item as-referral-tab">
+    <a class="d-flex nav-before-arrow p-0 border-0 bg-transparent text-start as-account-tabs" data-router="#referral-page"
+      href="{{ routes.account_url }}{% if isheader %}/{% endif %}#referral-page">{{ settings.sidebar_referral_page_title }}</a>
+  </li>
+  {%- endif -%}
+  {%- if settings.show_user_portal -%}
+  <li class="nav-item">
+    <a class=" d-flex nav-before-arrow p-0 border-0 bg-transparent text-start as-account-tab" 
+      href="{{ routes.root_url }}pages/work-order">{{ 'service_portal.user_portal.sidebar' | t }}</a>
+  </li>
+  {%- endif -%}
+  <li class="nav-item">
+    <a data-href="{{ routes.account_logout_url | prepend: request.origin }}" class="as-logout-btn cursor-pointer d-flex nav-before-arrow p-0 border-0 bg-transparent text-start as-account-tabs" 
+    >{{ 'customer.sidebar.logout' | t }}</a>
+  </li>
+</ul>
+
+<div class="position-relative customer-select as-customer-select d-sm-none d-block bg-light mb-5 z-index-2">
+  <div class="border border-dark flex-center customer-selected cursor-pointer customer-select-height">
+    <span class="as-customer-selected">{{ 'general.account.title' | t }}</span>
+    <div class="end-0 pe-4 position-absolute">
+      <div class=" customer-select-arrow flex-center" >
+        {% render 'select-arrow' %}
+      </div>
+    </div>
+  </div>
+  <ol class="position-absolute list-unstyled w-100 border-top-0 border border-dark customer-select-lists overflow-hidden mb-0 bg-light">
+    <li class="border-dark cursor-pointer flex-center">
+      <a class="{% if request.page_type contains 'customers/account' or request.page_type contains 'customers/order' %}active{% endif %} as-account-tabs as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.account_url }}">
+        {{ 'customer.sidebar.my_orders' | t }}
+      </a>
+    </li>
+    <li class="border-dark cursor-pointer flex-center">
+      <a data-router="#edit-profile" class="as-account-tabs as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.account_url }}#edit-profile">
+        {{ 'customer.sidebar.edit_profile' | t }}
+      </a>
+    </li>
+    <li class="border-dark cursor-pointer flex-center">
+      <a class="{% if request.page_type contains 'customers/addresses' %}active{% endif %} as-account-tabs as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.account_addresses_url }}">
+        {{ 'customer.sidebar.addresses' | t }}
+      </a>
+    </li>
+    {%- if settings.show_referral_page -%}
+      <li class="border-dark cursor-pointer flex-center">
+        <a data-router="#referral-page" class="as-account-tabs as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.account_url }}#referral-page">
+          {{ settings.sidebar_referral_page_title }}
+        </a>
+      </li>
+    {%- endif -%}
+    {%- if settings.show_user_portal -%}
+    <li class="border-dark cursor-pointer flex-center">
+      <a class="{% if template.suffix contains 'user-portal' %}active{% endif %} as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.root_url }}pages/work-order">
+        {{ 'service_portal.user_portal.sidebar' | t }}
+      </a>
+    </li>
+    {%- endif -%}
+    <li class="border-dark cursor-pointer flex-center">
+      <a data-href="{{ routes.account_logout_url | prepend: request.origin }}" class="as-logout-btn as-account-tabs as-customer-select-list customer-select-height w-100 text-center">
+        {{ 'customer.sidebar.logout' | t }}
+      </a>
+    </li>
+  </ol>
+</div>

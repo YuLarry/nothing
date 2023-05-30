@@ -1,0 +1,119 @@
+<script>
+  window.p_img = new Array()
+    {% assign option = 'white' %}
+    {% if option == 'white' %}window.p_img['{{ option }}'] = ['//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0059_BA_BEL_030_1001.png?v=1668051319', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0058_BA_BEL_030_1002.png?v=1668051319', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0057_BA_BEL_030_1003.png?v=1668051319', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0056_BA_BEL_030_1004.png?v=1668051319', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0055_BA_BEL_030_1005.png?v=1668051319', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0054_BA_BEL_030_1006.png?v=1668051319', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0053_BA_BEL_030_1007.png?v=1668051320', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0052_BA_BEL_030_1008.png?v=1668051319', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0051_BA_BEL_030_1009.png?v=1668051319', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0050_BA_BEL_030_1010.png?v=1668051319', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0049_BA_BEL_030_1011.png?v=1668051114', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0048_BA_BEL_030_1012.png?v=1668051114', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0047_BA_BEL_030_1013.png?v=1668051114', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0046_BA_BEL_030_1014.png?v=1668051114', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0045_BA_BEL_030_1015.png?v=1668051113', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0044_BA_BEL_030_1016.png?v=1668051113', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0043_BA_BEL_030_1017.png?v=1668051114', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0042_BA_BEL_030_1018.png?v=1668051114', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0041_BA_BEL_030_1019.png?v=1668051114', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0040_BA_BEL_030_1020.png?v=1668051114', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0039_BA_BEL_030_1021.png?v=1668050841', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0038_BA_BEL_030_1022.png?v=1668050841', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0037_BA_BEL_030_1023.png?v=1668050841', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0036_BA_BEL_030_1024.png?v=1668050841', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0035_BA_BEL_030_1025.png?v=1668050841', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0034_BA_BEL_030_1026.png?v=1668050841', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0033_BA_BEL_030_1027.png?v=1668050840', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0032_BA_BEL_030_1028.png?v=1668050840', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0031_BA_BEL_030_1029.png?v=1668050840', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0030_BA_BEL_030_1030.png?v=1668050840', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0029_BA_BEL_030_1031.png?v=1668050648', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0028_BA_BEL_030_1032.png?v=1668050648', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0027_BA_BEL_030_1033.png?v=1668050648', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0026_BA_BEL_030_1034.png?v=1668050648', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0025_BA_BEL_030_1035.png?v=1668050648', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0024_BA_BEL_030_1036.png?v=1668050647', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0023_BA_BEL_030_1037.png?v=1668050648', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0022_BA_BEL_030_1038.png?v=1668050648', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0021_BA_BEL_030_1039.png?v=1668050648', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0020_BA_BEL_030_1040.png?v=1668050648', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0019_BA_BEL_030_1041.png?v=1668050487', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0018_BA_BEL_030_1042.png?v=1668050487', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0017_BA_BEL_030_1043.png?v=1668050487', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0016_BA_BEL_030_1044.png?v=1668050487', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0015_BA_BEL_030_1045.png?v=1668050487', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0014_BA_BEL_030_1046.png?v=1668050487', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0013_BA_BEL_030_1047.png?v=1668050487', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0012_BA_BEL_030_1048.png?v=1668050487', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0011_BA_BEL_030_1049.png?v=1668050487', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0010_BA_BEL_030_1050.png?v=1668050487', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0009_BA_BEL_030_1051.png?v=1668050200', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0008_BA_BEL_030_1052.png?v=1668050200', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0007_BA_BEL_030_1053.png?v=1668050200', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0006_BA_BEL_030_1054.png?v=1668050200', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0005_BA_BEL_030_1055.png?v=1668050201', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0004_BA_BEL_030_1056.png?v=1668050200', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0003_BA_BEL_030_1057.png?v=1668050200', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0002_BA_BEL_030_1058.png?v=1668050200', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0001_BA_BEL_030_1059.png?v=1668050201', '//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0000_BA_BEL_030_1060.png?v=1668050200']{% endif %}
+</script>
+<div class="product-wrap as-product-rotate as-ear as-location-target main-product-phone1"
+  data-color="{{ option }}">
+  <div class="modal fade as-rotate-modal" id="rotate-modal">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content bg-dark text-white">
+        <a data-bs-dismiss="modal" aria-label="Close" href="javascript:void(0);" class="text-reset position-absolute top-0 end-0 me-4 mt-4 z-index-1 font-ndot55">{{ 'cart.general.close' | t }}</a>
+        <div class="ratio product-media-img">
+          <img loading="lazy" class="main-img w-100 h-100 as-img-mob object-fit-contain cursor-grab"
+              src="//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0059_BA_BEL_030_1001.png?v=1668051319" width="" height=""
+          alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-0">
+    <div class="col media-content">
+      <div class="container-fits-viewport sticky-top bg-dark d-flex">
+        <div class="position-lg-absolute h-100 w-100">
+          <div class="position-relative w-100 h-100 overflow-hidden">
+            {% if section.settings.title != blank %}
+              {%- liquid
+                if section.settings.show_dotted_font_on_mobile
+                  assign className = "d-block"
+                else
+                  assign className = "d-none"
+                endif
+              -%}
+              <div class="position-absolute z-index-1 {{ className }} d-lg-block font-size-calc">
+                {% render 'product-special-title', title: section.settings.title, color: 'white' %}
+              </div>
+            {% endif %}
+            <div class="ratio product-media-img">
+              <img loading="lazy" class="main-img w-100 h-100 as-img object-fit-contain cursor-grab"
+                  src="//cdn.shopify.com/s/files/1/0514/8554/0505/files/BA_ABR_360_02_0059_BA_BEL_030_1001.png?v=1668051319" width="" height=""
+                alt="">
+            </div>
+            <div class="position-absolute cursor-grab rotate-icon d-none d-lg-block text-white" style="z-index: -1;">
+              <span class="font-ndot55 p-2"><</span><span>{{ "products.phone1.spin360" | t }}</span><span class="font-ndot55 p-2">></span>
+            </div>
+            <a style="outline: 0;" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#rotate-modal" class="link-white position-absolute rotate-icon z-index-1 d-block d-lg-none">
+              <span class="font-ndot55 p-2"><</span><span>{{ "products.phone1.spin360" | t }}</span><span class="font-ndot55 p-2">></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col col-auto purchase-content px-4 pt-1 pt-lg-0 pb-6 pb-md-8 pb-lg-0 d-flex flex-column justify-content-end">
+      <div class="text-dark w-100 pb-2 pb-sm-0">
+        {% render 'product-step-title', step_index: section.settings.pages , step_title: section.settings.subline %}
+        <h1 class="mb-0 fs-h1">{{ section.settings.heading }}</h1>
+        {% if section.settings.lead_graph != blank %}
+        <div class="mt-5 mb-6">{{ section.settings.lead_graph | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="text-dark text-decoration-underline"' }}</div>
+        {% endif %}
+        
+        <div class="np-4 pb-0 px-0 row w-100 d-none">
+          <div class="col-4 radio-btn position-relative">
+            <input type="radio"
+              class="as-step-option radio-btn-input form-check-input visually-hidden"
+              name="option-{{ product.id }}"
+              value="{{ option }}" 
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "360-banner",
+  "class": "main-product as-ear1-purchase-area bg-light font-base position-relative overflow-hidden",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "ear(stick)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dotted_font_on_mobile",
+      "label": "Show dotted font on mobile",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "pages",
+      "label": "pages",
+      "default": "00."
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "subline",
+      "default": "subline"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "lead_graph",
+      "label": "Lead paragraph",
+      "default": "<p>Lead paragraph</p>"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,32 @@
+{%- comment -%}https://yoast.com/which-pages-noindex-or-nofollow/{%- endcomment -%}
+{% case template.name %}
+  {% when 'page' %}
+  {% assign current_url = page.url %}
+  {% when 'blog' %}
+  {% assign current_url = blog.url %}
+  {% when 'article' %}
+  {% assign current_url = article.url %}
+  {% when 'collection' %}
+  {% assign current_url = collection.url %}
+  {% when 'product' %}
+  {% assign current_url = product.url %}
+{% endcase %}
+{%- for link in linklists.noindex.links -%}
+  {% if link.url == current_url %}
+    <meta name="robots" content="noindex">
+  {% endif %}
+  {%- if link.links != blank -%}
+    {%- for child_link in link.links -%}
+      {% if child_link.url == current_url %}
+      <meta name="robots" content="noindex">
+      {% endif %}
+    {%- if child_link.links != blank -%}
+      {%- for grandchild_link in child_link.links -%}
+      {% if grandchild_link.url == current_url %}
+      <meta name="robots" content="noindex">
+      {% endif %}
+      {%- endfor -%}
+    {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{% endfor %}

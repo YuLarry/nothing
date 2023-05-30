@@ -1,0 +1,14 @@
+<div class="mt-4 mt-md-5">
+  {% if section.settings.drop_off_subline != blank %}
+  <p class="mb-0">{{ section.settings.drop_off_subline }}</p>
+  {% endif %}
+  <div class="px-lg-6">
+    <div class="mt-4">
+      <div class="form-floating overflow-hidden rounded-pill">
+        <input type="date" name="pickUpDate" class="form-control border-0 as-form-input" 
+          id="pickUpDate" placeholder="{{ section.settings.drop_off_label }}">
+        <label for="pickUpDate">{{ section.settings.drop_off_label }}</label>
+      </div>
+    </div>
+  </div>
+</div>

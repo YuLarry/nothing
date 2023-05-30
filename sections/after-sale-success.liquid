@@ -1,0 +1,108 @@
+{% unless customer %}
+  {% unless request.design_mode %}
+    <input type="hidden" class="as-unlogin" value="{{ routes.account_login_url }}?return_to={{canonical_url}}" />
+  {% endunless %}
+{% endunless %}
+<div class="container-core">
+  <div class="fst-italic mb-5 mb-md-6 mb-lg-7">{{ 'service_portal.general.support_centre' | t }}</div>
+  <p class="fs-h1 mb-0">{{ section.settings.title  }}</p>
+  <div class="mt-5 mt-md-6 mt-lg-8 dot-border-dark border-bottom">
+    <div class="row">
+      <div class="pb-1 pb-lg-3 col-md-8">
+        {% render 'richtext', richtext: section.settings.des %}
+      </div>
+    </div>
+  </div>
+  <div class="mt-5 mt-md-6 mt-lg-8">
+    {% if section.settings.subline != blank %}
+    <h3 class="fs-h2 mb-5 mb-sm-6">{{ section.settings.subline }}</h3>
+    {% endif %}
+    <div class="dot-border-dark border-top">
+      <div class="row">
+        <div class="pt-1 pt-lg-3 col-md-8">
+          {% render 'richtext', richtext: section.settings.title_des %}
+        </div>
+      </div>
+    </div>
+    <div class="mt-5">
+      <div class="">{{ section.settings.number }}</div>
+      <div class="as-order-number"></div>
+    </div>
+    <div class="px-lg-6">
+      <a class="btn btn-lg btn-primary mt-6" {% render 'link', link: section.settings.btn_link %} href="{{ section.settings.btn_link }}">{{ section.settings.btn }}</a>
+      <button class="mb-0 mt-3 text-center text-primary text-center d-block as-sale-view-detail border-0 mx-auto bg-transparent"
+        data-action="{{ settings.queryWorkOrderDetail }}">{{ section.settings.view_details }}</button>
+      <div class="text-start mt-3 px-4 text-danger invalid-feedback as-sale-detail-error">
+        {{ 'service_portal.error.other_error' | t }}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Success",
+  "tag": "section",
+  "class": "mt-7 mt-sm-9 mb-7 mb-sm-9 as-submit-success d-none",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Headline",
+      "default": "Submit Successfully! "
+    },
+    {
+      "type": "richtext",
+      "id": "des",
+      "label": "Description",
+      "default": "<p>We'll take care of the rest.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Success"
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Subline",
+      "default": "Success!"
+    },
+    {
+      "type": "text",
+      "id": "title_des",
+      "label": "description",
+      "default": "<p>We have received your request. We will email you soon with more information.</p>"
+    },
+    {
+      "type": "text",
+      "id": "number",
+      "label": "Work Order Number",
+      "default": "Work Order Number:"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "btn",
+      "label": "Button",
+      "default": "Back to Support Centre"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "view_details",
+      "label": "View details",
+      "default": "( View details )"
+    }
+  ]
+}
+{% endschema %}

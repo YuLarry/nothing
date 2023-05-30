@@ -1,0 +1,278 @@
+<style>
+  .compare-container .price {
+    font-size: 0.75rem !important;
+  }
+  .compare-container .dot-border-white{
+    border-width: 1.5px !important;
+  }
+</style>
+<div id="{{ section.settings.id_for_hash }}" class="compare-container position-relative w-100 h-100 pb-8 p-4">
+  <div class="row m-0 d-flex justify-content-lg-between">
+    <div class="col-lg-6 col-12 p-0">
+      <div class="row m-0 compare-min-height">
+        <div class="col-12 col-md-4 p-0">{{ section.settings.title }}
+        </div>
+        <div class="col-6 col-md-4 p-0 item-p-r pb-4 pb-lg-6">
+          <p class="mb-0">{{ section.settings.product_a_name }}</p>
+          {% if section.settings.product_a_image != blank %}
+          <div class="pe-1 pe-md-0">
+            <img class="w-100 object-fit-cover pe-1 pe-md-0"
+            width="auto"
+            height="auto"
+            sizes="calc(100vw * 33.33%)"
+            srcset="{{ section.settings.product_a_image | img_url: '414x' }} 414w,
+                    {{ section.settings.product_a_image | img_url: '576' }} 576w,
+                    {{ section.settings.product_a_image | img_url: '892x' }} 892w,
+                    {{ section.settings.product_a_image | img_url: '1292x' }} 1292w,
+                    {{ section.settings.product_a_image | img_url: '1592x' }} 1592w,
+                    {{ section.settings.product_a_image | img_url: '1892x' }} 1892w,
+                    {{ section.settings.product_a_image | img_url: '2192x' }} 2192w,
+                    {{ section.settings.product_a_image | img_url: '2492x' }} 2492w,
+                    {{ section.settings.product_a_image | img_url: '2792x' }} 2792w,
+                    {{ section.settings.product_a_image | img_url: '3092x' }} 3092w,
+                    {{ section.settings.product_a_image | img_url: '3392x' }} 3392w"
+                src="{{ section.settings.product_a_image | img_url: '1472x' }}"
+            alt="{{ section.settings.product_a_image.alt  | escape }}">
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-6 col-md-4 p-0 item-p-l pb-4 pb-lg-6">
+          <p class="mb-0">{{ section.settings.product_b_name }}</p>
+          {% if section.settings.product_b_image != blank %}
+          <div class="pe-1 pe-md-0">
+            <img class="w-100 object-fit-cover"
+            width="auto"
+            height="auto"
+            sizes="calc(100vw * 33.33%)"
+            srcset="{{ section.settings.product_b_image | img_url: '414x' }} 414w,
+                    {{ section.settings.product_b_image | img_url: '576' }} 576w,
+                    {{ section.settings.product_b_image | img_url: '892x' }} 892w,
+                    {{ section.settings.product_b_image | img_url: '1292x' }} 1292w,
+                    {{ section.settings.product_b_image | img_url: '1592x' }} 1592w,
+                    {{ section.settings.product_b_image | img_url: '1892x' }} 1892w,
+                    {{ section.settings.product_b_image | img_url: '2192x' }} 2192w,
+                    {{ section.settings.product_b_image | img_url: '2492x' }} 2492w,
+                    {{ section.settings.product_b_image | img_url: '2792x' }} 2792w,
+                    {{ section.settings.product_b_image | img_url: '3092x' }} 3092w,
+                    {{ section.settings.product_b_image | img_url: '3392x' }} 3392w"
+                src="{{ section.settings.product_b_image | img_url: '1472x' }}"
+            alt="{{ section.settings.product_b_image.alt | escape }}">
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="compare-area">
+        {% for block in section.blocks %}
+          {% if block.type == "feature" %}
+            <div class="row m-0 border-bottom dot-border-white py-3 {% if forloop.first %} border-top {% endif %}">
+              <div class="col-md-4 col-12 p-0">{{ block.settings.label }}
+              </div>
+              <div class="col-md-4 col-6 p-0 item-p-r">{{block.settings.product_a_info | replace: '<p', '<p class="mb-0"' | replace: '</p>' ,'</p>'}}
+              </div>
+              <div class="col-md-4 col-6 p-0 item-p-l">{{block.settings.product_b_info | replace: '<p', '<p class="mb-0"' | replace: '</p>' ,'</p>'}}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+        {% for block in section.blocks %}
+          {% if block.type == "price" %}
+            <div class="row m-0 border-bottom dot-border-white py-3">
+              <div class="col-md-4 col-12 p-0">{{ block.settings.label }}
+              </div>
+              <div class="col-md-4 col-6 p-0 item-p-r">
+                <div class="d-flex flex-wrap align-items-center">
+                  {% if block.settings.show_price and block.settings.product_a != blank %}
+                    {%- liquid
+                      assign target = block.settings.product_a
+                      assign price = target.price | default: 1999
+                      assign money_price = price | money
+                    -%}
+                    <span class="price-item price-item--regular pe-2">
+                      {{ money_price }}
+                    </span>
+                  {% endif %}
+                  <a href="{{ block.settings.product_a_link }}" class="text-white">{{ block.settings.button_a_label }}
+                  </a>
+                </div>
+              </div>
+              <div class="col-md-4 col-6 p-0 item-p-l">
+                <div class="d-flex flex-wrap align-items-center">
+                  {% if block.settings.show_price  and block.settings.product_b != blank %}
+                    {%- liquid
+                      assign target = block.settings.product_b
+                      assign price = target.price | default: 1999
+                      assign money_price = price | money
+                    -%}
+                    <span class="price-item price-item--regular pe-2">
+                      {{ money_price }}
+                    </span>
+                  {% endif %}
+                  <a href="{{ block.settings.product_b_link }}" class="text-white">{{ block.settings.button_b_label }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-lg-5 col-12 p-0 d-flex {{ section.settings.image_position_pc }} justify-content-md-center">
+      {%- assign img = section.settings.desktop_image -%}
+      {%- assign img_mobile = section.settings.mobile_image -%}
+      <picture class="d-block pt-7 pt-lg-0">
+        {% if img_mobile %}
+          <source media="(max-width: 992px)" 
+            sizes="(max-width: 992px) 100vw, 992px" 
+            srcset="{{ img_mobile | img_url: 'master' }}" >
+        {% endif %}
+        <img loading="lazy" class="img-fluid"
+          sizes="(max-width: 2160px) 100vw, 2160px"
+          srcset="{{ img | img_url: 'master' }}" 
+          src="{{ img | img_url: 'master' }}"
+          width="{{ img.width | divided_by: 2 }}"
+          height="{{ img.height | divided_by: 2 }}"
+          alt="{{ img.alt }}">
+      </picture>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "compare",
+    "class": "pdp position-relative overflow-hidden pdp-compare-section",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "id_for_hash",
+        "label": "ID for hash",
+        "default": "compare"
+      },
+      {
+        "type": "text",
+        "label": "Title",
+        "id": "title",
+        "default": "Comparison."
+      },
+      {
+        "type": "text",
+        "label": "Product A name",
+        "id": "product_a_name"
+      },
+      {
+        "type": "text",
+        "label": "Product B name",
+        "id": "product_b_name"
+      },
+      {
+        "type": "image_picker",
+        "id": "product_a_image",
+        "label": "Product A image"
+      }, 
+      {
+        "type": "image_picker",
+        "id": "product_b_image",
+        "label": "Product B image"
+      },
+      {
+        "type": "image_picker",
+        "id": "desktop_image",
+        "label": "Desktop image"
+      }, 
+      {
+        "type": "image_picker",
+        "id": "mobile_image",
+        "label": "Mobile image"
+      },
+      {
+        "type": "select",
+        "id": "image_position_pc",
+        "label": "Image position for desktop",
+        "options": [
+          {
+            "value": "align-items-center",
+            "label": "Center"
+          },
+          {
+            "value": "align-items-end",
+            "label": "Botom"
+          }
+        ],
+        "default": "align-items-end"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Feature",
+        "type": "feature",
+        "settings": [
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Label"
+          }, {
+            "type": "richtext",
+            "id": "product_a_info",
+            "label": "Product A info"
+          }, {
+            "type": "richtext",
+            "id": "product_b_info",
+            "label": "Product B info"
+          }
+        ]
+      }, {
+        "name": "Price",
+        "type": "price",
+        "limit":1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Label"
+          },
+          {
+            "type": "checkbox",
+            "label": "Show price",
+            "default": true,
+            "id": "show_price"
+          },
+          {
+            "type": "product",
+            "label": "Product A",
+            "id": "product_a"
+          },
+          {
+            "type": "text",
+            "id": "button_a_label",
+            "label": "Button A label",
+            "default": "SHOP NOW"
+          }, {
+            "type": "url",
+            "id": "product_a_link",
+            "label": "Product A link"
+          }, {
+            "type": "product",
+            "label": "Product B",
+            "id": "product_b"
+          }, {
+            "type": "text",
+            "id": "button_b_label",
+            "label": "Button B label",
+            "default": "SHOP NOW"
+          }, {
+            "type": "url",
+            "id": "product_b_link",
+            "label": "Product B link"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "compare",
+        "category": "Content"
+      }
+    ]
+  }
+{% endschema %}

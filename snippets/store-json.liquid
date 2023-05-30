@@ -1,0 +1,464 @@
+<script>
+  window.DEFAULTSTORE = {
+    "name": "International",
+    "language": "English / (AUD)",
+    "dtc": true,
+    "link": "https://intl.nothing.tech",
+    "code": "intl"
+  }
+  window.STOREJSON = {
+    "europe": [
+      {
+        "name": "Österreich",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://eu.nothing.tech",
+        "code": "at"
+      },
+      {
+        "name": "Belgique",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://eu.nothing.tech",
+        "code": "be"
+      },
+      {
+        "name": "България",
+        "language": "English / (BGN)",
+        "dtc": true,
+        "link": "https://bg.nothing.tech",
+        "code": "bg"
+      },
+      {
+        "name": "Hrvatska",
+        "language": "English / (HRK)",
+        "dtc": true,
+        "link": "https://hr.nothing.tech",
+        "code": "hr"
+      },
+      {
+        "name": "Česko",
+        "language": "English / (CZK)",
+        "dtc": true,
+        "link": "https://cz.nothing.tech",
+        "code": "cz"
+      },
+      {
+        "name": "Danmark",
+        "language": "English / (DKK)",
+        "dtc": true,
+        "link": "https://dk.nothing.tech",
+        "code": "dk"
+      },
+      {
+        "name": "Eesti",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://ee.nothing.tech",
+        "code": "ee"
+      },
+      {
+        "name": "Finland",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://fi.nothing.tech",
+        "code": "fi"
+      },
+      {
+        "name": "France",
+        "language": "Français / (EUR)",
+        "dtc": true,
+        "link": "https://fr.nothing.tech",
+        "code": "fr"
+      },
+      {
+        "name": "Deutschland",
+        "language": "Deutsch / (EUR)",
+        "dtc": true,
+        "link": "https://de.nothing.tech",
+        "code": "de"
+      },
+      {
+        "name": "Ελλάδα",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://gr.nothing.tech",
+        "code": "gr"
+      },
+      {
+        "name": "Magyarország",
+        "language": "English / (HUF)",
+        "dtc": true,
+        "link": "https://hu.nothing.tech",
+        "code": "hu"
+      },
+      {
+        "name": "Ireland",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://ie.nothing.tech",
+        "code": "ie"
+      },
+      {
+        "name": "Italia",
+        "language": "Italiano / (EUR)",
+        "dtc": true,
+        "link": "https://it.nothing.tech",
+        "code": "it"
+      },
+      {
+        "name": "Latvija",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://lv.nothing.tech",
+        "code": "lv"
+      },
+      {
+        "name": "Lietuva",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://lt.nothing.tech",
+        "code": "lt"
+      },
+      {
+        "name": "Luxembourg",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://eu.nothing.tech",
+        "code": "lu"
+      },
+      {
+        "name": "Malta",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://mt.nothing.tech",
+        "code": "mt"
+      },
+      {
+        "name": "Nederland",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://nl.nothing.tech",
+        "code": "nl"
+      },
+      {
+        "name": "Norge",
+        "language": "English / (NOK)",
+        "dtc": false,
+        "link": "https://no.nothing.tech",
+        "code": "no"
+      },
+      {
+        "name": "Polska",
+        "language": "English / (PLN)",
+        "dtc": true,
+        "link": "https://pl.nothing.tech",
+        "code": "pl"
+      },
+      {
+        "name": "Portugal",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://pt.nothing.tech",
+        "code": "pt"
+      },
+      {
+        "name": "Κύπρος Kıbrıs",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://cy.nothing.tech",
+        "code": "cy"
+      },
+      {
+        "name": "Romania",
+        "language": "English / (RON)",
+        "dtc": true,
+        "link": "https://ro.nothing.tech",
+        "code": "ro"
+      },
+      {
+        "name": "Slovensko",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://sk.nothing.tech",
+        "code": "sk"
+      },
+      {
+        "name": "Slovenija",
+        "language": "English / (EUR)",
+        "dtc": true,
+        "link": "https://si.nothing.tech",
+        "code": "si"
+      },
+      {
+        "name": "España",
+        "language": "Español / (EUR)",
+        "dtc": true,
+        "link": "https://es.nothing.tech",
+        "code": "es"
+      },
+      {
+        "name": "Sverige",
+        "language": "English / (SEK)",
+        "dtc": true,
+        "link": "https://se.nothing.tech",
+        "code": "se"
+      },
+      {
+        "name": "Suisse",
+        "language": "English / (CHF)",
+        "dtc": false,
+        "link": "https://ch.nothing.tech",
+        "code": "ch"
+      },
+      {
+        "name": "United Kingdom",
+        "language": "English / (GBP)",
+        "dtc": true,
+        "link": "https://nothing.tech",
+        "code": "gb"
+      }
+    ],
+    "north-america": [
+      {
+        "name": "Canada",
+        "language": "English / (CAD)",
+        "dtc": true,
+        "link": "https://ca-en.nothing.tech",
+        "code": "ca"
+      },
+      {
+        "name": "United States",
+        "language": "English / (USD)",
+        "dtc": true,
+        "link": "https://us.nothing.tech",
+        "code": "us"
+      }
+    ],
+    "asia-pacific": [
+      {
+        "name": "Australia",
+        "language": "English / (AUD)",
+        "dtc": true,
+        "link": "https://au.nothing.tech",
+        "code": "au" 
+      },
+      {
+        "name": "Hong Kong",
+        "language": "English / (HKD)",
+        "dtc": false,
+        "link": "https://hk.nothing.tech",
+        "code": "hk"
+      },
+      {
+        "name": "India",
+        "language": "English / (INR)",
+        "dtc": false,
+        "link": "https://in.nothing.tech",
+        "code": "in"
+      },
+      {
+        "name": "Indonesia",
+        "language": "English / (IDR)",
+        "dtc": false,
+        "link": "https://id.nothing.tech",
+        "code": "id"
+      },
+      {
+        "name": "日本",
+        "language": "日本語 / (JPY)",
+        "dtc": true,
+        "link": "https://jp.nothing.tech",
+        "code": "jp"
+      },
+      {
+        "name": "대한민국",
+        "language": "한국어 / (KRW)",
+        "dtc": true,
+        "link": "https://kr.nothing.tech",
+        "code": "kr"
+      },
+      {
+        "name": "Malaysia",
+        "language": "English / (MYR)",
+        "dtc": false,
+        "link": "https://my.nothing.tech",
+        "code": "my"
+      },
+      {
+        "name": "Philippines",
+        "language": "English / (PHP)",
+        "dtc": false,
+        "link": "https://ph.nothing.tech",
+        "code": "ph"
+      },
+      {
+        "name": "Singapore",
+        "language": "English / (SGD)",
+        "dtc": false,
+        "link": "https://sg.nothing.tech",
+        "code": "sg"
+      },
+      {
+        "name": "Taiwan",
+        "language": "繁體中文 / (NTD)",
+        "dtc": false,
+        "link": "https://tw.nothing.tech",
+        "code": "tw"
+      },
+      {
+        "name": "Thailand",
+        "language": "ภาษาไทย / (THB)",
+        "dtc": false,
+        "link": "https://th.nothing.tech",
+        "code": "th" 
+      },
+      {
+        "name": "Việt Nam",
+        "language": "English / (USD)",
+        "dtc": false,
+        "link": "https://intl.nothing.tech",
+        "code": "vn"
+      }
+    ],
+    "latin-america": [
+      {
+        "name": "Chile",
+        "language": "Español / (USD)",
+        "dtc": false,
+        "link": "https://cl.nothing.tech",
+        "code": "cl"
+      },
+      {
+        "name": "Colombia",
+        "language": "Español / (USD)",
+        "dtc": false,
+        "link": "https://co.nothing.tech",
+        "code": "co"
+      },
+      {
+        "name": "México",
+        "language": "Español / (MXN)",
+        "dtc": false,
+        "link": "https://mx.nothing.tech",
+        "code": "mx"
+      }
+    ],
+    "middle-east": [
+      {
+        "name": "مملكة البحرين",
+        "language": "العربية / (BHD)",
+        "dtc": false,
+        "link": "https://bh.nothing.tech",
+        "code": "bh"
+      },
+      {
+        "name": "Bahrain",
+        "language": "English / (BHD)",
+        "dtc": false,
+        "link": "https://bh.nothing.tech/en",
+        "code": "en_bh"
+      },
+      {
+        "name": "Israel",
+        "language": "English / (USD)",
+        "dtc": false,
+        "link": "https://il.nothing.tech",
+        "code": "il"
+      },
+      {
+        "name": "عُمان",
+        "language": "العربية / (OMR)",
+        "dtc": false,
+        "link": "https://om.nothing.tech",
+        "code": "om"
+      },
+      {
+        "name": "Oman",
+        "language": "English / (OMR)",
+        "dtc": false,
+        "link": "https://om.nothing.tech/en",
+        "code": "en_om"
+      },
+      {
+        "name": "العراق",
+        "language": "العربية / (IQD)",
+        "dtc": false,
+        "link": "https://iq.nothing.tech",
+        "code": "iq"
+      },
+      {
+        "name": "Iraq",
+        "language": "English / (IQD)",
+        "dtc": false,
+        "link": "https://iq.nothing.tech/en",
+        "code": "en_iq"
+      },
+      {
+        "name": "قطر",
+        "language": "العربية / (QAR)",
+        "dtc": false,
+        "link": "https://qa.nothing.tech",
+        "code": "qa"
+      },
+      {
+        "name": "Qatar",
+        "language": "English / (QAR)",
+        "dtc": false,
+        "link": "https://qa.nothing.tech/en",
+        "code": "en_qa"
+      },
+      {
+        "name": "الكويت",
+        "language": "العربية / (KWD)",
+        "dtc": false,
+        "link": "https://kw.nothing.tech",
+        "code": "kw"
+      },
+      {
+        "name": "Kuwait",
+        "language": "English / (KWD)",
+        "dtc": false,
+        "link": "https://kw.nothing.tech/en",
+        "code": "en_kw"
+      },
+      {
+        "name": "المملكة العربية السعودية",
+        "language": "العربية / (SAR)",
+        "dtc": false,
+        "link": "https://sa.nothing.tech",
+        "code": "sa"
+      },
+      {
+        "name": "SA",
+        "language": "English / (SAR)",
+        "dtc": false,
+        "link": "https://sa.nothing.tech/en",
+        "code": "en_sa"
+      },
+      {
+        "name": "الإمارات",
+        "language": "العربية / (AED)",
+        "dtc": false,
+        "link": "https://ae.nothing.tech",
+        "code": "ar_ae"
+      },
+      {
+        "name": "UAE",
+        "language": "English / (AED)",
+        "dtc": false,
+        "link": "https://ae.nothing.tech/en",
+        "code": "ae"
+      }
+    ],
+    "other-countries-and-regions": [
+      {
+        "name": "International",
+        "language": "English / (USD)",
+        "dtc": false,
+        "link": "https://intl.nothing.tech",
+        "code": "intl"
+      }
+    ]
+  }
+</script>

@@ -1,0 +1,15 @@
+<div data-api="{{ settings.referral_api }}" class="as-account-components as-referral-page-content col-sm-6 d-none" data-router="#referral-page">
+  <div class="h-100 font-base text-uppercase">
+    {% assign title = settings.referral_page_title %}
+    {% render 'page-title', title: title %}
+    <hr class="d-none d-md-block">
+    <div class="as-empty d-none">
+      {{ settings.no_referral_text }}
+    </div>
+    <div class="as-results d-none">
+      {{ settings.referral_text }}
+      <div>{{ settings.share_success_text }}</div>
+      <div>{{ settings.referral_success_text }}</div>
+    </div>
+  </div>
+</div>

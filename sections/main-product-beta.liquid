@@ -1,0 +1,217 @@
+{% liquid
+  assign currentAvailable = product.selected_or_first_available_variant.available
+  assign image = product.images[0]
+  assign ratio = image.aspect_ratio
+  assign mobile_image = section.settings.mobile_image | default: product.images[0]
+  assign mobile_ratio = mobile_image.aspect_ratio
+  
+  assign currentStore = request.host
+  assign diff_variant = false
+  if product.metafields.my_fields.display_different_variant != blank
+    assign diff_variant = true
+    assign diff_variant_data = product.metafields.my_fields.display_different_variant.value
+    assign current_store_variant_id = null
+    for data in diff_variant_data
+      for store in data.stores
+        if store == currentStore
+          assign current_store_variant_id = data.variant | plus: 0
+          break
+        endif
+      endfor
+    endfor
+  endif
+  
+  assign current_variant = product.selected_or_first_available_variant
+  if diff_variant
+    for variant in product.variants
+      if variant.id  == current_store_variant_id
+        assign current_variant = variant
+      endif
+    endfor
+  endif
+%}
+
+{% style %}
+  .richtext-with-normal-link a {
+    color: inherit;
+    text-decoration: underline;
+  }
+  .custom-img {
+    object-fit: cover;
+    object-position: center center;
+  }
+  @media screen and (min-width: 578px ) and (max-width: 1023px) {
+    .main-product .product-media-img {
+      --bs-aspect-ratio: {{ 1 | divided_by: ratio | times: 100 }}%;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    .main-product .product-media-img {
+      --bs-aspect-ratio: {{ 1 | divided_by: mobile_ratio | times: 100 }}%;
+    }
+  }
+{% endstyle %}
+<div class="container-fits-viewport main-product-content">
+  <div class="row g-0">
+    <div class="col media-content">
+      <div class="container-fits-viewport sticky-top figure-wrap d-flex" style="background-color: #efefef;">
+        <div class="position-lg-absolute h-100 w-100">
+          <div class="position-relative w-100 h-100 overflow-hidden">
+            {%- if section.settings.dot_title != blank -%}
+              <div class="position-absolute z-index-1 d-none d-lg-block font-size-calc">
+                {% render 'product-special-title', title: section.settings.dot_title, color: dark %}
+              </div>
+            {%- endif -%}
+            <div class="ratio product-media-img">
+              <figure class="mb-0">
+                <picture>
+                  <source 
+                    media="(max-width: 576px)"
+                    sizes="100vw"
+                    srcset="{{ mobile_image | img_url: '1242x' }} 1242w,
+                            {{ mobile_image | img_url: '828x' }} 828w,
+                            {{ mobile_image | img_url: '414x' }} 414w"
+                  >
+                  </source>
+                  <img 
+                    class="h-100 w-100 custom-img"
+                    sizes="(max-width: 1023px) 100vw, calc(100vw - 28rem)"
+                    srcset="{{ image | img_url: '576' }} 576w,
+                            {{ image | img_url: '892x' }} 892w,
+                            {{ image | img_url: '1292x' }} 1292w,
+                            {{ image | img_url: '1592x' }} 1592w,
+                            {{ image | img_url: '1892x' }} 1892w,
+                            {{ image | img_url: '2192x' }} 2192w,
+                            {{ image | img_url: '2492x' }} 2492w,
+                            {{ image | img_url: '2792x' }} 2792w,
+                            {{ image | img_url: '3092x' }} 3092w,
+                            {{ image | img_url: '3392x' }} 3392w"
+                    src="{{ image | img_url: '1472x' }}"
+                    alt="{{ image.alt | escape }}"
+                  />
+                </picture>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <product-beta data-login-url="{{ routes.account_login_url }}" {% if customer %}data-login="1"{% endif %} class="col col-auto purchase-content px-4 pt-1 pt-lg-0 d-flex flex-column justify-content-end"> 
+      <div class="container-fits-viewport responsive row">
+        <div class="col align-self-end py-lg-7 {% if customer and currentAvailable and section.settings.shipping_text != blank %}pb-lg-2{% endif %}">
+          {% render 'beta-purchased', section: section, current_variant: current_variant, diff_variant: diff_variant, dot_holder_blocks: dot_holder_blocks %}
+        </div>
+      </div>
+    </product-beta>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product",
+  "class": "main-product mb-6 mb-lg-0",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "dot_title",
+      "label": "Dot title"
+    },
+    {
+      "type": "text",
+      "id": "pages",
+      "label": "Pages"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "lead_paragraph",
+      "label": "Lead paragraph"
+    },
+    {
+      "type": "text",
+      "id": "login_button",
+      "label": "Login button",
+      "default": "Sign up now"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "Recommended image size 110N x auto (in px), format .jpg, where N can be integer in 1 ~ 12"
+    },
+    {
+      "type": "header",
+      "content": "AFTER LOGIN"
+    },
+    {
+      "type": "text",
+      "id": "after_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "after_lead_paragraph",
+      "label": "Lead paragraph"
+    },
+    {
+      "type": "text",
+      "id": "checkout_text",
+      "label": "Checkout text",
+      "default": "Buy now"
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_text",
+      "label": "Shipping text"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_tag",
+      "label": "Subscribe tag",
+      "default": "membership"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Dot holder",
+      "type": "dot_holder",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "dot_image",
+          "label": "image"
+        },
+        {
+          "type": "richtext",
+          "id": "dot_text",
+          "label": "text",
+          "default": "<p>Special thank you for black dot holders, Learn more</p>"
+        }
+      ]
+    },
+    {
+      "name": "Checkbox",
+      "type": "checkbox",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "checkbox_body",
+          "label": "Checkbox body"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

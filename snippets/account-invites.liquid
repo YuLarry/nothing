@@ -1,0 +1,178 @@
+{%- liquid
+  assign preorderProduct = all_products[settings.pre_order_product]
+  assign variantId = preorderProduct.variants[0].id
+-%}
+{%- if settings.show_invites_page -%}
+<div class="download-image-modal modal fade p-0" id="downloadImageModal" tabindex="-1" aria-labelledby="downloadImageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content text-white">
+      <a href="" class="btn-close p-0 text-white font-ndot55" data-bs-dismiss="modal" aria-label="Close">X</a>
+      <div class="modal-body p-0">
+        <p class="mb-2">{{ 'customer.invite_page.download_tips' | t }}</p>
+        <div class="row align-items-center">
+          <div class="col">
+            <download-btn data-action="press" data-download-url="{{ settings.mob_download_link_1x1 }}" >
+              <div class="ratio ratio-1x1 position-relative">
+                <div class="h-100 w-100 bg-white"></div>
+                <div class="position-absolute h-100 w-100 d-flex justify-content-center align-items-center h4 mb-0 text-body font-ndot55">
+                  1 x 1
+                </div>
+              </div>
+            </download-btn>
+          </div>
+          <div class="col">
+            <download-btn data-action="press" data-download-url="{{ settings.mob_download_link_9x16 }}">
+              <div class="ratio ratio-9x16"> 
+                <div class="h-100 w-100 bg-white"></div>
+                <div class="position-absolute h-100 w-100 d-flex justify-content-center align-items-center h4 mb-0 text-body font-ndot55">
+                  9 x 16
+                </div>
+              </div>
+            </download-btn>
+          </div> 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div data-checkout-url="{{ routes.cart_url }}/{{ variantId }}:1" {% if customer %}data-user-email="{{ customer.email }}"{% endif %} class="as-account-components as-invite-page-content d-none col-sm-6 user-invite-page" data-router="#invites">
+  <div class="h-100 font-base">
+    {% assign title = 'customer.invite_page.title' | t %}
+    {% render 'page-title', title: title %}
+    <div class="as-empty d-none text-uppercase">
+      <p class="mb-0">// {{ 'customer.invite_page.no_invite_code' | t }}</p>
+    </div>
+    <div class="as-invites as-invites-list as-invites-list-template d-none">
+    </div>
+  </div>
+</div>
+{% render 'lazyload-google' %}
+
+<script type="text/hogan" id="tpl-invites-list-template">
+  @{#data}@
+    <div class="as-available-invite code-card-item">
+      <div class="position-relative">
+        <figure class="mb-0 ratio poster-figure">
+          {% if settings.invite_code_poster_pc != blank %}
+          <picture>
+            <source media="(max-width: 576px)" 
+              sizes="(max-width: 576px) 100vw, 576px" 
+              srcset="
+                {{ settings.invite_code_poster_mob | img_url: 'master' }}" >
+            <img loading="lazy" class="w-100 h-100 object-fit-cover" src="{{ settings.invite_code_poster_pc | img_url: 'master' }}" alt="{{settings.invite_code_poster_pc.alt}}">
+          </picture>
+          {% endif %}
+        </figure>
+        <div class="text-uppercase position-absolute top-0 start-0 w-100 h-100 text-overlay @{#show_overlay}@ shadow-overlay @{/show_overlay}@">
+          <div class="position-relative h-100 w-100">
+            <div class="position-absolute bottom-0 w-100 code-status-bottom">
+              <div class="row gx-2 gy-2 text-body flex-wrap justify-content-between align-items-center">
+                <div class="col-sm-auto">
+                  <div class="code font-ndot55">@{code}@</div>   
+                  <countdown-marquee class="status d-flex align-items-center">
+                    <span class="d-flex @{#expired}@ text-warning @{/expired}@ @{#activated}@ text-danger @{/activated}@ @{#available}@ text-danger @{/available}@ @{#purchased}@ text-danger @{/purchased}@  @{#activated_by_other}@ text-danger @{/activated_by_other}@ ">{% render 'icon-dot' %}</span>
+                    @{#valid}@
+                      <count-down data-end="@{expired_time}@">
+                        <span class="as-not-started d-none">
+                        </span>
+                        <span class="as-already-started d-none">
+                          {{ 'customer.invite_page.expires_in_time' | t }}
+                          <span class="as-days" data-units="D"></span>
+                          <span class="as-hours" data-units="H"></span>
+                          <span class="as-minutes" data-units="M"></span>
+                          <span class="as-seconds" data-units="S"></span>
+                        </span>
+                      </count-down>
+                    @{/valid}@
+                    @{#expired}@
+                      <span>{{ 'customer.invite_page.code_expired' | t }}</span>
+                    @{/expired}@
+                    @{#activated}@
+                      <span>{{ 'customer.invite_page.code_used' | t }}</span>
+                    @{/activated}@
+                    @{#available}@
+                      <span>{{ 'customer.invite_page.code_available' | t }}</span>
+                    @{/available}@
+                    @{#purchased}@
+                      <span>{{ 'customer.invite_page.code_purchased' | t }}</span>
+                    @{/purchased}@
+                    @{#activated_by_other}@
+                      <span>{{ 'customer.invite_page.code_used_by_other' | t }}</span>
+                    @{/activated_by_other}@
+                  </countdown-marquee>               
+                </div>
+                @{#valid}@
+                  <div class="col-sm-auto flex-item as-submit-code-wrap">
+                    <div class="as-verify-code-recaptcha"></div>
+                    <button data-checkout-url="{{ routes.cart_url }}/{{ variantId }}:1" data-user-email="{{ customer.email }}" data-code="@{code}@" class="as-submit-code btn btn-danger text-uppercase btn-down-lg-auto">{{ 'customer.invite_page.pre_order' | t }}</button>
+                  </div>
+                @{/valid}@
+                @{#available}@
+                  <div class="col-sm-auto flex-item">
+                    <a href="/discount/@{code}@?redirect={{ settings.use_invites_page }}" class="as-purchase-code btn btn-danger text-uppercase btn-down-lg-auto">{{ 'customer.invite_page.buy_now' | t }}</a>
+                  </div>
+                @{/available}@
+              </div>
+            </div>
+      
+            <share-btn-group data-share-code="@{code}@" data-share-text="{{ 'customer.invite_page.share_invite_code_html' | t }}" data-share-link="{{ request.origin }}{{ settings.pre_order_page.url }}?invite_code=@{code}@" class="as-share-btn-group row gy-2 d-flex flex-column position-absolute code-share-action end-0 h-100 top-0">
+              @{#valid}@
+                @{#canShare}@
+                  <a target="_blank" data-type="twitter" data-href="https://twitter.com/intent/tweet/" href="" class="as-share-btn text-body">{% render 'icon-twitter-filled' %}</a>
+                  <a target="_blank" data-type="linkedin" data-href="https://www.linkedin.com/shareArticle" href="" class="as-share-btn text-body" >{% render 'icon-linkedin-filled' %}</a>
+                  <a target="_blank" data-type="pintrest" data-href="https://pinterest.com/pin/create/button/" href="" class="as-share-btn text-body">{% render 'icon-pintrest-filled' %}</a>
+                  <a target="_blank" data-type="facebook" data-href="https://facebook.com/sharer/sharer.php" href=""  class="as-share-btn text-body">{% render 'icon-facebook-filled' %}</a>
+                @{/canShare}@
+              @{/valid}@
+
+              {% if settings.pc_download_link != blank %}
+                <download-btn data-action="click" data-download-url="{{ settings.pc_download_link }}" class="cursor-pointer d-none d-sm-block text-body">{% render 'icon-download' %}</download-btn>
+              {% endif %}
+              <a data-bs-toggle="modal" data-bs-target="#downloadImageModal" class="d-block d-sm-none text-body" href="">{% render 'icon-download' %}</a>
+  
+            </share-btn-group>
+          </div>
+        </div>
+      </div>    
+      <div class="text-content">
+        @{#valid}@
+          @{#canShare}@
+            <p data-copy-content="@{code}@" class="as-copy-content font-size-sm mb-2">{{ 'customer.invite_page.share_text_html' | t }}</p>
+            <form data-user-email="{{ customer.email }}" data-source="{{ shop.permanent_domain | remove: ".myshopify.com" }}" data-action="{{ settings.invites_api_host }}/v1/invitation/@{code}@/share" method="post" class="as-share-code-form" novalidate="true">
+              <div class="as-recaptcha-wrapper"></div>
+              <div>
+                <input pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$" name="email" placeholder="{{ 'customer.invite_page.email_placeholder' | t }}" type="email" class="as-form-input rounded-pill border-0 form-control" required>
+                <button class="mt-2 btn btn-dark">{{ 'customer.invite_page.share' | t }}</button>
+              </div>
+              <div class="as-error-tips text-start px-0 mt-1 text-danger invalid-feedback small">
+                {{ 'customer.invite_page.post_error' | t }}
+              </div>
+              <div class="as-tips-error d-none text-danger mt-1 text-uppercase small">{{ 'customer.invite_page.post_error' | t }}</div>
+              <div class="as-google-error d-none">{{ 'sections.pre_order_landing_page.recaptcha_not_working' | t }}</div>
+              <div class="as-tips-success d-none text-success mt-1 text-uppercase small">{{ 'customer.invite_page.post_success' | t }}</div>
+            </form>
+          @{/canShare}@
+          @{^canShare}@
+            <p class="font-size-sm mb-0">{{ 'customer.invite_page.code_valid' | t }}</p>
+          @{/canShare}@
+        @{/valid}@
+        @{#expired}@
+          <p class="font-size-sm mb-0">{{ 'customer.invite_page.expired_note' | t }}</p>
+        @{/expired}@
+        @{#activated}@
+          <p class="font-size-sm mb-0">{{ 'customer.invite_page.used_note' | t }}</p>
+        @{/activated}@
+        @{#available}@
+          <p class="font-size-sm mb-0">{{ 'customer.invite_page.available_note' | t }}</p>
+        @{/available}@
+        @{#purchased}@
+        <p class="font-size-sm mb-0">{{ 'customer.invite_page.code_purchased' | t }}</p>
+        @{/purchased}@
+        @{#activated_by_other}@
+          <p class="font-size-sm mb-0">{{ 'customer.invite_page.used_by_other_note' | t }}</p>
+        @{/activated_by_other}@
+      </div>
+    </div>
+  @{/data}@
+</script>
+{%- endif -%}

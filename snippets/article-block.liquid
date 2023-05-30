@@ -1,0 +1,27 @@
+<div class="card bg-transparent border-0">
+    
+  {% render 'single-and-small-picture', img: block.settings.img %}
+
+  <div class="card-body text-dark p-0 row">
+    <div class="col-md-7">
+    <div class="">
+      {% render 'richtext', richtext: block.settings.name %} 
+    </div>
+    <p class="mb-2 mt-2 pt-2 font-size-sm text-muted">{{ block.settings.heading }}</p>
+    <h4 class="card-title mb-4 display-3 font-weight-bold">{{ block.settings.subtext }}</h4>
+    <p class="mb-0 card-text font-base">
+      {{ block.settings.text }}
+    </p>
+    {% if block.settings.btn_text != blank %}
+          {% if block.settings.is_disabled %}
+            <button disabled class="btn btn-primary mt-4">{{ block.settings.btn_text }}</button>
+          {% else %}
+            <a href="{{ block.settings.btn_url }}" class="btn btn-primary mt-4" download target="_blank">{{ block.settings.btn_text }}</a>
+          {% endif %}
+    {% endif %}
+    </div>
+  </div>
+  {% if block.settings.btn_text == blank %}
+  <a href="{{ block.settings.url }}" class="stretched-link" target="_blank" rel="noopener noreferrer"></a>
+  {% endif %}
+</div>

@@ -1,0 +1,27 @@
+<!-- /templates/cart.liquid -->
+{% comment %}
+
+  For info on test orders:
+    - General http://docs.shopify.com/manual/your-store/orders/test-orders
+    - Shopify Payments - http://docs.shopify.com/manual/more/shopify-payments/testing-shopify-payments
+
+{% endcomment %}
+{% if settings.enable_cart %}
+<main class="main cart-template" role="main" id="root">
+  <!-- CONTENT -->
+  {% section 'cart-template' %}
+  
+</main>
+{% else %}
+
+  <div class="container section-top section-bottom d-flex flex-column flex-grow-1 justify-content-center">
+    <div class="row justify-content-center text-center">
+      <div class="col-lg-5 col-md-7 col-sm-9">
+        <h1 class="display-404 mb-0">{{ 'general.404.title' | t }}</h1>
+        <h4 class="h4 mb-4">{{ 'general.404.subtext' | t }}</h4>
+        <a href="{{ routes.root_url }}products/ear-1" class="btn btn-outline-primary">{{ 'general.404.link' | t }}</a>
+      </div>
+    </div>
+  </div>
+
+{% endif %}

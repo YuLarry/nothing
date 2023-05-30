@@ -1,0 +1,57 @@
+<main class="index-tpl product-tpl as-countdown">
+  {% section 'kn-earlyaccess-with-countdown' %}
+  {% section 'index-media' %}
+  {%- comment -%}
+  {% section 'kn-earlyaccess-with-form' %}
+  {%- endcomment -%}
+  {% section 'keynote-video' %}
+  <div class="position-relative bg-dark">
+    {%- comment -%}
+    <div class="sticky-buy-now container-topic pb-2 pb-sm-5 px-3 px-sm-6 position-sticky" style="z-index: 3;">
+      <div class="pb-2 px-1 px-sm-0">
+        <div class="row g-0 justify-content-end">
+          <div class="col-12 col-sm-4 col-xl-3">
+            <a href="#pre-register" class="w-100 btn btn-danger text-uppercase">{{ 'general.newsletter_form.pre_register' | t }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% section 'kn-earlyaccess-hero' %}
+    {% section 'earlyaccess-hero' %}
+    {% section 'kn-earlyaccess-investors' %}
+    {%- endcomment -%}
+    <style>
+      .kn-ea-faq .bg-light{
+        background-color: #333333!important;
+        color: #FFFFFF!important;
+      }
+      .kn-ea-faq button{
+        color: #FFFFFF!important;
+      }
+      .kn-ea-faq .border-top{
+        border-top: 1px solid rgba(255,255,255,.2)!important;
+      }
+      .kn-ea-faq .accordion-button:after{
+        content: "+";
+      }
+      .kn-ea-faq .accordion-button:not(.collapsed):after{
+        content: "-";
+      }
+      .kn-ea-faq .accordion-button:after,
+      .kn-ea-faq .accordion-button:not(.collapsed):after{
+        width: 10px;
+        height: 100%;
+        line-height: 0;
+        background-image: none;
+        position: absolute;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+    <div class="kn-ea-faq">
+    {% section 'keynote-faq' %}
+    </div>
+  </div>
+</main>

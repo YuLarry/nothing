@@ -1,0 +1,37 @@
+
+<div class="d-none d-sm-block">
+  {% assign title = 'general.support.title' | t %}
+  {% render 'page-title', title: title  %}
+</div>
+<ul class="d-none d-sm-block list-unstyled my-0">
+  <li class="nav-item">
+    <a class="{% if handle == 'contact-support' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+      href="{{ routes.root_url }}pages/contact-support">{{ 'contact.support.title' | t }}</a>
+  </li>
+  <li class="nav-item">
+    <a class="{% if handle == 'faq' %}active{% endif %} d-flex nav-before-arrow text-uppercase" 
+      href="{{ routes.root_url }}pages/support-centre">{{ 'faq.title' | t }}</a>
+  </li>
+</ul>
+<div class="position-relative customer-select as-customer-select d-sm-none d-block bg-light mb-5 z-index-2">
+  <div class="border border-dark flex-center customer-selected cursor-pointer customer-select-height">
+    <span class="as-customer-selected">{{ 'general.support.title' | t }}</span>
+    <div class="end-0 pe-4 position-absolute">
+      <div class=" customer-select-arrow flex-center" >
+        {% render 'select-arrow' %}
+      </div>
+    </div>
+  </div>
+  <ol class="position-absolute list-unstyled w-100 border-top-0 border border-dark customer-select-lists overflow-hidden mb-0 bg-light">
+    <li class="border-bottom border-dark cursor-pointer flex-center">
+      <a class="as-customer-select-list customer-select-height w-100 text-center {% if handle == 'contact-support' %}active{% endif %}" href="{{ routes.root_url }}pages/contact-support">
+        {{ 'contact.support.title' | t }}
+      </a>
+    </li>
+    <li class="cursor-pointer flex-center">
+      <a class="as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.root_url }}pages/support-centre">
+        {{ 'faq.title' | t }}
+      </a>
+    </li>
+  </ol>
+</div>

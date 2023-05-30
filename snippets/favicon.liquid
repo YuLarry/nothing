@@ -1,0 +1,5 @@
+{%- if images['favicon.png'] != blank -%}
+<link rel="shortcut icon" href="{{ images['favicon.png'] | img_url: '32x32' }}" type="image/png" />
+{%- elsif settings.favicon != blank -%}
+<link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png" />
+{%- endif -%}

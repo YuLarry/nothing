@@ -1,0 +1,134 @@
+
+
+<main role="main" id="root" class="bg-light">
+  <section class="container-fits-viewport-100 px-2 text-black section-top section-bottom">
+    <div class="container-topic px-2 pt-header mt-5 mt-sm-1 font-base section-bottom">
+      <div class="row">
+        <div class="col">
+          <div class="row mx-n2">
+            <div class="col-sm-3 col-xl-2 px-2">
+              {% render 'sidebar-account' %}
+            </div>
+            <div class="col-sm-6 px-2">
+              {% assign title = 'customer.order.title' | t %}
+              {% render 'page-title', title: title %}
+              <div class="">
+                <div class="mb-1 dot-border-dark border-top"></div>
+                  <p class="mb-0 text-uppercase d-flex justify-content-between">
+                    {{ 'customer.order.order' | t }}: {{ order.name }}
+                    {{ order.created_at | time_tag: format: 'month_day_year' | replace: '<time', '<time class="text-ellipsis"' }}
+                    <span>(
+                    {% if order.cancelled %}
+                    {{ 'customer.orders.cancelled' | t }}
+                    {% else %}
+                    {{ order.fulfillment_status_label }}
+                    {% endif %}
+                    )</span>
+                  </p>
+                  {% assign line_item = order.line_items | first %}
+                  {% if line_item.fulfillment.tracking_url %}
+                    <a href="{{ line_item.fulfillment.tracking_url }}" class="text-dark text-decoration-underline mb-1 d-block" target="_blank" rel="noopener">{{ 'customer.order.track_order' | t }}</a>
+                  {% endif %}
+              </div>
+              <div class="pb-5">
+                {% render 'order-list', order: order %}
+              </div>
+              <div class="mt-6">
+                <div class="mb-1 dot-border-dark border-top"></div>
+                <div class="">
+                  <p class="mb-0">{{ 'customer.orders.shipping_address' | t }}</p>
+                </div>
+              </div>
+              <div class="mt-5">
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.name' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.shipping_address.name }}</dd>
+                </dl>
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.street' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.shipping_address.street }}</dd>
+                </dl>
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.zip_code' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.shipping_address.zip }}</dd>
+                </dl>
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.city' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.shipping_address.city }}</dd>
+                </dl>
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.country' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.shipping_address.country }}</dd>
+                </dl>
+                {% if order.shipping_address.phone %}
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column link-phone">
+                  <dt class="">{{ 'customer.order.phone' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5 text-dark">{{ order.shipping_address.phone }}</dd>
+                </dl>
+                {% endif %}
+                {% if order.shipping_address.email %}
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.email' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.shipping_address.email }}</dd>
+                </dl>
+                {% endif %}
+              </div>
+              <div class="mt-6">
+                <div class="mb-1 dot-border-dark border-top"></div>
+                <div class="">
+                  <p class="mb-0">{{ 'customer.order.billing_address' | t }}</p>
+                </div>
+              </div>
+              <div class="mt-5">
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.name' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.billing_address.name }}</dd>
+                </dl>
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.street' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.billing_address.street }}</dd>
+                </dl>
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.zip_code' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.billing_address.zip }}</dd>
+                </dl>
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.city' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.billing_address.city }}</dd>
+                </dl>
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.country' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.billing_address.country }}</dd>
+                </dl>
+                {% if order.billing_address.phone %}
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column link-phone">
+                  <dt class="">{{ 'customer.order.phone' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5 text-dark">{{ order.billing_address.phone }}</dd>
+                </dl>
+                {% endif %}
+                {% if order.billing_address.email %}
+                <dl class="d-flex mb-0 flex-sm-row justify-content-sm-between flex-column">
+                  <dt class="">{{ 'customer.order.email' | t }}:&nbsp;</dt>
+                  <dd class="mb-0 ms-sm-5">{{ order.billing_address.email }}</dd>
+                </dl>
+                {% endif %}
+              </div>
+
+              {%- comment -%}JP、KR、UK不需要下载发票功能，后续做成配置项{%- endcomment -%}
+              {%- assign permanent_domain = shop.permanent_domain -%}
+              {%- if permanent_domain == 'nothing-jp.myshopify.com' or permanent_domain == 'nothing-kr.myshopify.com' or permanent_domain == 'avicii-dev.myshopify.com' -%}
+              {%- else -%}
+                <div class="mt-5">
+                  <div class="ms-auto" style="max-width: 18.75rem;">
+                    {%- capture invoice_link -%}https://api-pdf.vify.io/api/pdf-preview/invoice?shop_domain={{ shop.permanent_domain }}&order_id={{ order.id }}&locale=en{%- endcapture -%}
+                    <a class="btn btn-primary" 
+                      href="{{ invoice_link }}" 
+                      {% render 'link', link: invoice_link %}>Download PDF Invoice</a>
+                  </div>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+    </div>
+  </section>
+</main>

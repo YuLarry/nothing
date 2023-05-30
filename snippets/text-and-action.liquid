@@ -1,0 +1,38 @@
+{% assign text_color = settings.bg_color | replace: 'bg-light', '' | replace: 'bg-white', '' | replace: 'bg-black', 'text-light' | replace: 'bg-dark', 'text-light' %}
+<div class="mw-text mx-auto mt-n4">
+  {% if settings.title != blank %}
+  <h2 class="featurette-heading mt-4 text-center {{ settings.desktop_text_alignment }} {{ text_color }}">{{ settings.title }}</h2>
+  {% endif %}
+  {% if settings.lead_graph != blank %}
+  <div class="lead text-center mt-4 {{ settings.desktop_text_alignment }} {{ text_color }}">
+    {{ settings.lead_graph }}
+  </div>
+  {% endif %}
+  {% if settings.primary_link != blank or settings.secondary_link != blank %}
+  <p class="text-center {{ settings.desktop_text_alignment }}">
+    {% if settings.primary_link != blank %}
+    <a href="{{ settings.primary_link }}" {% if settings.primary_link contains 'https://' %}target="_blank" rel="noopener noreferrer"{% endif %}
+      class="card-link mt-4">{{ settings.primary_link_text }}</a>
+    {% endif %}
+    {% if settings.secondary_link != blank %}
+    <a href="{{ settings.secondary_link }}" {% if settings.secondary_link contains 'https://' %}target="_blank" rel="noopener noreferrer"{% endif %}
+      class="card-link mt-4">{{ settings.secondary_link_text }}</a>
+    {% endif %}
+  </p>
+  {% endif %}
+  {% if settings.primary_btn_link != blank or settings.secondary_btn_link != blank %}
+  <p>
+    {% if settings.primary_btn_link != blank %}
+    <a {% if settings.primary_btn_link contains 'https://' %}target="_blank" rel="noopener noreferrer"{% endif %}
+      {% if settings.primary_btn_link contains '#' and settings.primary_btn_link contains '-modal' %}data-bs-toggle="modal" data-bs-target="{{ settings.primary_btn_link }}"{% endif %}
+      href="{{ settings.primary_btn_link }}"
+      class="btn btn-primary stretched-link mt-4" style="min-width: 160px;">{{ settings.primary_btn }}</a>
+    {% endif %}
+    {% if settings.secondary_btn_link != blank %}
+    <a {% if settings.secondary_btn_link contains 'https://' %}target="_blank" rel="noopener noreferrer"{% endif %}
+      href="{{ settings.secondary_btn_link }}"
+      class="btn btn-outline-primary with-stretched-link mt-4" style="min-width: 160px;">{{ settings.secondary_btn }}</a>
+    {% endif %}
+  </p>
+  {% endif %}
+</div>

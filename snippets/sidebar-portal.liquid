@@ -1,0 +1,108 @@
+
+
+
+<ul class="border-top d-none d-sm-flex dot-border-dark flex-column list-unstyled mb-0 overflow-hidden position-relative pt-4 pt-md-5">
+  <li class="nav-item d-inline-flex">
+    <div class="align-items-center d-flex sidebar-item">
+      {% render 'icon-sidebar-arrow' %}
+      <a class="text-dark ms-1" 
+        href="{{ routes.account_url }}">{{ 'customer.sidebar.my_orders' | t }}</a>
+    </div>
+  </li>
+  {%- if settings.show_invites_page -%}
+  <li class="nav-item d-inline-flex">
+    <div class="align-items-center d-flex sidebar-item">
+      {% render 'icon-sidebar-arrow' %}
+      <a class="text-dark ms-1" data-router="#invites"
+        href="{{ routes.account_url }}#invites">{{ 'customer.sidebar.invites' | t }}</a>
+    </div>
+  </li>
+  {%- endif -%}
+  <li class="nav-item d-inline-flex">
+    <div class="align-items-center d-flex sidebar-item">
+      {% render 'icon-sidebar-arrow' %}
+      <a class="text-dark ms-1" data-router="#edit-profile"
+        href="{{ routes.account_url }}#edit-profile">{{ 'customer.sidebar.edit_profile' | t }}</a>
+    </div>
+  </li>
+  <li class="nav-item d-inline-flex">
+    <div class="align-items-center d-flex sidebar-item">
+      {% render 'icon-sidebar-arrow' %}
+      <a class="text-dark ms-1" 
+        href="{{ routes.account_addresses_url }}">{{ 'customer.sidebar.addresses' | t }}</a>
+    </div>
+  </li>
+  {%- if settings.show_referral_page -%}
+  <li class="nav-item d-inline-flex">
+    <div class="align-items-center d-flex sidebar-item">
+      {% render 'icon-sidebar-arrow' %}
+      <a class="text-dark ms-1" data-router="#referral-page"
+        href="{{ routes.account_url }}#referral-page">{{ settings.sidebar_referral_page_title }}</a>
+    </div>
+  </li>
+  {%- endif -%}
+  <li class="nav-item d-inline-flex">
+    <div class="align-items-center d-flex sidebar-item {% if template.suffix contains 'user-portal' %}active{% endif %}">
+      {% render 'icon-sidebar-arrow' %}
+      <a class="text-dark ms-1" href="{{ routes.root_url }}pages/work-order">{{ 'service_portal.user_portal.sidebar' | t }}</a>
+    </div>
+  </li>
+  <li class="nav-item d-inline-flex">
+    <div class="align-items-center d-flex sidebar-item">
+      {% render 'icon-sidebar-arrow' %}
+      <a data-href="{{ routes.account_logout_url | prepend: request.origin }}" class="as-logout-btn cursor-pointer text-dark ms-1" 
+      >{{ 'customer.sidebar.logout' | t }}</a>
+    </div>
+  </li>
+</ul>
+
+<div class="position-relative customer-select as-customer-select d-sm-none d-block bg-light mb-5 z-index-2">
+  <div class="border border-dark flex-center customer-selected cursor-pointer customer-select-height">
+    <span class="as-customer-selected">{{ 'general.account.title' | t }}</span>
+    <div class="end-0 pe-4 position-absolute">
+      <div class=" customer-select-arrow flex-center" >
+        {% render 'select-arrow' %}
+      </div>
+    </div>
+  </div>
+  <ol class="position-absolute list-unstyled w-100 border-top-0 border border-dark customer-select-lists overflow-hidden mb-0 bg-light">
+    <li class="border-dark cursor-pointer flex-center">
+      <a class="{% if request.page_type contains 'customers/account' or request.page_type contains 'customers/order' %}active{% endif %} as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.account_url }}">
+        {{ 'customer.sidebar.my_orders' | t }}
+      </a>
+    </li>
+    {%- if settings.show_invites_page -%}
+    <li class="border-dark cursor-pointer flex-center">
+      <a data-router="#invites" class="as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.account_url }}#invites">
+        {{ 'customer.sidebar.invites' | t }}
+      </a>
+    </li>
+    {%- endif -%}
+    <li class="border-dark cursor-pointer flex-center">
+      <a data-router="#edit-profile" class="as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.account_url }}#edit-profile">
+        {{ 'customer.sidebar.edit_profile' | t }}
+      </a>
+    </li>
+    <li class="border-dark cursor-pointer flex-center">
+      <a class="{% if request.page_type contains 'customers/addresses' %}active{% endif %} as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.account_addresses_url }}">
+        {{ 'customer.sidebar.addresses' | t }}
+      </a>
+    </li>
+    {%- if settings.show_referral_page -%}
+      <li class="border-dark cursor-pointer flex-center">
+        <a class="as-customer-select-list customer-select-height w-100 text-center" data-router="#referral-page"
+          href="{{ routes.account_url }}#referral-page">{{ settings.sidebar_referral_page_title }}</a>
+      </li>
+    {%- endif -%}
+    <li class="border-dark cursor-pointer flex-center">
+      <a class="{% if template.suffix contains 'user-portal' %}active{% endif %} as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.root_url }}pages/work-order">
+        {{ 'service_portal.user_portal.sidebar' | t }}
+      </a>
+    </li>
+    <li class="border-dark cursor-pointer flex-center">
+      <a data-href="{{ routes.account_logout_url | prepend: request.origin }}" class="as-logout-btn as-customer-select-list customer-select-height w-100 text-center" href="{{ routes.root_url }}pages/privacy-policy">
+        {{ 'customer.sidebar.logout' | t }}
+      </a>
+    </li>
+  </ol>
+</div>

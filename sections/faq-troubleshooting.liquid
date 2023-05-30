@@ -1,0 +1,55 @@
+
+{% render 'faq-template', key: 'troubleshooting' %}
+
+{% schema %}
+{
+  "name": "Troubleshooting",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title1",
+      "label": "Accordions 1"
+    },
+    {
+      "type": "text",
+      "id": "title2",
+      "label": "Accordions 2"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Accordions 1",
+      "type": "tab1",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    },
+    {
+      "name": "Accordions 2",
+      "type": "tab2",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,68 @@
+<div class="container-core">
+  <div class="align-items-center d-flex justify-content-between">
+    <h3 class="fs-h2 mb-0">@{enName}@</h3>
+    <span class="as-not-activated d-none">{{ 'service_portal.imei.not_activated' | t }}</span>
+  </div>
+  <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+    <div class="mt-4 mt-md-5">
+      <div class="row mt-n4">
+        <div class="mt-4 col-sm-7">
+          <figure class="mb-0 figure">
+            <picture>
+              <img loading="lazy" src="@{img}@" class="w-100 h-100 object-fit-cover">
+            </picture>
+          </figure>
+        </div>
+        <div class="mt-4 col-sm-5">
+          @{#sn}@
+          <div class="mb-4 row">
+            <div class="col-6">{{ 'service_portal.imei.serial_number' | t }}</div>
+            <div class="col-6 word-break-all">@{sn}@</div>
+          </div>
+          @{/sn}@
+          @{#refurbished}@
+          <div class="mb-4 row">
+            <div class="col-6">{{ 'service_portal.imei.product_status' | t }}</div>
+            <div class="col-6 word-break-all">{{ 'service_portal.imei.refurbished' | t }}</div>
+          </div>
+          @{/refurbished}@
+          @{#nonwarranty}@
+          <div class="mb-4 row">
+            <div class="col-6">{{ 'service_portal.imei.product_status' | t }}</div>
+            <div class="col-6 word-break-all">{{ 'service_portal.imei.refurbished_products' | t }}</div>
+          </div>
+          @{/nonwarranty}@
+          @{#activationTime}@
+          <div class="mb-4 row">
+            <div class="col-6">{{ 'service_portal.imei.activation_date' | t }}</div>
+            <div class="col-6 word-break-all">@{activationTime}@</div>
+          </div>
+          @{/activationTime}@
+          @{#ddrEmmc}@
+          <div class="mb-4 row">
+            <div class="col-6">{{ 'service_portal.imei.version_capacity' | t }}</div>
+            <div class="col-6 word-break-all">@{ddrEmmc}@</div>
+          </div>
+          @{/ddrEmmc}@
+          @{#imei1}@
+          <div class="mb-4 row">
+            <div class="col-6">{{ 'service_portal.imei.imei1' | t }}</div>
+            <div class="col-6 word-break-all">@{imei1}@</div>
+          </div>
+          @{/imei1}@
+          @{#imei2}@
+          <div class="mb-4 row">
+            <div class="col-6">{{ 'service_portal.imei.imei2' | t }}</div>
+            <div class="col-6 word-break-all">@{imei2}@</div>
+          </div>
+          @{/imei2}@
+          <div class="mt-6">
+            <p class="mb-0 richtext">
+              {{ 'service_portal.imei.notes' | t }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,180 @@
+
+<div class="container-core">
+  <h3 class="fs-h2">{{ 'service_portal.submit.enter_your_address_title' | t }}</h3>
+  <form class="as-service-portal-form as-handle-params" 
+    action="{{ settings.submitWorkOrder }}" method="post" autocomplete="false" 
+    novalidate="true" id="submitWorkOrder">
+    <input type="hidden" name="postType" value="{{ section.settings.posttype }}" />
+    <input type="hidden" name="belongedRegion" class="as-belongedRegion" value="" />
+    <input type="hidden" name="RMAcode" class="as-form-rma-code-target">
+    <input type="hidden" name="agreePrivacyRule" value=true>
+    <input type="hidden" name="model" class="as-form-model" value=true>
+    <input type="hidden" name="loginEmail" value="{{ customer.email }}">
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+      <div class="mt-4 mt-md-5">
+        <p class="mb-0">{{ 'service_portal.submit.basic_information_subline' | t }}</p>
+        <div class="px-lg-6">
+          <div class="mt-4">
+            <div class="form-floating overflow-hidden rounded-pill">
+              <input type="email" name="email" class="form-control border-0 as-form-input" 
+                pattern='^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+                required id="after-sale-email" placeholder="{{ 'service_portal.submit.email_label' | t }}" value="{{ customer.email }}">
+              <label for="after-sale-email">{{ 'service_portal.submit.email_label' | t }}</label>
+            </div>
+            <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+              {{ 'service_portal.submit.email_label' | t }} {{ 'general.error_message.format_error' | t }}
+            </div>  
+          </div>
+          {% if section.settings.show_postid %}
+            <div class="mt-4">
+              <div class="form-floating overflow-hidden rounded-pill">
+                <input type="text" name="postID" class="form-control border-0 as-form-input" 
+                  required id="postID" placeholder="{{ 'service_portal.submit.postid_label' | t }}">
+                <label for="postID">{{ 'service_portal.submit.postid_label' | t }}</label>
+              </div>
+              <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                {{ 'service_portal.submit.postid_label' | t }} {{ 'general.error_message.format_error' | t }}
+              </div>
+            </div>
+            {% assign des = 'service_portal.submit.postid_description_html' | t %}
+            <div class="mt-3 px-4 text-muted fs-small">
+              {% render 'richtext', richtext: des %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% if section.settings.posttype == 'PickupOrDropoff' %}
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+      <div class="mt-4 mt-md-5">
+        <p class="mb-1">{{ 'service_portal.submit.pick_Up_Time_subline' | t }}</p>
+        <p class="mb-0">{{ 'service_portal.submit.pick_up_description' | t }}</p>
+        <div class="px-lg-6">
+          <div class="row row-cols-md-2">
+            <div class="mt-4">
+              <div class="form-floating overflow-hidden rounded-pill">
+                <input type="date" name="pickUpDate" class="form-control border-0 as-form-input as-pickup-date d-flex align-items-center justify-content-start" 
+                  required id="pickUpDate" placeholder="{{ 'service_portal.submit.pick_Up_Date_label' | t }}">
+                <label for="pickUpDate">{{ 'service_portal.submit.pick_Up_Date_label' | t }}</label>
+              </div>
+              <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                {{ 'service_portal.submit.pick_Up_Date_label' | t }} {{ 'general.error_message.format_error' | t }}
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="form-floating overflow-hidden rounded-pill">
+                <select type="text" name="pickUpTime" class="form-control form-select border-0 as-form-input" 
+                  required id="pickUpTime">
+                    <option value="9AM-10AM">9AM-10AM</option>
+                    <option value="10AM-11AM">10AM-11AM</option>
+                    <option value="11AM-12PM">11AM-12PM</option>
+                    <option value="12PM-1PM">12PM-1PM</option>
+                    <option value="1PM-2PM">1PM-2PM</option>
+                    <option value="2PM-3PM">2PM-3PM</option>
+                    <option value="3PM-4PM">3PM-4PM</option>
+                    <option value="4PM-5PM">4PM-5PM</option>
+                    <option value="5PM-6PM">5PM-6PM</option>
+                </select>
+                <label for="pickUpTime">{{ 'service_portal.submit.pick_Up_Time_label' | t }}</label>
+              </div>
+              <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+                {{ 'service_portal.submit.pick_Up_Time_label' | t }} {{ 'general.error_message.format_error' | t }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top as-post-address-form">
+      <div class="mt-4 mt-md-5">
+        <p class="mb-0">{{ 'service_portal.submit.Pick_up_address' | t }}</p>
+        {% render 'post-address' %}
+      </div>
+    </div>
+    {% endif %}
+    <div class="mt-5 mt-sm-6 dot-border-dark border-top {% if section.settings.posttype == 'PickupOrDropoff' %}as-checkbox-show-address{% endif %}">
+      <div class="mt-4 mt-md-5">
+        <p class="mb-0">{{ 'service_portal.submit.return_address_subline' | t }}</p>
+        {% if section.settings.posttype == 'PickupOrDropoff' %}
+        <div class="mt-4 px-lg-6">
+          <div class="d-flex">
+            <input style="margin-top: 0.1875rem;" class="form-check-input position-relative flex-center as-checkbox rounded-0" type="checkbox" checked id="same_address">
+            <label class="ms-2" for="same_address">
+              {{ 'service_portal.submit.same_as_Pick_up_address' | t }}
+            </label>
+          </div>
+        </div>
+        {% endif %}
+        <div class="px-lg-6{% if section.settings.posttype == 'PickupOrDropoff' %} d-none{% endif %} as-checkbox-wrap">
+          {% render 'receive-address', posttype: section.settings.posttype %}
+        </div>
+      </div>
+    </div>
+    <div class="px-lg-6 mt-5 mt-sm-6">	
+      <div class="">
+        <div class="d-flex">
+          <input style="margin-top: 0.1875rem;" class="form-check-input position-relative flex-center as-form-input-pre as-form-input rounded-0" type="checkbox" id="form-input-pre">
+          {% assign des = 'service_portal.submit.privacy_description_html' | t %}
+          <label class="ms-2 richtext" for="form-input-pre">
+            {% render 'richtext', richtext: des %}
+          </label>
+        </div>
+        <div class="text-start mt-3 px-4 text-danger invalid-feedback as-input-error-tips">
+          {{ 'service_portal.error.privacy_error' | t }}
+        </div>
+      </div>
+      <div class="text-start mt-3 px-4 text-danger invalid-feedback as-form-error-tips">
+        {{ 'service_portal.error.other_error' | t }}
+      </div>
+      <div class="text-start mt-3 px-4 text-danger invalid-feedback as-form-error-tips-441 as-form-error-tips-special">	
+        {{ 'service_portal.error.441_error' | t }}
+      </div>	
+      <button class="as-next-step btn btn-lg btn-primary mt-3 w-100 as-btn" type="submit">{{ 'service_portal.general.submit' | t }}</button>
+      <p class="as-pre-step cursor-pointer mb-0 mt-3 text-center text-primary">{{ 'service_portal.general.go_back' | t }}</p>
+    </div>
+  </form>
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLhxN1MfVES4M5icRoAOMrB116aeMT97g&v=weekly&libraries=places"></script>
+{% schema %}
+{
+  "name": "Shipping information",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9 as-tab-content d-none",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Basic information"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_postid",
+      "label": "Show postid input",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Post type"
+    },
+    {
+      "type": "radio",
+      "id": "posttype",
+      "label": "postType",
+      "options": [
+        {
+          "value": "PickupOrDropoff",
+          "label": "PickupOrDropoff"
+        },
+        {
+          "value": "SelfMailing",
+          "label": "SelfMailing"
+        }
+      ],
+      "default": "SelfMailing"
+    },
+    {
+      "type": "header",
+      "content": "Belonged Region"
+    }
+  ]
+}
+{% endschema %}

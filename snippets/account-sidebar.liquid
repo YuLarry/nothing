@@ -1,0 +1,28 @@
+
+<div class="position-relative d-flex justify-content-between">
+  <div class="mw-text-href w-left-sidebar">
+    <h2 class="mb-4 text-uppercase font-57">
+      <span class="d-block">{{ 'customer.sidebar.title' | t }},</span>
+      <span class="d-block break-word">{% if customer.first_name.size > 0 %}{{ customer.first_name }}{% else %}{{ customer.email | split: '@' | first }}{% endif %}</span>
+    </h2>
+    <ul class="list-unstyled mb-0">
+      <li class="nav-item pt-1 pb-sm-1 pb-2">
+        <a class="{% if request.page_type contains 'customers/account' or request.page_type contains 'customers/order' %}active{% endif %} d-flex nav-before-arrow p-0 border-0 bg-transparent text-start text-uppercase dark-link as-account-tabs" 
+          href="{{ routes.account_url }}">{{ 'customer.sidebar.my_orders' | t }}</a>
+      </li>
+      <li class="nav-item pt-1 pb-sm-1 pb-2">
+        <a class="d-flex nav-before-arrow p-0 border-0 bg-transparent text-start text-uppercase dark-link as-account-tabs" data-router="#edit-profile"
+          href="{{ routes.account_url }}#edit-profile">{{ 'customer.sidebar.edit_profile' | t }}</a>
+      </li>
+      <li class="nav-item pt-1 pb-sm-1 pb-2">
+        <a class="{% if request.page_type contains 'customers/addresses' %}active{% endif %} d-flex nav-before-arrow p-0 border-0 bg-transparent text-start text-uppercase dark-link as-account-tab" 
+          href="{{ routes.account_addresses_url }}">{{ 'customer.sidebar.addresses' | t }}</a>
+      </li>
+      <li class="nav-item pt-1 pb-sm-1 pb-2">
+        <a class="d-flex nav-before-arrow p-0 border-0 bg-transparent text-start text-uppercase dark-link as-account-tabs" 
+        href="{{ routes.account_logout_url }}">{{ 'customer.sidebar.logout' | t }}</a>
+      </li>
+    </ul>
+    
+  </div>
+</div>

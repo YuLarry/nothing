@@ -1,0 +1,26 @@
+<main id="root" class="tempalte-about-us bg-light">
+  {% section 'career_banner' %}
+  <section class="px-2 text-black pt-4 section-bottom _feature-products-section">
+    <div class="container-topic px-2 mt-sm-1 font-base section-bottom">
+      <div class="row mx-n2">
+        <div class="col-sm-3 col-xl-2 px-2" style="z-index: 2;">
+          {% assign blog = blogs[settings.blog] %}
+          {% render 'sidebar-newsroom', handle: page.handle, blog: blog %}
+        </div>
+        
+        <div class="col-sm-6 px-2">
+              {% section 'career_video' %}
+              <div class="dot-border-dark border-bottom mb-2 mt-6 pt-sm-6"></div>
+              {% section 'career_jobs' %}
+              <div class="dot-border-dark border-bottom mb-2 mt-6 pt-sm-6"></div>
+              {% section 'career_values' %}
+              <div class="dot-border-dark border-bottom mb-2 mt-6 pt-sm-6"></div>
+              {% section 'career_hero' %}
+              <div class="dot-border-dark border-bottom mb-2 mt-6 pt-sm-6"></div>
+              {% section 'career_perks' %}
+        </div>
+      </div>
+    </div>
+  </section>
+  
+</main>

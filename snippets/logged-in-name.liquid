@@ -1,0 +1,2 @@
+
+<span class="font-base username-round flex-center">{% if customer.first_name.size > 0 %}{{ customer.first_name | slice: 0, 1 }}{% else %}{{ customer.email | split: '@' | first | slice: 0, 1 }}{% endif %}</span>

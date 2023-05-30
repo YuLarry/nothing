@@ -1,0 +1,28 @@
+<form method="post" 
+  action="{{ settings.product_vocher }}" 
+  accept-charset="UTF-8" 
+  enctype="multipart/form-data"
+  class="needs-validation as-product-voucher-form" 
+  novalidate="true" 
+  autocomplete="off">
+  <div>
+    <div class="input-group input-group-overlay">
+      <input class="as-form-input as-voucher-input z-index-0 bg-transparent placeholder-{{ color }} dot-border-{{ color }} font-change form-control text-{{ color }} border-end-0"
+        type="text" name="invite_code" id="sign-up-email" 
+        placeholder="{{ 'products.voucher.voucher' | t }}"
+        required>
+      <input type='hidden' value='{{ shop.domain }}' />
+      <input type='hidden' value='{{ current_variant.id }}' name="variant_info" />
+      <button class="btn btn-{{ color }} font-55 z-index-0 btn-voucher as-voucher-btn" disabled>
+        {{ 'products.voucher.submit' | t }}
+      </button>
+    </div>
+    <div class="text-start px-0 mt-2 text-danger invalid-feedback as-error-tips text-uppercase">
+      {{ 'products.voucher.voucher' | t }} {{ 'general.error_message.format_error' | t }}
+    </div>
+  </div>
+  <div class="as-tips-success d-none text-danger mt-2 text-uppercase"></div>
+
+  <div class="as-tips-error d-none text-danger mt-2 text-uppercase">{{ 'products.voucher.error' | t }}</div>
+
+</form>

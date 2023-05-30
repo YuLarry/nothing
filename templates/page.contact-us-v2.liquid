@@ -1,0 +1,135 @@
+
+<main id="root" role="main" class="bg-light page-contact-us fs-base">
+  <section class="container-fits-viewport px-2 text-dark section-top section-bottom">
+    <div class="container-topic px-2 pt-header mt-5 mt-sm-1 font-base">
+          <div class="row mx-n2">
+            <div class="col-sm-3 col-xl-2 px-2 d-none d-sm-block">
+              {% assign blog = blogs[settings.blog] %}
+              {% render 'sidebar-newsroom-v2', handle: page.handle, blog: blog %}   
+            </div>
+            <div class="col-sm-6 px-2">
+                {% assign title = 'contact.us.title' | t %}
+                {% render 'page-title-v2', title: title %}
+                <div class="mb-3">
+                  <p class="mb-1">{{ 'contact.us.product_info' | t }}</p>
+                  <p class="mb-0">{{ 'contact.us.other_questions' | t }}</p>
+                </div>
+                {% form 'contact', class: 'as-contact-us-form w-100 opacity-light', novalidate: 'novalidate', autocomplete: "off" %}
+                  <div class="">
+                    <input type="hidden" id="as-category-hidden-input" name="contact[category]" value="">
+                    <input type="hidden" id="as-subject-hidden-input" name="contact[subject]" value="">
+                    <div class="row">
+                      <div class="d-none  ">{{ 'contact.us.category.title' | t }}</div>
+                      <div class="col-12 mt-3">
+                        <div class="d-flex position-relative contact-dropdown-wrap as-category-wrap text-uppercase">
+                          <a class="contact-dropdown select-dropdown bg-white cursor-pointer d-flex text-dark text-decoration-none w-100" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="as-category-text px-13 flex-grow-1 dot-border-dark d-flex display-6 align-items-center">
+                              {{ 'contact.us.category.title' | t }}
+                            </span>
+                            <span class="dot-border-dark flex-center pe-4">
+                              {% render 'icon-chevron-down' %}
+                            </span>
+                          </a>
+                          <ul class="dropdown-menu display-6 py-0 as-category-ul w-100 bg-white border-0">
+                            <li>
+                              <a class="px-2 dropdown-item nav-link as-category-link cursor-pointer">{{ 'contact.us.category.business' | t }}</a>
+                            </li>
+                            <li>
+                              <a class="px-2 dropdown-item nav-link as-category-link cursor-pointer">{{ 'contact.us.category.collaboration' | t }}</a>
+                            </li>
+                            <li>
+                              <a class="px-2 dropdown-item nav-link as-category-link cursor-pointer">{{ 'contact.us.category.sales' | t }}</a>
+                            </li>
+                            <li>
+                              <a class="px-2 dropdown-item nav-link as-category-link cursor-pointer">{{ 'contact.us.category.other' | t }}</a>
+                            </li>
+                          </ul>
+                        </div> 
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label for="contact-us-subject" class="d-none   opacity-20">{{ 'contact.us.subject' | t }}</label>
+                      <div class="col-12 mt-3">
+                        <input type="text"
+                          id="contact-us-subject"
+                          class="placeholder-dark as-form-input as-subject-input bg-transparent dot-border-dark display-6 form-control"
+                          placeholder="{{ 'contact.us.subject' | t }}"
+                          value=""
+                          disabled
+                          required>
+                        <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                          {{ 'contact.us.subject' | t }}{{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label for="contact-us-name" class="d-none   opacity-20">{{ 'contact.us.name' | t }}</label>
+                      <div class="col-12 col-lg-6 mt-3">
+                        <input type="text"
+                          id="contact-us-name"
+                          name="contact[name]"
+                          class="placeholder-dark as-form-input bg-transparent dot-border-dark display-6 form-control"
+                          placeholder="{{ 'contact.us.name' | t }}"
+                          value=""
+                          disabled
+                          required>
+                        <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                          {{ 'contact.us.name' | t }}{{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div>
+                      <label for="contact-us-email" class="d-none   opacity-20">{{ 'contact.us.email' | t }}</label>
+                      <div class="col-12 col-lg-6 mt-3">
+                        <input type="email"
+                          id="contact-us-email"
+                          name="contact[email]"
+                          class="placeholder-dark as-form-input bg-transparent dot-border-dark display-6 form-control"
+                          placeholder="{{ 'contact.us.email' | t }}"
+                          value=""
+                          disabled
+                          pattern='^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+                          required>
+                        <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                          {{ 'contact.us.email' | t }}{{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <label for="contact-us-body" class="d-none   opacity-20">{{ 'contact.us.message' | t }}</label>
+                      <div class="col-12 mt-3">
+                        {% comment %} 当textarea标签中有空格或内容时，会不显示placeholder {% endcomment %}
+                        <textarea 
+                          id="contact-us-body"
+                          class="py-2 placeholder-dark as-form-input bg-transparent dot-border-dark display-6 form-control form-control-textarea"
+                          rows="5"
+                          disabled
+                          name="contact[body]" 
+                          style="resize: none;"
+                          placeholder="{{ 'contact.us.message' | t }}"
+                          required></textarea>
+                        <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                          {{ 'contact.us.message' | t }}{{ 'general.error_message.format_error' | t }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex mt-5">
+                    <div class="d-none  "></div>
+                    <button type="submit" disabled class="as-btn border-0 btn btn-lg btn-dark font-55 text-uppercase">{{ 'contact.us.submit' | t }}</button>
+                  </div>
+    
+                  <div class="d-flex">
+                    <div class="d-none  "></div>
+                    {% if form.posted_successfully? %}
+                      <p class="mt-2 mb-0 text-danger">{{ 'contact.us.post_success' | t }}</p>
+                    {% endif %}
+                    {% if form.errors %}
+                      <p class="mt-2 mb-0 text-center text-danger text-uppercase">{{ 'contact.us.post_error' | t }}</p>
+                    {% endif %}
+                  </div>
+                {% endform %}
+            </div>
+
+          </div>
+    </div>
+  </section>
+</main>

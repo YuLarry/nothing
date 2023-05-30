@@ -1,0 +1,139 @@
+<div class="container-core">
+  {% if section.settings.title != blank %}
+  <h3 class="fs-h2">{{ section.settings.title }}</h3>
+  {% endif %}
+  <div class="{% if section.settings.title != blank %}mt-5 mt-sm-6 dot-border-dark border-top{% endif %}">
+    <div class="mt-4 mt-md-5">
+      <div class="row row-cols-sm-2 mt-n4">
+        <div class="mt-4">
+          <figure class="mb-0 figure">
+            <picture>
+              {% assign image = section.settings.desktop_image %}
+              <img
+                src="{{ image | img_url: 'master' }}"
+                alt="{{ image.alt | escape }}"
+                loading="lazy"
+                class="w-100 h-100 object-fit-cover"
+                width="{{ image.width }}"
+                height="{{ image.height }}">
+            </picture>
+          </figure>
+        </div>
+        <div class="mt-4">
+          {% for block in section.blocks %}
+            {%- case block.type -%}
+              {%- when 'richtext' -%}
+                <div class="mb-4">
+                  {% render 'richtext', richtext: block.settings.title %}
+                </div>
+              {%- when 'key_value' -%}
+                <div class="mb-4 row">
+                  <div class="col-3">{{ block.settings.title }}</div>
+                  <div class="col-9 word-break-all">{{ block.settings.value }}</div>
+                </div>
+              {%- when 'button' -%}
+                <div class="mb-4 row">
+                  <div class="col-sm-9">
+                    {% if block.settings.title != blank %}
+                      <a class="btn w-100 btn-primary" {% render 'link', link: block.settings.btn_link %} 
+                        href="{{ block.settings.btn_link }}">{{ block.settings.title }}</a>
+                      {% if block.settings.note != blank %}
+                        <div class="mt-3 text-muted">
+                          {% render 'richtext', richtext: block.settings.note %}
+                        </div>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                </div>
+            {%- endcase -%}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Image with info",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Image",
+      "info": "1200px x auto .jpg recommended"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "richtext",
+      "type": "richtext",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "richtext"
+        }
+      ]
+    },
+    {
+      "name": "key value",
+      "type": "key_value",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "title"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "value"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "button",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "btn"
+        },
+        {
+          "type": "url",
+          "id": "btn_link",
+          "label": "btn link"
+        },
+        {
+          "type": "richtext",
+          "id": "note",
+          "label": "note"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with info",
+      "blocks": [
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

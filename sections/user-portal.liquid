@@ -1,0 +1,152 @@
+{% unless customer %}
+  {% unless request.design_mode %}
+    <input type="hidden" class="as-unlogin" value="{{ routes.account_login_url }}?return_to={{canonical_url}}" />
+  {% endunless %}
+{% endunless %}
+<div class="container-sidebar mb-7 mb-sm-9 mt-7 mt-sm-9">
+  <div class="row flex-column flex-sm-row">
+    <div class="col-sm-3 col-lg-2">
+    </div>
+    <div class="col-sm-8">
+      <div class="fst-italic mb-5 mb-md-6 mb-lg-7">{{ 'service_portal.general.support_centre' | t }}</div>
+      <h1 class="fs-h1 mb-0">{{ page.title }}</h1>
+    </div>
+  </div>
+</div>
+<div class="container-sidebar" style="min-height: 50vh;">
+  <input type="hidden" value="{{ settings.queryWorkOrderList }}" class="as-queryWorkOrderList">
+  <input type="hidden" value="{{ settings.queryWorkOrderDetail }}" class="as-queryWorkOrderDetail">
+  {% if customer %}
+  <input type="hidden" value="{{ customer.email }}" class="as-customer-email">
+  {% endif %}
+  <div class="row flex-column flex-sm-row">
+    <div class="col-sm-3 col-lg-2">
+      {% render 'sidebar-portal' %}
+    </div>
+    <div class="as-no-order d-none col-sm-8">
+      <div class="dot-border-dark border-top pt-4 pt-md-5">
+        // {{ 'service_portal.user_portal.empty' | t }}
+      </div>
+    </div>
+    <div class="tpl-order-list-wrap col-sm-8">
+    </div>
+  </div>
+</div>
+<script type="text/hogan" id="tpl-order-list">
+  <div class="@{#orderC}@mt-sm-n6@{/orderC}@@{^orderC}@mt-n7 mt-sm-n9@{/orderC}@">
+    @{#orderC}@
+      <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+        <div class="mt-4 mt-md-5">
+          <div class="row gx-0">
+            <div class="col-sm-8 col-md-6">
+              <div class="d-sm-none mb-4">(@{status}@)</div>
+              <div class="row mb-4">
+                <span class="col-6">{{ 'service_portal.track.ticket_number' | t }}:</span>
+                <span class="col-6">@{workOrderNumber}@</span>
+              </div>
+              <div class="row row-cols-2">
+                <span class="col-6">{{ 'service_portal.track.service_type' | t }}:</span>
+                <span class="col-6">@{type}@</span>
+              </div>
+              <div class="row row-cols-2">
+                <span class="col-6">{{ 'service_portal.track.product' | t }}:</span>
+                <span class="col-6">@{model}@</span>
+              </div>
+              <div class="row row-cols-2">
+                <span class="col-6">{{ 'service_portal.track.SN_IMEI' | t }}:</span>
+                <span class="col-6">@{SN_IMEI}@</span>
+              </div>
+            </div>
+            <div class="col-sm-4 col-md-6 mt-5 mt-sm-0">
+              <div class="row h-100">
+                <div class="d-flex flex-column justify-content-between offset-md-6 col-md-6">
+                  <div class="text-end d-sm-block d-none">(@{status}@)</div>
+                  <button class="btn btn-primary w-100 as-track-detail-btn" data-number="@{workOrderNumber}@" type="submit" data-link-detail="{{ routes.root_url }}pages/support-request-status">{{ 'service_portal.track.view_detail' | t }}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-start mt-3 text-start text-md-end text-danger invalid-feedback as-track-error-tips">
+            {{ 'service_portal.error.other_error' | t }}
+          </div>
+        </div>
+      </div>
+    @{/orderC}@
+    @{#orderB}@
+    <div class="mt-7 mt-sm-9">
+      <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+        <div class="py-4 py-md-5">
+          <div class="row gx-0 flex-column-reverse flex-sm-row">
+            <div class="col-sm-8 col-md-6">
+              <div class="row gx-sm-0">
+                <span class="col-6 col-sm-auto">{{ 'service_portal.track.ticket_number' | t }}:</span>
+                <span class="col-6 col-sm-auto">@{workOrderNumber}@</span>
+              </div>
+            </div>
+            <div class="text-start text-sm-end mb-4 mb-sm-0 col-sm-4 col-md-6">(@{status}@)</div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-n5 mt-sm-n6 px-0 px-md-6">
+        @{#childWorkOrderEntityList}@
+          <div class="mt-5 mt-sm-6 dot-border-dark border-top">
+            <div class="mt-4 mt-md-5">
+              <div class="row gx-0">
+                <div class="col-sm-8 col-md-6">
+                  <div class="d-sm-none mb-4">(@{status}@)</div>
+                  <div class="row mb-4">
+                    <span class="col-6">{{ 'service_portal.track.sub_ticket_number' | t }}:</span>
+                    <span class="col-6">@{workOrderNumber}@</span>
+                  </div>
+                  <div class="row row-cols-2">
+                    <span class="col-6">{{ 'service_portal.track.service_type' | t }}:</span>
+                    <span class="col-6">@{type}@</span>
+                  </div>
+                  <div class="row row-cols-2">
+                    <span class="col-6">{{ 'service_portal.track.product' | t }}:</span>
+                    <span class="col-6">@{model}@</span>
+                  </div>
+                  <div class="row row-cols-2">
+                    <span class="col-6">{{ 'service_portal.track.SN_IMEI' | t }}:</span>
+                    <span class="col-6">@{SN_IMEI}@</span>
+                  </div>
+                </div>
+                <div class="col-sm-4 col-md-6 mt-5 mt-sm-0">
+                  <div class="row h-100">
+                    <div class="d-flex flex-column justify-content-between offset-md-6 col-md-6">
+                      <div class="text-end d-sm-block d-none">(@{status}@)</div>
+                      <button class="btn btn-primary w-100 as-track-detail-btn" data-number="@{workOrderNumber}@" type="submit" data-link-detail="{{ routes.root_url }}pages/support-request-status">{{ 'service_portal.track.view_detail' | t }}</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="text-start mt-3 text-start text-md-end text-danger invalid-feedback as-track-error-tips">
+                {{ 'service_portal.error.other_error' | t }}
+              </div>
+            </div>
+          </div>
+        @{/childWorkOrderEntityList}@
+        @{#viewAll}@
+          <div class="border-top dot-border-dark mt-5 mt-sm-6">
+            <div class="mt-4 mt-md-5 row">
+              <div class="col-md-3 d-flex flex-column justify-content-between">
+                <button class="btn btn-primary w-100 as-track-list-btn" data-number="@{workOrderNumber}@" type="submit" data-link-list="{{ routes.root_url }}pages/support-request-status-business" data-link-detail="{{ routes.root_url }}pages/support-request-status">{{ 'service_portal.general.view_all' | t }}</button>
+              </div>
+            </div>
+          </div>
+        @{/viewAll}@
+        @{^viewAll}@
+        <div class="as-track-list-btn"></div>
+        @{/viewAll}@
+      </div>
+    </div>
+    @{/orderB}@
+  </div>
+</script>
+{% schema %}
+{
+  "name": "User portal",
+  "tag": "section",
+  "class": "mb-7 mb-sm-9 as-user-portal"
+}
+{% endschema %}

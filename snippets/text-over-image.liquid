@@ -1,0 +1,15 @@
+{% assign text_color = settings.bg_color | replace: 'bg-black', 'text-white' | replace: 'bg-dark', 'text-white' | replace: 'bg-light', 'text-body' | replace: 'bg-white', 'text-body' %}
+<div class="container-topic px-0">
+  <div class="h-7 h-lg-10 img-wrapper rigid-wrapper card rounded-0 border-0">
+    {% render 'picture' , desktop_image: settings.desktop_image, mobile_image: settings.mobile_image %}
+    <div class="card-img-overlay">
+      <div class="container h-100 py-5 py-md-9">
+        <div class="row h-100 {{ settings.mobile_content_position }} {{ settings.desktop_content_position }} text-center">
+          <div class="col-md-{{ settings.content_width }} offset-md-{{ settings.content_offset }} text-center {{ settings.desktop_text_alignment }}">
+            {% render 'text-and-buttons', settings: settings %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

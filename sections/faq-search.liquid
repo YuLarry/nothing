@@ -1,0 +1,150 @@
+
+<div class="container-topic pt-header mt-5 mt-sm-1 as-faq-search faq-search">
+  <div class="row">
+    <div class="col-lg-7 col-sm-8 col-md-6 col-xl-8 col-xxl-7 col-xxxl-6 offset-sm-3">
+      <div class="col-lg-8 faq-form-wrap">
+        <h2 class="mb-0 mb-xl-4 text-uppercase display-1 font-ndot55 faq-title">
+          <span class="faq-title-all">{{ 'faq.general.title' | t }}</span>
+          <span class="faq-title-result">{{ 'faq.general.title_reault' | t }}</span>
+        </h2>
+        <form class="as-faq-form mt-4 mt-md-8">
+          <div class="input-group input-group-faq mb-3">
+            <input type="text" name="key" class="bg-transparent form-control border-end-0 placeholder-dark as-faq-form-input" 
+              placeholder="Search" aria-label="Search">
+            <button class="border border-start-0 btn btn-search" id="button-addon2">{% render "icon-search" %}</button>
+          </div>
+          <div class="as-faq-form-invalid d-none text-danger">{{ 'faq.general.empty' | t }}</div>
+        </form>
+      </div>
+      <div class="as-faq-list faq-list mt-7 mt-md-6">
+        <ul class="row mb-0 list-unstyled mt-n4">
+          {% for block in section.blocks %}
+            {% if block.type == 'list' %}
+              {% if block.settings.title %}
+              <li class="col-lg-6 col-xl-4 mt-4 position-relative d-flex">
+                <div class="bg-white d-flex flex-column p-3 w-100">
+                  <div class="d-flex align-items-center">
+                    {% if block.settings.image %}
+                    <figure class="mb-0 faq-icon-img">
+                      <img loading="lazy" class="img-fluid w-100 h-100"
+                        srcset="{{ block.settings.image | img_url: 'master' }}" 
+                        src="{{ block.settings.image | img_url: 'master' }}"
+                        alt="{{ block.settings.image.alt }}">
+                    </figure>
+                    {% endif %}
+                    <h6 class="ps-3 ms-1 mb-0">{{ block.settings.title }}</h6>
+                  </div>
+                  <ol class="flex-grow-1 mb-0 mt-5 list-unstyled">
+                    {% if block.settings.questions1 != blank %}
+                    <li class="border-bottom py-2 small d-flex"><span class="faq-marker d-inline-flex">1.</span><span class="ellipsis-2">{{ block.settings.questions1 }}</span></li>
+                    {% endif %}
+                    {% if block.settings.questions2 != blank %}
+                    <li class="border-bottom py-2 small d-flex"><span class="faq-marker d-inline-flex">2.</span><span class="ellipsis-2">{{ block.settings.questions2 }}</span></li>
+                    {% endif %}
+                    {% if block.settings.questions3 != blank %}
+                    <li class="py-2 small d-flex"><span class="faq-marker d-inline-flex">3.</span><span class="ellipsis-2">{{ block.settings.questions3 }}</span></li>
+                    {% endif %}
+                  </ol>
+                  <button class="show-all bg-dark border-0 mt-6 mt-7 py-1 small text-center text-white w-100" 
+                    type="button">{{ 'faq.general.show_all' | t }}</button>
+                </div>
+                <a href="{{ canonical_url }}#{{ block.settings.title | handleize }}" class="stretched-link as-faq-tab-target-all"></a>
+              </li>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="as-faq-noresult faq-noresult mt-6">
+        {%- capture key -%}
+        <span class="as-faq-noresult-key"></span>
+        {%- endcapture -%}
+        {{ 'faq.result.no_result_html' | t: key: key }}
+      </div>
+      <div class="as-faq-result-list faq-result-list mt-6">
+        
+      </div>
+    </div>
+  </div>
+</div>
+{%- capture key -%}
+{%- raw -%}{{ key }}{%- endraw -%}
+{%- endcapture -%}
+{%- capture num -%}
+{%- raw -%}{{ num }}{%- endraw -%}
+{%- endcapture -%}
+
+<script type="text/hogan" id="result-list">
+  {% raw %}
+  <div>
+    <div class="mt-6 mb-3 fw-bold">
+      {% endraw %}{{ 'faq.result.result_html' | t: key: key, num: num }}{% raw %}
+    </div>
+    <ul class="mb-0 list-unstyled">
+      {{#data}}
+        <li class="border-top py-4 py-md-3 cursor-pointer as-result-list position-relative" data-index={{ item.i }} data-hash="{{ item.hash }}">
+          <h5 class="d-block fw-bold font-base">{{ item.q }}</h5>
+          <div class="ellipsis-3 mb-3">
+            {{{ item.a }}}
+          </div>
+          <a class="text-muted break-word small" href="{% endraw %}{{ canonical_url }}{% raw %}#{{ item.hash }}">{% endraw %}{{ canonical_url }}{% raw %}#{{ item.hash }}</a>
+          <a href="{% endraw %}{{ canonical_url }}{% raw %}#{{ item.hash }}" class="stretched-link"></a>
+        </li>
+        {{/data}}
+    </ul>
+  </div>
+  {% endraw %}
+</script>
+
+
+{% schema %}
+{
+  "name": "Faq search",
+  "tag": "section",
+  "class": "container-fits-viewport bg-light tab-pane fade as-faq-tab section-bottom section-top px-3 px-sm-6",
+  "blocks": [
+    {
+      "name": "list",
+      "type": "list",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon image",
+          "info": "Recommended image size 55 x 55 (in px), format .jpg"
+        },
+        {
+          "type": "header",
+          "content": "List of Questions"
+        },
+        {
+          "type": "text",
+          "id": "questions1",
+          "label": "Questions 1"
+        },
+        {
+          "type": "text",
+          "id": "questions2",
+          "label": "Questions 2"
+        },
+        {
+          "type": "text",
+          "id": "questions3",
+          "label": "Questions 3"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Faq search",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

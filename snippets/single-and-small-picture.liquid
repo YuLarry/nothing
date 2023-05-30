@@ -1,0 +1,11 @@
+
+{% if img %}
+  <figure class="mb-0 w-100">
+    <picture class="d-block w-100" style="height: 0;padding-bottom: {{ 1 | divided_by: img.aspect_ratio | times: 100 }}%">
+      <img loading="lazy" class="img-fluid w-100 lazyload"
+        srcset="{{ img | img_url: 'master' }}" 
+        src="{{ img | img_url: 'master' }}"
+        alt="{{ img.alt }}">
+    </picture>
+  </figure>
+{% endif %}

@@ -1,0 +1,27 @@
+<main id="root" class="bg-light leagl-tpl">
+  <section class="container-fits-viewport px-2 text-black section-top section-bottom">
+    <div class="container-topic px-2 pt-header mt-sm-1 font-base section-bottom">
+          <div class="row mx-n2">
+            <div class="col-sm-3 col-xl-2 px-2">
+              {% render 'sidebar-policy'  %}
+            </div>
+            <div class="col-sm-6 px-2">
+              <div class="tab-content">
+                  <div class="tab-pane show active">
+                    <div class="dot-border-dark border-top d-none d-sm-block"></div>
+                    <div class="pb-4 pt-2">
+                      <h2 class="text-uppercase fs-h2 {% unless request.path contains 'privacy-policy' %}mb-0{% endunless %}">{{ page.title }}</h2>
+                      {% if request.path contains 'privacy-policy' %}
+                        <p class="mb-0">{{ 'general.privacy.update_date' | t }}</p>
+                      {% endif %}
+                    </div>
+                    <div class="richtext">
+                      {{ page.content | replace: '<a', '<a class="text-decoration-underline"' }}
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+    </div>
+  </section>
+</main>

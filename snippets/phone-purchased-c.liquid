@@ -1,0 +1,284 @@
+
+<div>
+  <input type="hidden" class="as-money-format" name="money_format" form="as-product-form-{{ section.id }}" value="{{ shop.money_format }}">
+  <variant-lists data-url="{{ product.url }}" data-section="{{ section.id }}" class="d-none as-all-variants as-all-selection">
+    <label for="product-{{ product.id }}-variant" class="form-label visually-hidden">Variant</label>
+    <select id="product-{{ product.id }}-variant" class="as-product-variant" name="id" data-type="phone">
+      {%- for variant in product.variants -%}
+        {%- liquid
+          assign option_variant_available = variant.available
+          assign option_delivery_data = variant.metafields.my_fields.delivery_time.value
+          if option_delivery_data != blank
+            if variant.inventory_quantity < option_delivery_data.last.quantity
+              assign option_variant_available = false
+            endif
+          endif  
+        -%}
+        <option
+          data-available="{{ option_variant_available }}"
+          data-hide-purchase="{{ variant.metafields.my_fields.hide_purchase_and_notify }}"
+          data-product-color="{{ variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' | replace: 'white', 'light' }}" data-price="{{ variant.price }}" 
+        {% if variant.compare_at_price > variant.price %}
+          data-compare-price="{{ variant.compare_at_price }}"
+        {% else %}
+          data-compare-price="{{ variant.price }}"
+        {% endif %}
+         data-title="{{ variant.title }}"
+         data-variant-title="{{ product.title }} - {{ variant.title }}"
+         data-sku="{{ variant.sku }}"
+        class="as-product-variant-option" value="{{ variant.id }}"
+        {% if variant.option1 %}data-option1="{{ variant.option1 }}" {% endif %}
+        {% if variant.option2 %}data-option2="{{ variant.option2 }}" {% endif %}
+        {% if variant.option3 %}data-option3="{{ variant.option3 }}" {% endif %}
+          {%- if variant == current_variant %} selected="selected" {%- endif -%}>
+          {{ variant.title }}
+        </option>
+      {%- endfor -%}
+    </select>
+  </variant-lists>
+  {%- assign product_form_id = 'as-product-form-' | append: section.id -%}
+  <div>
+    <div data-step="0" class="as-step step as-main-step">
+      {% assign step_1_index = "products.phone1.step_001" | t %}
+      {% assign step_1_title = "products.phone1.step_configuration" | t %}
+
+      <div class="row g-0">
+        {% if section.settings.pages or section.settings.subline or bundle %}
+          {% render 'product-step-title', step_index: section.settings.pages , step_title: section.settings.subline %}
+        {% else %}
+          {% render 'product-step-title', step_index: step_1_index , step_title: step_1_title %}
+        {% endif %}
+
+        <div class="col-12 col-md-6 col-lg-12">
+          <h1 class="fs-h1 mb-3 mb-md-5">{% if section.settings.heading != blank %}{{ heading }}{% else %}{{ product.title }}{% endif %}</h1>
+        </div>
+        <div class="col-12 col-md-6 col-lg-12">
+          {% if section.settings.lead_paragraph != blank %}
+            <div class="fs-base mb-4 richtext{% if section.settings.show_sold_out_text %} as-product-lead-paragraph{% if hide_purchase_and_notify %}{% unless has_resellers_blocks %} d-none{% endunless %}{% else %}{% unless current_available %} d-none{% endunless %}{% endif %}{% endif %}">
+              {{ section.settings.lead_paragraph | replace: '<p', '<p class="mb-0"' }}
+            </div>
+          {% endif %}
+          {%- if section.settings.logo_image != blank or section.settings.logo_link != blank -%}
+            <div class="mb-4 logo-img position-relative">
+              {% if section.settings.logo_link != blank %}
+                <a href="{{ section.settings.logo_link }}" {% render 'link', link: section.settings.logo_link %} class="stretched-link"></a>
+              {% endif %}
+              <img loading="lazy" class="w-100" src="{{ section.settings.logo_image | img_url: 'master' }}" alt="{{ section.settings.logo_image.alt }}">
+            </div>
+          {%- endif -%}
+
+          <div class="{% if section.settings.show_price %}d-flex{% else %}d-none{% endif %} as-price-{{ section.id }} mb-4">
+            <div class="fs-base">{{ product.title }}&nbsp;</div>
+            <div class="as-price-data-{{ section.id }}">
+              {% if selected_variant %}
+                {% render 'price', product: product, use_variant: true %}
+              {% else %}
+                {% render 'price', product: product, use_variant: false %}
+              {% endif %}
+            </div>
+          </div>
+
+          <div>
+            {%- unless product.has_only_default_variant -%}
+              <variant-options data-levels="{{ product.options_with_values.size }}" data-section="{{ section.id }}" data-url="{{ product.url }}">
+                {%- for option in product.options_with_values -%}
+                    <fieldset class="as-option-wrap mb-4">
+                      <legend class="fs-base mb-2">{{ "products.general.select_option" | t: option_name: option.name }}</legend>
+                      <div class="row gx-4 gy-3">
+                        {% liquid
+                          if option.name == product.metafields.my_fields.colorful_option
+                            assign option_array = option.values
+                          else
+                            assign option_array = option.values
+                          endif
+                        %}
+                        {%- for value in option_array -%}
+                          {%- liquid
+                            assign first_related_variant = blank
+                            if option.name == product.metafields.my_fields.colorful_option
+                              for variant_item in product.variants
+                                  if option.position == 1
+                                    if variant_item.option1 == value
+                                      assign first_related_variant = variant_item
+                                      break
+                                    endif
+                                  endif
+                                  if option.position == 2
+                                    if variant_item.option2 == value
+                                      assign first_related_variant = variant_item
+                                      break
+                                    endif
+                                  endif
+                                  if option.position == 3
+                                    if variant_item.option3 == value
+                                      assign first_related_variant = variant_item
+                                      break
+                                    endif
+                                  endif
+                              endfor
+                            endif
+                          -%}
+                          {%- capture is_not_exist -%}
+                            {%- render 'filter-options', product: product, option: option, value: value, current_variant: current_variant -%}
+                          {%- endcapture -%}
+                          {% assign is_not_exist = is_not_exist | strip %}
+
+                          <div class="{% if bundle %}col-auto{% else %}col-4{% endif %} radio-btn position-relative {% if is_not_exist == 'true' %}d-none{% endif %}">
+                            <input {% if option.name == product.metafields.my_fields.colorful_option and first_related_variant != blank and first_related_variant.metafields.my_fields.option != blank %}data-media-color="{{ first_related_variant.metafields.my_fields.option | downcase | replace: 'black', 'dark' | replace: 'white', 'light' }}"{% endif %}
+                              data-position="{{ option.position }}" type="radio" id="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}"
+                              class="as-step-option as-make-select radio-btn-input form-check-input visually-hidden {% if option.name == product.metafields.my_fields.colorful_option %}as-colorful-option{% endif %}"
+                              name="{{ option.name }}"
+                              value="{{ value | escape }}"
+                              form="as-product-form-{{ section.id }}"
+                              index="{{selected_variant.optionName}}"
+                              {% if option.position == 1 and selected_variant.option1 == value %}checked{% endif %}
+                              {% if option.position == 2 and selected_variant.option2 == value %}checked{% endif %}
+                              {% if option.position == 3 and selected_variant.option3 == value %}checked{% endif %}
+                            >
+                            <label class="{% if bundle %}px-5{% endif %} radio-btn-label form-check-label {% if option.name == product.metafields.my_fields.colorful_option and first_related_variant != blank and first_related_variant.metafields.my_fields.option != blank %}{{ first_related_variant.metafields.my_fields.option | downcase }}{% else %}none{% endif %}" for="{{ section.id }}-{{ option.name }}-{{ forloop.index0 }}">
+                              {{ value }}
+                            </label>
+                          </div>
+                        {%- endfor -%}
+                      </div>
+                    </fieldset>
+                {%- endfor -%}
+                <script class="as-variants-data" type="application/json">
+                  {{ product.variants | json }}
+                </script>
+              </variant-options>
+            {%- endunless -%}
+          </div>
+          
+          <div id="as-sold-out-message-{{ section.id }}" class="mt-5 mt-md-6 {% if product.available or hide_purchase_and_notify %}d-none{% endif %}">
+            {% if section.settings.show_sold_out_text %}
+            <div class="richtext">{{ section.settings.sold_out_text | replace: '<p', '<p class="mb-0"' }}</div>
+            {% else %}
+            <p class="mb-0">{{ 'products.form_notify_me.notify_me_text' | t: product_title: product.title }}</p>
+            <form method="post" class="as-notify-me-form mt-3 mt-md-4" data-event="subscribe" data-type="notify_me" action="{{ settings.subscribe_api }}" autocomplete="true" novalidate="true">
+              {% comment %} <!-- 使用google-recaptcha后，生成包含<textarea name="g-recaptcha-response"></textarea>的结构（内含token值） --> {% endcomment %}
+              <google-recaptcha data-sitekey="{{ settings.google_recaptcha_sitekey }}" data-container-class="as-verify-code-recaptcha"></google-recaptcha>  
+              {% if settings.store_tag != blank or settings.notify_me_tag != blank or current_variant.metafields.my_fields.notify_me_tag != blank %}
+                <input type="hidden" name="tags" id="as-variant-tag-{{ section.id }}" value="{{settings.store_tag}},{{settings.notify_me_tag}},{{ current_variant.metafields.my_fields.notify_me_tag }}">
+              {% endif %}
+              <div>
+                <div class="input-group input-group-overlay fs-base text-primary">
+                  <span class="d-flex align-items-center">(&nbsp;</span>
+                  <input class="as-form-input bg-transparent form-control p-0 border-0 fs-base placeholder-primary text-primary"
+                    type="email" name="email" id="email" 
+                    placeholder="{{ 'products.form_notify_me.enter_your_email' | t }}" 
+                    pattern='^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+                    style="height: auto;" required>
+                  <button type="submit" class="as-btn fw-normal p-0 border-0 px-0 bg-transparent fs-base link-primary">{{ 'products.form_notify_me.notify_me' | t }}</button>
+                  <span class="d-flex align-items-center">&nbsp;)</span>
+                </div>
+                <div class="mt-1 text-danger invalid-feedback as-input-error-tips">
+                  {{ 'products.form_notify_me.error' | t }}
+                </div>
+              </div>
+              <div>
+                <div class="mt-7 d-flex align-items-center position-relative">
+                  <input id="notify-me-policy" class="as-form-input form-check-input m-0 me-2 position-relative flex-center rounded-0" type="checkbox" required />
+                  <label for="notify-me-policy">{{ 'products.form_notify_me.terms_html' | t }}</label>
+                </div>
+                <div class="mt-1 text-danger invalid-feedback as-input-error-tips">
+                  {{ 'products.form_notify_me.terms_error' | t }}
+                </div>
+              </div>
+              <div class="as-tips-success invalid-feedback text-success fs-base">{{ 'products.form_notify_me.success' | t }}</div>
+              <div data-error406="{{ 'general.newsletter_form.distributor_error' | t }}" data-default="{{ 'products.form_notify_me.error' | t }}" class="as-form-error-tips invalid-feedback text-danger fs-base">{{ 'products.form_notify_me.error' | t }}</div>
+            </form>
+            {% endif %}
+          </div>
+          <div class="as-delivery-message-{{ section.id }} dot-border-dark border-top py-1 mt-5 mt-md-6">
+            {% if section.settings.store_locator_text != blank or current_shipping_info != blank or delivery_text != blank %}
+              <div class="">
+                  <div class="fs-small font-mono" style="text-transform: uppercase !important;">
+                    {%- unless hide_purchase_and_notify  -%}
+                      {% if delivery_text != blank %}
+                        <div>{{ delivery_text }}</div>
+                      {% endif %}
+                      {% if current_shipping_info != blank %}
+                        <div class="d-block d-lg-none">{{ current_shipping_info |  newline_to_br }}</div>
+                      {% endif %}
+                    {%- endunless -%}
+                    {% if section.settings.store_locator_text != blank %}
+                      <div class="richtext">{{ section.settings.store_locator_text | replace: '<p', '<p class="mb-0"' }}</div>
+                    {% endif %}
+                  </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div data-step="3" class="as-step step d-none as-view-cart-summary {% if hide_purchase_and_notify %}d-none{% endif %}">
+      {% assign step_4_index = "products.phone1.step_003" | t %}
+      {% assign step_4_title = "products.phone1.step_summary" | t %}
+      {% unless bundle %}
+        {% render 'product-step-title', step_index: step_4_index, step_title: step_4_title %}
+      {% endunless %}
+      <div class="row g-0">
+        <div class="col-12 col-md-6 col-lg-12">
+          <h2 class="fs-h1 mb-5">{{ "products.phone1.step_4_summary" | t }}</h2>
+          <div class="d-flex justify-content-between as-price-{{ section.id }}-total">
+            <div class="fs-base">{{ product.title }}</div>
+            {% if selected_variant %}
+              {% render 'price', product: product, use_variant: true %}
+            {% else %}
+              {% render 'price', product: product, use_variant: false %}
+            {% endif %}
+          </div>
+          <div class="as-accessory-price-list">
+  
+          </div>
+          <div class="mt-4 d-flex">
+            <span>{{ "products.phone1.total" | t }}</span>
+            <s class="d-inline-block as-sticky-total-compare-price mx-1"></s>
+            <div class="d-inline-block as-sticky-total-price mx-1">
+              {% if selected_variant %}
+                {% render 'price', product: product, use_variant: true %}
+              {% else %}
+                {% render 'price', product: product, use_variant: false %}
+              {% endif %}
+            </div>
+          </div>
+          <div class="as-delivery-message-{{ section.id }}-total as-delivery-message-total" style="text-transform: uppercase !important;">
+            {% if delivery_text != blank %}
+              <div>{{ delivery_text }}</div>
+            {% endif %}
+            {%- unless hide_purchase_and_notify -%}
+              {% if current_shipping_info != blank %}
+                <div class="d-block d-lg-none" style="text-transform: uppercase !important;">
+                  <div class="as-without-ear-stick mt-4 ">{{ current_shipping_info |  newline_to_br }}</div>
+                  <div class="as-with-ear-stick mt-4 d-none">{{ 'products.phone1.shipping_info_with_ear_stick_html' | t: delivery_time: estimated_delivery_time, current_delivery_time: current_delivery_time }}</div>
+                </div>
+              {% endif %}
+            {%- endunless -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/hogan" class="as-line-item-template">
+@{#data}@
+  <div class="d-flex justify-content-between">
+    <div class="fs-base">@{name}@</div>
+    <div class="d-flex flex-wrap price @{#show_compare}@ price--on-sale @{/show_compare}@">
+      <div class="@{#show_compare}@ price__sale @{/show_compare}@">
+        @{#show_compare}@
+        <dd>
+          <s class="d-inline">@{format_compared_price}@</s>
+        </dd>
+      @{/show_compare}@
+        <dd>
+          <div class="d-inline">@{format_price}@</div>
+        </dd>
+      </div>
+    </div>
+  </div>
+@{/data}@
+</script>

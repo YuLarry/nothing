@@ -1,0 +1,101 @@
+<main role="main" id="root" class="bg-light">
+  <section data-login-url="{{ routes.account_login_url | prepend: request.origin }}" class="as-account-page container-fits-viewport-100 px-2 text-black section-top section-bottom">
+    <div class="container-topic px-2 pt-header mt-5 mt-sm-1 font-base section-bottom">
+          <div class="row mx-n2 flex-column flex-sm-row">
+            <div class="col-sm-3 col-xl-2 px-2">
+              {% render 'sidebar-account' %}
+            </div>
+            <div class="as-account-components d-none col-sm-6 px-2">
+              {% assign title = 'customer.orders.title' | t %}
+              {% render 'page-title', title: title %}
+              <div class="">
+                {% if customer.orders.size != 0 %}
+                  <ul class="list-unstyled mb-0 mt-n5 mt-sm-n7">
+                    {% for order in customer.orders %}
+                      <li class="mt-5 mt-sm-7">
+                        <div class="mb-1 dot-border-dark border-top"></div>
+                            <p class="mb-0 text-uppercase d-flex justify-content-between">
+                              {{ 'customer.orders.order_name' | t }}: {{ order.name }}
+                              {{ order.created_at | time_tag: format: 'month_day_year' | replace: '<time', '<time class="text-ellipsis"' }}
+                              <span>(
+                              {% if order.cancelled %}
+                              {{ 'customer.orders.cancelled' | t }}
+                              {% else %}
+                              {{ order.fulfillment_status_label }}
+                              {% endif %}
+                              )</span>
+                            </p>
+                        {% render 'order-list', order: order %}
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <a href="{{ order.customer_url }}" class="btn btn-primary mb-2">{{ 'customer.orders.details' | t }}</a>
+                            {% assign line_item = order.line_items | first %}
+                            {% if line_item.fulfillment.tracking_url %}
+                              <a href="{{ line_item.fulfillment.tracking_url }}" class="btn btn-primary mb-2" target="_blank" rel="noopener">{{ 'customer.orders.track_order' | t }}</a>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                <p class="mb-0 text-uppercase">// {{ 'customer.no_orders.title' | t }}</p>
+                <div class="border-top border-bottom mt-7 dot-border-dark border-start-0 border-end-0 d-none">
+                  <div class="m-auto" style="height: 233px;">
+                    <p class="mt-2 mb-0 text-uppercase">{{ 'customer.no_orders.product' | t }}</p>
+                    <a class="mt-5 mb-0 text-uppercase d-flex gray-link text-decoration-underline" href="/">{{ 'customer.no_orders.learn_more' | t }}</a>
+                  </div>
+                </div>
+                <div class="m-auto d-none">
+                  <p class="mt-5 text-uppercase">{{ 'customer.no_orders.shipping' | t }}</p>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="as-account-components d-none col-sm-6 px-2" data-router="#edit-profile">
+              <div class="h-100 font-base text-uppercase as-edit-file-section">
+                {% assign title = 'customer.edit_profile.title' | t %}
+                {% render 'page-title', title: title %}
+                <form action="{{ settings.api_host }}/auth/update" class="as-edit-file-form" method="post" novalidate data-need-authorization="true" autocomplete="off">
+                  <input type="hidden" name="need_multipass" class="as-need-multipass-param" value="1">
+                  {% assign edit_profile = canonical_url | append: '#edit-profile' | url_encode %}
+                  <input type="hidden" name="return_to" value="{{ request.origin | append: '/pages/redirect' | append: '?return_to=' | append: edit_profile | url_encode }}"  class="as-return-to-param">
+                  <input type="hidden" name="store" value="{{ shop.permanent_domain | remove: ".myshopify.com" }}" class="as-store-param">
+                  <input type="hidden" name="lang" value="{{ settings.store_code }}">
+                  <div class="row">
+                    <div class="col-12 col-lg-6">
+                      <div class="form-pristine font-base">
+                        <input type="text" maxlength="32" name="first_name" {% if customer.first_name %}value="{{ customer.first_name }}"{% endif %} class="as-first-name rounded-pill border-0 form-control input-pristine" id="floatingInput" placeholder="{{ 'customer.edit_profile.first_name' | t }}" required
+                        data-pristine-maxlength-message="{{ 'customer.error.format_error' | t }}"
+                        data-pristine-required-message="{{ 'customer.edit_profile.first_name' | t }}{{ 'customer.error.empty_error' | t }}">
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-3 mt-lg-0">
+                      <div class="form-pristine font-base">    
+                        <input type="text" maxlength="32" name="last_name" {% if customer.last_name %}value="{{ customer.last_name }}"{% endif %} class="as-last-name rounded-pill border-0 form-control input-pristine" id="floatingInput" placeholder="{{ 'customer.edit_profile.last_name' | t }}" required
+                        data-pristine-maxlength-message="{{ 'customer.error.format_error' | t }}"
+                        data-pristine-required-message="{{ 'customer.edit_profile.last_name' | t }}{{ 'customer.error.empty_error' | t }}">
+                      </div>
+                    </div>
+                    <div class="col mt-5">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <button class="btn btn-primary as-submit text-uppercase">
+                            {{ 'customer.edit_profile.save_changes' | t }}
+                          </button>
+                        </div>
+                      </div>
+                      <div class="as-form-error text-danger d-none small mt-2"></div>
+                      <div class="as-invalid-error d-none">{{ 'customer.error.other_error' | t }}</div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            {%- if settings.show_referral_page -%}
+              {% render 'account-referral-page' %}
+            {%- endif -%}
+          </div>
+    </div>
+  </section>
+</main>

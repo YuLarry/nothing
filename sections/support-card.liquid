@@ -1,0 +1,85 @@
+<div class="container-core">
+  {% if section.settings.title != blank %}
+  <h3 class="fs-h2">{{ section.settings.title }}</h3>
+  {% endif %}
+  <div class="{% if section.settings.title != blank %}mt-5 mt-sm-6 dot-border-dark border-top{% endif %}">
+    <div class="mt-4 mt-md-5">
+      <div class="row row-cols-sm-3 mt-n4">
+        {% for block in section.blocks %}
+          <div class="card bg-transparent border-0 gx-4 position-relative mt-4">
+            <a href="{{ block.settings.url }}" class="stretched-link"></a>
+            <figure class="mb-0 figure">
+              <picture>
+                {% assign image = block.settings.desktop_image %}
+                <img
+                  src="{{ image | img_url: 'master' }}"
+                  alt="{{ image.alt | escape }}"
+                  loading="lazy"
+                  class="w-100 h-100 object-fit-cover"
+                  width="{{ image.width }}"
+                  height="{{ image.height }}">
+              </picture>
+            </figure>
+            <div class="mt-2">
+              <p class="mb-0">{{ block.settings.title }}</p>
+              <p class="mt-2 mb-0 text-nowrap text-primary">{{ 'service_portal.general.read_more' | t }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Card",
+  "tag": "section",
+  "class": "bg-light mb-7 mb-sm-9",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Headline"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "list",
+      "type": "list",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "title"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "url"
+        },
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Image",
+          "info": "1200px x auto .jpg recommended"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Card list",
+      "blocks": [
+        {
+          "type": "list"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

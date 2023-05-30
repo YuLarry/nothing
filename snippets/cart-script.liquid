@@ -1,0 +1,98 @@
+{% raw %}
+<script id="tpl-cart-items" type="text/template">
+  {{#items}}
+  <li class="position-relative border-bottom dot-border-dark">
+    <div class="row py-2">
+      <div class="col-4 position-relative">
+        <img loading="lazy" width="{{ image.width }}" 
+          src="{{image}} 1x, {{image}} 2x, {{image}} 3x"
+          alt="{{ title }}" class="img-fluid w-100">
+        <!-- Image -->
+        <a class="stretched-link" href="{{url}}"></a>
+      </div>
+      <div class="col-8 d-flex flex-column justify-content-between">
+        <div>
+          <div class="">
+            <a class="text-reset" href="{{ url }}">
+              <span>{{ product_title }}</span>
+            </a>
+          </div>
+          {{#variant_title}}
+          {{#options_with_values}}
+          <div class="">
+            <span>{{ name }}:</span>
+            <span>{{ value }}</span>
+          </div>
+          {{/options_with_values}}
+          {{/variant_title}}
+          <div class="">
+            <span>{% endraw %}{{ 'cart.general.price' | t }}:{% raw %}</span>
+            <span>
+              {{#original_price}}
+              <del class="me-2 text-muted">{{ original_price }}</del>
+              {{/original_price}}
+              <span>{{ final_price }}</span>
+            </span>
+          </div>
+
+          {{#show_discounts}}
+            <div class="mt-3" style="text-transform: uppercase;">
+              {{#discounts}}
+                <div>{{title}}</div>
+              {{/discounts}}
+            </div>
+          {{/show_discounts}}
+
+        </div>
+        <div class="as-input-group-number d-flex align-items-center mx-n2">
+          <button class="bg-transparent border-0 flex-center px-2 as-form-control-number-minus" type="button">{% endraw %}{% render 'icon-minus' %}{% raw %}</button>
+          <input type="text" 
+            name="updates[]" id="updates_{{ key }}" data-key="{{ key }}"
+            disabled
+            style="width: 1.5rem;"
+            class="as-form-control-number as-update-item-quantity bg-transparent border-0 p-0 text-center h-auto" 
+            step="1" min="0" max="9" value="{{quantity}}">
+          <button class="bg-transparent border-0 flex-center px-2 as-form-control-number-plus as-form-control-number-{{ id }}" type="button" {{#disabled}}disabled{{/disabled}}>{% endraw %}{% render 'icon-plus' %}{% raw %}</button>
+        </div>
+      </div>
+    </div>
+  </li>
+  {{/items}}
+  {{#show_membership_delivery_text}}
+  {% endraw %}<div class="py-2">{{ 'cart.general.membership_delivery_text' | t }}</div>{% raw %}
+  {{/show_membership_delivery_text}}
+</script>
+
+<script id="tpl-cart-summary" type="text/template">
+  {{#items_subtotal_price}}
+  <li class="d-flex justify-content-between">
+    <span class="">{% endraw %}{{ 'cart.general.subtotal' | t }}{% raw %}</span> 
+    <span class="ms-2 ms-sm-5">
+      {{#original_total_price}}
+      <del class="text-muted text-nowrap">{{original_total_price}}</del>
+      {{/original_total_price}}
+      <span class="ms-2 text-nowrap">{{items_subtotal_price}}</span>
+    </span>
+  </li>
+  {{/items_subtotal_price}}
+  {{#cart_level_discount_applications}}
+  <li class="d-flex justify-content-between">
+    <span class="">{{title}}</span>
+    <span class="ms-2 ms-sm-5">- {{total_allocated_amount}}</span>
+  </li>
+  {{/cart_level_discount_applications}}
+  <li class="d-flex justify-content-between">
+    <span class="">{% endraw %}{{ 'cart.general.total' | t }}{% raw %}</span>
+    <span class="ms-2 ms-sm-5">{{total_price}}</span>
+  </li>
+  {% endraw %}
+  <li class="d-flex align-items-end">
+    {{ taxes_shipping_checkout }}
+  </li>
+  {% raw %}
+</script>
+
+<script id="tpl-cart-shipping-message" type="text/template">
+  {{ cart_shipping_message }}
+</script>
+{% endraw %}

@@ -1,0 +1,29 @@
+{%- liquid
+  if option.position == 1 
+    assign filtered_variant = product.variants | where: "option1", value | first 
+    if filtered_variant == null 
+      assign is_not_exist = true 
+    else 
+      assign is_not_exist = false 
+    endif 
+  elsif option.position == 2 
+    assign filtered_variant = product.variants | where: "option1", current_variant.option1 
+    assign filtered_variant = filtered_variant | where: "option2", value | first 
+    if filtered_variant == null 
+      assign is_not_exist = true 
+    else 
+      assign is_not_exist = false 
+    endif 
+  elsif option.position == 3 
+    assign filtered_variant = product.variants | where: "option1", current_variant.option1 
+    assign filtered_variant = filtered_variant | where: "option2", current_variant.option2 
+    assign filtered_variant = filtered_variant | where: "option3", value | first 
+    if filtered_variant == null 
+      assign is_not_exist = true 
+    else 
+      assign is_not_exist = false 
+    endif 
+  endif
+-%}
+{{ is_not_exist }}
+

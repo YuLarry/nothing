@@ -1,0 +1,214 @@
+<main id="root" role="main" class="bg-light page-contact-us">
+  <section class="container-fits-viewport px-2 text-dark section-top section-bottom">
+    <div class="container-topic px-2 pt-header mt-sm-1 font-base">
+      <div class="row mx-n2">
+        <div class="col-sm-3 col-xl-2 px-2">
+          {% assign blog = blogs[settings.blog] %}
+          {% render 'sidebar-newsroom', handle: page.handle, blog: blog %}
+        </div>
+        <div class="col-sm-6 px-2">
+          {% assign title = 'contact.press.title' | t %}
+          {% render 'page-title', title: title %}
+          <div class="mb-3">
+            <p class="mb-1">{{ 'contact.press.product_info' | t }}</p>
+            <p class="mb-0">{{ 'contact.press.other_questions_html' | t }}</p>
+          </div>
+          <form
+            class="as-press-contact-form w-100"
+            action="{{ settings.press_contact_api }}"
+            enctype="multipart/form-data"
+            novalidate="true"
+            autocomplete="off"
+            method="post"
+          >
+            <google-recaptcha data-sitekey="{{ settings.google_recaptcha_sitekey }}" data-container-class="as-verify-code-recaptcha"></google-recaptcha>
+            <div class="">
+              <input type="hidden" name="store" value="{{ settings.store_code }}">
+              <input type="hidden" id="as-category-hidden-input" name="to_email" value="">
+              <input type="hidden" id="as-subject-hidden-input" name="subject" value="">
+              <div class="row">
+                <div class="d-none  ">{{ 'contact.press.category.title' | t }}</div>
+                <div class="col-12 mt-3">
+                  <div class="d-flex position-relative contact-dropdown-wrap as-category-wrap text-uppercase">
+                    <a
+                      class="rounded-pill contact-dropdown select-dropdown bg-white cursor-pointer d-flex text-dark text-decoration-none w-100"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <span class="as-category-text px-13 flex-grow-1 dot-border-dark d-flex  align-items-center">
+                        {{ 'contact.press.category.title' | t }}
+                      </span>
+                      <span class="dot-border-dark flex-center pe-4">
+                        {% render 'icon-chevron-down' %}
+                      </span>
+                    </a>
+                    <ul class="dropdown-menu  py-0 as-category-ul w-100 bg-white border-0 fs-base">
+                      <li>
+                        <a
+                          class="px-2 dropdown-item nav-link as-category-link cursor-pointer"
+                          data-value="{{ section.settings.email_media }}"
+                        >
+                          {{- 'contact.press.category.media' | t -}}
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          class="px-2 dropdown-item nav-link as-category-link cursor-pointer"
+                          data-value="{{ section.settings.email_influencer }}"
+                        >
+                          {{- 'contact.press.category.influencer' | t -}}
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          class="px-2 dropdown-item nav-link as-category-link cursor-pointer"
+                          data-value="{{ section.settings.email_other }}"
+                        >
+                          {{- 'contact.press.category.other' | t -}}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 mt-3">
+                  <div class="form-floating overflow-hidden rounded-pill">
+                    <input
+                      type="text"
+                      id="contact-us-subject"
+                      class="as-form-input as-subject-input rounded-pill form-control border-0"
+                      placeholder="{{ 'contact.press.subject' | t }}"
+                      maxlength="255"
+                      value=""
+                      disabled
+                      required
+                    >
+                    <label class="text-muted">{{ 'contact.press.subject' | t }}</label>
+                  </div>
+                  <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                    {{ 'contact.press.subject' | t -}}
+                    {{- 'general.error_message.format_error' | t }}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 col-lg-6 mt-3">
+                  <div class="form-floating overflow-hidden rounded-pill">
+                    <input
+                      type="text"
+                      id="contact-us-name"
+                      name="name"
+                      class="as-form-input rounded-pill form-control border-0"
+                      placeholder="{{ 'contact.press.name' | t }}"
+                      maxlength="255"
+                      value=""
+                      disabled
+                      required
+                    >
+                    <label class="text-muted">{{ 'contact.press.name' | t }}</label>
+                  </div>
+                  <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                    {{ 'contact.press.name' | t -}}
+                    {{- 'general.error_message.format_error' | t }}
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6 mt-3">
+                  <div class="form-floating overflow-hidden rounded-pill">
+                    <input
+                      type="email"
+                      id="contact-us-email"
+                      name="email"
+                      class="as-form-input rounded-pill form-control border-0"
+                      placeholder="{{ 'contact.press.email' | t }}"
+                      value=""
+                      disabled
+                      pattern='^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+                      required
+                    >
+                    <label class="text-muted">{{ 'contact.press.email' | t }}</label>
+                  </div>
+                  <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                    {{ 'contact.press.email' | t -}}
+                    {{- 'general.error_message.format_error' | t }}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 mt-3">
+                  {% comment %} 当textarea标签中有空格或内容时，会不显示placeholder {% endcomment %}
+                  <div class="form-floating rounded-pill">
+                    <textarea
+                      id="contact-us-body"
+                      class="py-2 as-form-input rounded-3 form-control border-0 form-control-textarea"
+                      maxlength="3000"
+                      rows="5"
+                      disabled
+                      name="message"
+                      style="resize: none;"
+                      placeholder="{{ 'contact.press.message' | t }}"
+                      required
+                    ></textarea>
+                    <label class="text-muted">{{ 'contact.press.message' | t }}</label>
+                  </div>
+                  <div class="text-start px-0 mt-1 text-danger invalid-feedback as-error-tips">
+                    {{ 'contact.press.message' | t -}}
+                    {{- 'general.error_message.format_error' | t }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 check-text font-mono">
+              <div class="form-check mb-0">
+                <input class="as-form-input-pre flex-center bg-transparent form-check-input rounded-0 mt-1 mt-lg-0" type="checkbox" id="read_policy" disabled required />
+                {%- capture policy -%}
+                  <a href="{{ routes.root_url }}pages/privacy-policy" class="dot-border-primary border-bottom text-primary">{{ 'general.event_banner.policy' | t }}</a>
+                {%- endcapture -%}
+                <label for="read_policy" class="ms-2">{{ 'contact.press.privacy_description_html' | t: policy: policy }}</label>
+              </div>
+              <div class="text-start pe-0 ps-5 mt-1 text-danger invalid-feedback as-error-tips">
+                {{ 'contact.press.privacy_unselected' | t }}
+              </div>
+            </div>
+            <div class="d-flex mt-5 row row-cols-lg-2 gx-0">
+              <button type="submit" disabled class="as-btn border-0 btn btn-lg btn-dark font-55 text-uppercase">
+                {{ 'contact.press.submit' | t }}
+              </button>
+            </div>
+            <div class="row">
+              <div class="invalid-feedback  "></div>
+              <div class="as-tips-success invalid-feedback text-danger mt-2">{{ 'contact.support.post_success' | t }}</div>
+              <div class="as-tips-error invalid-feedback text-danger mt-2">{{ 'contact.support.post_error' | t }}</div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+{% schema %}
+{
+  "name": "Press contact",
+  "settings": [
+    {
+      "type": "text",
+      "id": "email_media",
+      "label": "Email to media",
+      "default": "press@nothing.tech"
+    },
+    {
+      "type": "text",
+      "id": "email_influencer",
+      "label": "Email to influencer",
+      "default": "influencers@nothing.tech"
+    },
+    {
+      "type": "text",
+      "id": "email_other",
+      "label": "Email to other",
+      "default": "press@nothing.tech"
+    }
+  ]
+}
+{% endschema %}

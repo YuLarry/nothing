@@ -1,0 +1,104 @@
+
+{% style %}
+.custom-img-{{ section.id }} {
+  object-fit: cover;
+  object-position: {{ section.settings.pin_the_desktop_image_on }};
+}
+{% endstyle %}
+<div class="{% if section.settings.disabled_section %}d-none{% endif %}  {% unless section.settings.disable_container_fits_viewport %}container-fits-viewport {% endunless %}row g-0 as-location-target" data-color='{{ section.settings.text_color }}'>
+  <div class="col-lg position-relative overflow-hidden">
+    {% if section.settings.title != blank %}
+    <div class="position-absolute z-index-1 font-size-calc {% unless section.settings.show_dotted_font_on_mobile %}d-none d-lg-block{% endunless %}">
+      {% render 'product-special-title', title: section.settings.title, color: section.settings.left_text_color %}
+    </div>
+    {% endif %}
+    <figure class="mb-0">
+      <picture>
+        <source media="(max-width: 576px)" 
+          sizes="(max-width: 576px) 100vw, 576px" 
+          srcset="
+            {{ section.settings.imageMob | img_url: 'master' }}" >
+        <img loading="lazy" class="{% unless section.settings.disable_container_fits_viewport %}position-lg-absolute {% endunless %}w-100 h-100 custom-img-{{ section.id }}"
+          sizes="(max-width: 2160px) 100vw, 2160px"
+          srcset="
+            {{ section.settings.image | img_url: '600x' }} 600w,
+            {{ section.settings.image | img_url: '857x' }} 857w,
+            {{ section.settings.image | img_url: '1069x' }} 1069w,
+            {{ section.settings.image | img_url: '1244x' }} 1244w,
+            {{ section.settings.image | img_url: '1494x' }} 1494w,
+            {{ section.settings.image | img_url: '1560x' }} 1560w,
+            {{ section.settings.image | img_url: '1660x' }} 1660w,
+            {{ section.settings.image | img_url: '1901x' }} 1901w,
+            {{ section.settings.image | img_url: '2040x' }} 2040w,
+            {{ section.settings.image | img_url: '2155x' }} 2155w,
+            {{ section.settings.image | img_url: '2160x' }} 2160w,
+            {{ section.settings.image | img_url: '3840x' }} 3840w" 
+          src="{{ section.settings.image | img_url: '2160x' }}"
+          alt="{{ section.settings.image.alt }}">
+      </picture>
+    </figure>
+    {% if section.settings.badge_image != blank %}
+      {% render 'product-badge-image', image: section.settings.badge_image, badge_position: section.settings.badge_position %}
+    {% endif %}
+    {% if section.settings.image_link != blank %}
+    <a class="stretched-link" {% render 'link', link: section.settings.image_link %} href="{{ section.settings.image_link }}"></a>
+    {% endif %}
+  </div>
+  <div class="col-lg-auto w-lg-fixed px-4 pt-1 pb-6 py-lg-0 text-{{ section.settings.text_color }} position-relative">
+    <div class="{% if section.settings.disable_container_fits_viewport %}position-sticky top-0 {% endif %}container-fits-viewport row">
+      <div class="col align-self-end">
+        <div class="row">
+          <div class="col-4">{{ section.settings.pages }}</div>
+          <div class="col-8">{{ section.settings.subline }}</div>
+        </div>
+        {% if section.settings.heading != blank %}
+        <h2 class="as-section-name my-3 mb-lg-4 mt-lg-6 pb-1 fs-h1 break-word">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {{ section.settings.lead_graph | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="dark-link text-decoration-underline"' }}
+
+        {% if section.settings.secondary_btn != blank or section.settings.third_btn != blank %}
+          <div class="pt-3 pb-lg-1 pt-lg-5"></div>
+        {% else %}
+          <div class="py-lg-5"></div>
+        {% endif %}
+        <div class="{% if section.settings.btn_alignment == "between" %}d-sm-flex justify-content-between align-items-start mt-lg-n3{% endif %}">
+        {% if section.settings.secondary_btn != blank %}
+          <div class="d-flex align-items-center">
+            <a class="text-{{ section.settings.link_style }} {% if section.settings.link_style == 'primary' %}fs-base{% else %}fs-small{% endif %}" 
+            {% if section.settings.secondary_btn_link contains 'https://' or section.settings.secondary_btn_link contains 'http://' %}target="_blank" rel="noopener noreferrer"{% endif %}
+              data-id="banner_link"
+              href="{{ section.settings.secondary_btn_link }}">{{ section.settings.secondary_btn }}</a>
+          </div>
+        {% endif %}
+        {% if section.settings.third_btn != blank %}
+          <div class="d-flex align-items-center">
+            <a class="text-{{ section.settings.link_style }} {% if section.settings.link_style == 'primary' %}fs-base{% else %}fs-small{% endif %}" 
+            {% if section.settings.third_btn_link contains 'https://' or section.settings.third_btn_link contains 'http://' %}target="_blank" rel="noopener noreferrer"{% endif %}
+              data-id="banner_link"
+              href="{{ section.settings.third_btn_link }}">{{ section.settings.third_btn }}</a>
+          </div>
+        {% endif %} 
+        {% if section.settings.third_btn != blank and section.settings.secondary_btn == blank %}
+          <div class="py-lg-5"></div>
+        {% endif %}
+        </div>
+        {% if section.settings.add_padding_bottom %}
+          <div class="py-lg-5"></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% if section.settings.link_text != blank %}
+  <div class="as-fixed-bar sticky-bar position-fixed bg-white w-100 as-sticky-bar {% if section.settings.disabled_section %}d-none{% endif %}">
+    <div class="row h-100 g-0 bar-content">
+      <div class="col-lg"></div>
+      <div class="col-lg-auto w-lg-fixed d-flex flex-column justify-content-center px-4">
+        <a class="btn btn-primary text-nowrap" {% render 'link', link: section.settings.link %}
+          data-id="banner_link"
+          href="{{ section.settings.link }}">{{ section.settings.link_text }}</a>
+      </div>
+    </div>
+  </div>
+{% endif %}

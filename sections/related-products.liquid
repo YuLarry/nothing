@@ -1,0 +1,172 @@
+{%- assign product_blocks = section.blocks | where: 'type', 'product' -%}
+<style>
+  .related-products-{{ section.id }} .price .price__sale {
+    align-items: baseline;
+  }
+  .related-products-{{ section.id }} .add-to-cart:focus {
+    outline: none;
+  }
+</style>
+
+<div class="related-products-{{ section.id }} container-fluid">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="fs-h2 mb-0">{{ section.settings.heading }}</h2>
+  {%- endif -%}
+  
+  {%- if product_blocks.size > 0 -%}
+    <div class="mt-4 mt-md-5 overflow-hidden">
+      <div class="row gy-4">
+        {%- for block in product_blocks -%}
+          {%- assign product = block.settings.product -%}
+          {%- if product and product != empty -%}
+            {%- assign current_variant = product.selected_or_first_available_variant -%}
+            <div class="col-md-4">
+              {%- assign image = product.images[0] -%}
+              {%- if block.settings.image != blank -%}
+                {%- assign image = block.settings.image -%}
+              {%- endif -%}
+
+              {%- if image -%}
+                <div class="position-relative">
+                  <figure class="mb-1 mb-md-2">
+                    <picture class="d-block picture ratio"
+                      style="--bs-aspect-ratio: calc(668 / 549 * 100%);">
+                      <img
+                        sizes="(min-width: 767px) 100vw, 34vw"
+                        srcset="
+                          {%- if image.width >= 600 -%}{{ image | image_url: width: 600 }} 600w,{%- endif -%}
+                          {%- if image.width >= 857 -%}{{ image | image_url: width: 857 }} 857w,{%- endif -%}
+                          {%- if image.width >= 1069 -%}{{ image | image_url: width: 1069 }} 1069w,{%- endif -%}
+                          {%- if image.width >= 1244 -%}{{ image | image_url: width: 1244 }} 1244w,{%- endif -%}
+                          {%- if image.width >= 1494 -%}{{ image | image_url: width: 1494 }} 1494w,{%- endif -%}
+                          {%- if image.width >= 1560 -%}{{ image | image_url: width: 1560 }} 1560w,{%- endif -%}
+                          {%- if image.width >= 1660 -%}{{ image | image_url: width: 1660 }} 1660w,{%- endif -%}
+                          {%- if image.width >= 1901 -%}{{ image | image_url: width: 1901 }} 1901w,{%- endif -%}
+                          {%- if image.width >= 2040 -%}{{ image | image_url: width: 2040 }} 2040w,{%- endif -%}
+                          {%- if image.width >= 2160 -%}{{ image | image_url: width: 2160 }} 2160w,{%- endif -%}
+                          {%- if image.width >= 3840 -%}{{ image | image_url: width: 3840 }} 3840w,{%- endif -%}"
+                        src="{{ image | image_url: width: 2160 }}"
+                        alt="{{ image.alt | escape }}"
+                        class="w-100 h-100 object-fit-cover"
+                        loading="lazy"
+                        width="{{ image.width }}"
+                        height="{{ image.height }}"
+                      >
+                    </picture>
+                  </figure>
+                  <a class="stretched-link" href="{{ current_variant.url }}"></a>
+                </div>
+              {%- endif -%}
+
+              <div class="overflow-hidden">
+                <div class="d-flex align-items-md-center flex-column flex-md-row flex-wrap mb-md-n1">
+                  <div class="me-md-5 mb-md-1">
+                    <div class="position-relative me-xxl-9"><a class="link-dark" href="{{ current_variant.url }}">{{ product.title }}</a>{% if block.settings.show_price %} {% render 'price', price_class: 'd-inline-block', product: product, use_variant: true %}{% endif %}</div>
+                  </div>
+    
+                  <div class="overflow-hidden mb-md-1">
+                    <div class="mt-n1 ms-n2">
+                      {%- if block.settings.enable_purchase_function -%}
+                        {%- if product.available -%}
+                          {%- if product.has_only_default_variant or product.variants.size <= 1 -%}
+                            <product-form class="d-inline-block mt-1 ms-2">
+                              {% liquid
+                                assign productFormClass = 'form'
+                                assign productFormClass = productFormClass | append: ' as-async-add-form'
+                                assign product_form_id = 'as-product-form-' | append: section.id
+                              %}
+                              {% form 'product', product, id: product_form_id, class: productFormClass %}
+                                <input name="id" value="{{ current_variant.id }}" type="hidden">
+                                <button class="add-to-cart px-0 border-0 bg-transparent fw-normal link-primary" 
+                                  type="submit" 
+                                  data-bs-toggle="offcanvas" 
+                                  data-bs-target="#offcanvas-cart"><span>(&nbsp;</span>{{ 'sections.related_products.add_to_cart_button' | t }}<span>&nbsp;)</span></button>
+                              {% endform %}
+                            </product-form>
+                          {%- else -%}
+                            <div class="d-inline-block mt-1 ms-2">
+                              <a class="link-primary" 
+                                {% render 'link', link: current_variant.url %} 
+                                href="{{ current_variant.url }}"><span>(&nbsp;</span>{% if product.metafields.custom.buy_now_button_label.value %}{{ product.metafields.custom.buy_now_button_label.value }}{% else %}{{ 'sections.related_products.buy_now_button' | t }}{% endif %}<span>&nbsp;)</span></a>
+                            </div>
+                          {%- endif -%}
+                        {%- else -%}
+                          <div class="d-inline-block mt-1 ms-2 text-danger">{{ 'sections.related_products.out_of_stock' | t }}</div>
+                        {%- endif -%}
+                      {%- endif -%}
+        
+                      {%- if block.settings.learn_more_link != blank -%}
+                        <div class="d-inline-block mt-1 ms-2">
+                          <a class="link-primary" 
+                            {% render 'link', link: block.settings.learn_more_link %} 
+                            href="{{ block.settings.learn_more_link }}"><span>(&nbsp;</span>{{ 'sections.related_products.learn_more_button' | t }}<span>&nbsp;)</span></a>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Related Products",
+  "tag": "section",
+  "class": "my-6 my-md-8 related-products as-purchase-recommendation",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Related Products."
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Product",
+      "type": "product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_price",
+          "label": "Show Price",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_purchase_function",
+          "label": "Enable purchase function",
+          "default": true
+        },
+        {
+          "type": "url",
+          "id": "learn_more_link",
+          "label": "Learn more link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Products",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

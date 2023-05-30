@@ -1,0 +1,69 @@
+{% if section.blocks.size > 0 %}
+<div id="{{ section.settings.id_for_hash }}" class="container-topic px-3 px-sm-6 social-media-wrap as-location-target" data-color='dark'>
+  <div class="px-1 px-sm-0">
+    <ul class="list-unstyled grid-column-3 mb-0 justify-content-between flex-column flex-md-row">
+      {% for block in section.blocks %}
+      <li class="d-flex flex-sm-column flex-column-reverse grid-column-list {% unless forloop.last %}mb-7{% endunless %} mb-md-0 text-left text-sm-center">
+        {% assign img = block.settings.img %}
+        <div class="d-flex justify-content-sm-center justify-content-start social-media-icon">
+          <img class=""
+            width="{{ img.width | divided_by: 2 }}"
+            height="{{ img.height | divided_by: 2 }}"
+            srcset="{{ img | img_url: 'master' }}" 
+            src="{{ img | img_url: 'master' }}"
+            loading="lazy"
+            alt="{{ img.alt }}">
+        </div>
+        <div class="mb-0 font-change fs-h2 mt-sm-2 pt-sm-1 mb-2 mb-sm-0 pb-1 pb-sm-0">{{ block.settings.richtitle | replace: '<p', '<p class="mb-0"' | replace: '<a', '<a class="text-dark text-decoration-underline"' }}{{ block.settings.title }}</div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "Media quotes",
+  "class": "w-100 snap-child as-snap-list",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "text",
+      "id": "id_for_hash",
+      "label": "ID for hash"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "list",
+      "name": "list",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "richtitle",
+          "label": "Richtext"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Text"
+        },
+        {
+          "type": "image_picker",
+          "id": "img",
+          "label": "Logo"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Media quotes",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

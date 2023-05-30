@@ -1,0 +1,34 @@
+{% comment %} 
+  通过变体获取图片position列表（以;;为分隔符，position是指在产品图片列表中的位置，值=下标+1），如属于变体A的图片列表：img_pos_A;;img_pos_B;;img_pos_C。
+  若未给变体配置图片，则将产品所有图片的position返回。
+  参数:
+    - image_list: {String} 图片分组列表，例如：image_id_A::img_id_A_1 $$ image_id_B::img_id_B_1;;img_id_B_2;;img_id_B_3
+    - target_variant: {Object} 变体
+    - all_images: {Object} 所有产品图片
+  返回: 以;;分隔的图片位置
+{% endcomment %}
+
+{%- if target_variant.image -%}
+  {% comment %} img_id_A::img_pos_A_1 $$ img_id_B::img_pos_B_1;;img_pos_B_2;;img_pos_B_3 {% endcomment %}
+  {%- assign image_groups = image_list | split: '$$' -%}
+  {%- for image_group in image_groups -%}
+    {%- assign key_value = image_group | split: '::' -%}
+      {%- assign img_id = key_value[0] | plus: 0 -%}
+      {%- if target_variant.image.id == img_id -%}
+        {% comment %} 变体图片id相同 {% endcomment %}
+        {%- assign variant_image_strs = key_value[1] -%}
+      {%- endif -%}
+  {%- endfor -%}
+{%- else -%}
+  {% comment %} 展示全部图片 {% endcomment %}
+  {% assign all_image_strs = '' %}
+  {%- for product_image in all_images -%}
+    {%- unless forloop.first -%}
+      {%- assign all_image_strs = all_image_strs | append: ';;' -%}
+    {%- endunless -%}
+    {%- assign all_image_strs = all_image_strs | append: product_image.position -%}
+    {%- assign all_image_strs = all_image_strs | append: '||' | append: product_image.alt -%}
+  {%- endfor -%}
+  {%- assign variant_image_strs = all_image_strs -%}
+{%- endif -%}
+{{ variant_image_strs }}

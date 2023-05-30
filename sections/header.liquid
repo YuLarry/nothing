@@ -1,0 +1,267 @@
+{% liquid
+  assign text_color = 'is-dark'
+
+  assign current_path = request.path | json
+  assign current_origin = request.origin
+  assign white_header_blocks = section.blocks | where: 'type', 'white_header'
+  for block in white_header_blocks
+    assign origin_path = block.settings.change_the_header_to_white
+    assign tmp_path = origin_path | json
+    if origin_path contains current_origin
+      assign tmp_path = origin_path | replace_first: current_origin, '' | json
+    endif
+    if current_path == tmp_path
+      assign top_text_color = 'is-top-color'
+      break
+    endif
+  endfor
+
+  assign blog = blogs[settings.blog]
+  if request.page_type == 'page'
+    if page.handle == 'about'
+      assign newsroom_type = page.handle
+      assign title = page.title
+    elsif page.handle == 'career'
+      assign newsroom_type = page.handle
+      assign title = page.title
+    elsif page.handle == 'coverage'
+      assign newsroom_type = page.handle
+      assign title = blog.title
+    elsif page.handle == 'brand-assets'
+      assign newsroom_type = page.handle
+      assign title = blog.title
+    elsif page.handle == 'contact-us'
+      assign newsroom_type = page.handle
+      assign title = 'contact.us.title' | t
+    endif
+  elsif request.page_type == 'blog'
+    assign newsroom_type = request.page_type
+    assign title = blog.title
+  elsif request.page_type == 'article'
+    assign newsroom_type = request.page_type
+    assign title = blog.title
+  endif
+  %}
+
+<div class="is-top as-autohide as-navbar fixed-top {% if request.page_type == 'cart' %}{% endif %}{% if page.handle contains 'about' or page.handle == 'career' %} scrolled-down{% endif %}">
+  <nav class="navbar as-site-header py-0 {{ text_color }} {{ top_text_color }}">
+    <div class="w-100 row g-0 justify-content-between justify-content-lg-start">
+      <div class="col-lg d-none d-lg-block">
+        <div class="row">
+          <div class="col-3">
+          </div>
+          <div class="col-3 d-flex align-items-center navbar-height">
+            <a class="header-link font-ndot55 fs-base top-color" href="{{ routes.root_url }}" data-id="logo">{{ 'general.logo.title' | t }}</a>
+          </div>
+          {% unless template.name == 'login' or template.name == 'register' or page.template_suffix == 'reset-password' or request.page_type == 'cart'  %}
+          <div class="as-products-btn col-3 d-flex align-items-center navbar-height">
+            <a href="javascript:void(0);" class="header-link font-ndot55 fs-base top-color flex-center"><span class="me-1">{{ section.settings.navigation_text }}</span> {% render 'icon-chevron-header-down' %}</a>
+            <div class="as-dropdown-products position-absolute w-100 start-0 top-0 bg-dark scrolled-down" style="z-index: -1;">
+              <div class="navbar-height"></div>
+              <div class="row">
+                <div class="col">
+                  <div class="row">
+                    <div class="col-3 np-4 pt-0">
+                      <div class="position-relative ratio ratio-4x5 image-box">
+                        {% for block in section.blocks %}
+                          {% if block.settings.navigation_img != blank %}
+                          <img loading="lazy" class="as-navimg w-100 position-absolute z-index-1 opacity-hide object-fit-cover"
+                            srcset="{{ block.settings.navigation_img | img_url: '300x' }} 1x, {{ block.settings.navigation_img | img_url: '600x' }} 2x, {{ block.settings.navigation_img | img_url: '900x' }} 3x"
+                            src="{{ block.settings.navigation_img | img_url: 'master' }}"/>
+                          {% endif %}
+                        {% endfor %}
+                        {% if section.settings.navigation_img != blank %}
+                        <img loading="lazy" class="w-100 position-absolute object-fit-cover" 
+                          srcset="{{ section.settings.navigation_img | img_url: '300x' }} 1x, {{ section.settings.navigation_img | img_url: '600x' }} 2x, {{ section.settings.navigation_img | img_url: '900x' }} 3x"
+                          src="{{ section.settings.navigation_img | img_url: 'master' }}"/>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="col-3"></div>
+                    <div class="col-3 npb-3">
+                      {% for block in section.blocks %}
+                        <a {% if block.settings.navigation_url != blank %}href="{{ block.settings.navigation_url }}" data-id="header_nav" {% endif %}class="{% if block.settings.navigation_img %}as-navtrigger {% endif %}d-block header-link font-ndot55 fs-base {% if block.settings.navigation_url != blank %}nlink-hover{% endif %}">{% if block.settings.title != blank %}{{ block.settings.title }}{% if block.settings.tag != blank %}&nbsp;<span class="text-danger">{{ block.settings.tag }}</span>{% endif %}{% else %}&nbsp;{% endif %}</a>
+                      {% endfor %}
+                    </div>
+                    <div class="col-3"></div>
+                  </div>
+                </div>
+                <div class="col-auto w-lg-fixed"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-3 d-flex align-items-center navbar-height">
+            <a href="{{ section.settings.navigation_url2 }}" class="header-link font-ndot55 fs-base top-color" data-id="header_nav">{{ section.settings.navigation_text2 }}</a>
+          </div>
+          {% endunless %}
+        </div>
+      </div>
+      <div class="col-lg-auto w-lg-fixed np-4 pb-0 pt-1 pb-6 py-lg-0 d-none d-lg-block">
+        {% unless template.name == 'login' or template.name == 'register' or page.template_suffix == 'reset-password' or request.page_type == 'cart'  %}
+        <div class="row">
+          <div class="col-9 d-flex align-items-center navbar-height">
+            {% if shop.customer_accounts_enabled %}
+              {% if customer %}
+                <a class="header-link font-ndot55 fs-base"
+                  data-id="account"
+                  data-type="account_center"
+                  href="{{ routes.account_url }}">
+                  {% render 'logged-in-name' %}
+                </a>
+              {% else %}
+                <a href="{{ routes.account_login_url }}" class="header-link font-ndot55 fs-base" 
+                  data-id="account"
+                  data-type="log_in">{{ 'customer.login.title' | t }}</a>
+              {% endif %}
+            {% endif %}
+          </div>
+          <div class="col-3 d-flex align-items-center navbar-height">
+            {% if settings.enable_cart %}
+            <a href="javascript:void(0);" class="header-link font-ndot55 fs-base text-nowrap" 
+              data-id="cart"
+              data-bs-toggle="offcanvas" 
+              data-bs-target="#offcanvas-cart" 
+              aria-controls="offcanvas-cart">{{ 'cart.general.cart' | t }} ( <span class="as-cart-items-count">{%- if cart.item_count > 0 -%}{%- if cart.item_count > 99 -%}99+{%- else -%}{{ cart.item_count }}{%- endif -%}{%- else -%}0{%- endif -%}</span> )</a>
+            {% comment %}
+            <a class="text-uppercase header-link" href="{{ routes.cart_url }}">{{ 'cart.general.cart' | t }} ( <span class="as-cart-items-count">{%- if cart.item_count > 0 -%}{%- if cart.item_count > 99 -%}99+{%- else -%}{{ cart.item_count }}{%- endif -%}{%- else -%}0{%- endif -%}</span> )</a>
+            {% endcomment %}
+            {% endif %}
+          </div>
+        </div>
+        {% endunless %}
+      </div>
+      <div class="col-auto d-flex d-lg-none align-items-center justify-content-end end-0 top-0 header-toggler navbar-height px-0 bg-white icon-chevron-header icon-chevron-horizontal" 
+        data-bs-toggle="offcanvas" 
+        data-bs-target="#header-toggler" 
+        aria-controls="header-toggler">{% render 'icon-chevron-header-right' %}</div>
+      <div class="col-auto d-flex d-lg-none align-items-center np-3 py-0 navbar-height">
+        {% unless template.name == 'login' or template.name == 'register' or page.template_suffix == 'reset-password' or request.page_type == 'cart'  %}
+        {% if settings.enable_cart %}
+        <div class="as-header-cart d-flex header-cart header-cart-box rounded-pill{% if cart.item_count > 0 %} bg-danger{% else %} bg-white{% endif %}">
+          <a href="javascript:void(0);" class="flex-center header-cart-box header-link font-ndot55 fs-base{% if cart.item_count > 0 %}{% else %} text-dark{% endif %}" 
+            data-id="cart"
+            data-bs-toggle="offcanvas" 
+            data-bs-target="#offcanvas-cart" 
+            aria-controls="offcanvas-cart"><span class="cart-items-count as-cart-items-count">{%- if cart.item_count > 0 -%}{%- if cart.item_count > 99 -%}99+{%- else -%}{{ cart.item_count }}{%- endif -%}{%- else -%}0{%- endif -%}</span></a>
+        </div>
+        {% endif %}
+        {% endunless %}
+      </div>
+    </div>
+  </nav>
+</div>
+
+{% render 'header-toggler' %}
+
+<div id="as-product-nav" class="country-popup fade modal font-base" 
+  tabindex="-1" 
+  role="dialog"
+  data-keyboard="false"
+  aria-hidden="true">
+  <div class="modal-dialog m-0">
+    <div class="modal-content bg-light">
+      <div class="modal-header container-topic gx-2 py-0 align-items-center mt-1 justify-content-center navbar-height">
+        <a data-bs-toggle="modal" data-bs-target="#as-product-nav" class="d-flex text-dark">
+          <span class="font-ndot55 fs-base">{{ section.settings.navigation_text }}</span>
+          <span class="flex-center ms-2 rotate-270">{% render 'icon-chevron-header-right' %}</span>
+        </a>
+      </div>
+      <div class="modal-body container-topic gx-2 py-0 mt-2 mb-3">
+        <ul class="list-unstyled mb-0">
+          <li class="nav-item mb-1 mt-1 mt-lg-0">
+            <a class="active d-flex nav-before-arrow p-0 border-0 bg-transparent text-dark text-decoration-underline justify-content-center" 
+            href="{{ section.settings.navigation_url }}">{{ 'products.orerview.title' | t }}</a>
+          </li>
+          <!-- <li class="nav-item mb-1 mt-1 mt-lg-0">
+            <a class="d-flex nav-before-arrow p-0 border-0 bg-transparent text-dark text-decoration-underline cursor-pointer justify-content-center"
+            data-bs-dismiss="modal" aria-label="Close"
+            data-bs-toggle="modal" data-bs-target="#as-specs">{{ 'products.specs.title' | t }}</a>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Header",
+    "tag": "header",
+    "class": "site-header nheader",
+    "settings": [
+      {
+        "type": "link_list",
+        "label": "Main Menu",
+        "id": "main_menu",
+        "default": "main-menu"
+      },
+      {
+        "type": "image_picker",
+        "id": "navigation_img",
+        "label": "MENU DROPDOWN Default Image"
+      },
+      {
+        "type": "text",
+        "id": "navigation_text",
+        "label": "Navigation Text",
+        "default": "PRODUCTS"
+      },
+      {
+        "type": "url",
+        "id": "navigation_url",
+        "label": "Navigation Url"
+      },
+      {
+        "type": "text",
+        "id": "navigation_text2",
+        "label": "Navigation Text",
+        "default": "STORE"
+      },
+      {
+        "type": "url",
+        "id": "navigation_url2",
+        "label": "Navigation Url"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "New navigation",
+        "type": "navigation",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Navigation Text"
+          },
+          {
+            "type": "text",
+            "id": "tag",
+            "label": "Navigation tag"
+          },
+          {
+            "type": "url",
+            "id": "navigation_url",
+            "label": "Navigation Url"
+          },
+          {
+            "type": "image_picker",
+            "id": "navigation_img",
+            "label": "Navigation Img"
+          }
+        ]
+      },
+      {
+        "name": "White header",
+        "type": "white_header",
+        "settings": [
+          {
+            "type": "url",
+            "id": "change_the_header_to_white",
+            "label": "Change the header to white",
+            "info": "When selected, the page header text will turn white."
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
